@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand:500,700&display=swap');
+
+:global {
+  :root {
+    --black: #2d3748;
+    --white: #ffffff;
+    --gradient-abu-abu: linear-gradient(#ffffff, #e2e2e2);
+    --black2: #42495e;
+    --black3: #5c6378;
+    --font-default: 'Quicksand', sans-serif;
+    font-size: 24px;
+  }
+
+  body,
+  html,
+  #asha {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-family: var(--font-default);
+  }
+}

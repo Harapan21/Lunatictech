@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "lib": ["es2017", "dom"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "files": ["./global.d.ts"],
+  "exclude": ["node_modules", "public", "dist"],
+  "include": [
+    "main.tsx",
+    "src/*/**.ts",
+    "src/components/Layout.tsx",
+    "**/*.spec.ts"
+  ]
+}
