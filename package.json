@@ -12,7 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/Harapan21/Asha.git"
   },
-  "keywords": ["cms"],
+  "keywords": [
+    "cms"
+  ],
   "author": "Harapan Pardamean<harapanpardamean@gmail.com>",
   "license": "ISC",
   "bugs": {
@@ -23,12 +25,12 @@
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.4",
-    "@types/yup": "^0.26.20",
+    "@types/yup": "^0.26.21",
     "parcel-bundler": "^1.12.3",
     "sass": "^1.22.3",
     "tslint": "^5.18.0",
     "tslint-react": "^4.0.0",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.3"
   },
   "dependencies": {
     "@svgr/parcel-plugin-svgr": "^4.3.0",

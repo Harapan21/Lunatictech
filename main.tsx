@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import AshaRouter from './src/AshaRouter';
+import Layout from './src/Layout';
 
 const AshaRoot: React.FC = () => (
-  <div>
+  <Layout>
     <AshaRouter />
-  </div>
+  </Layout>
 );
 
-ReactDOM.render(<AshaRoot />, document.getElementById('asha'));
+ReactDOM.render(<AshaRoot />, document.getElementById('smile'));
