@@ -4,14 +4,27 @@
   padding: 0px;
   margin: 0px;
 }
-%flexMiddle {
+
+%flex {
   display: flex;
+}
+
+%flexMiddle {
+  @extend %flex;
   justify-content: center;
   align-items: center;
 }
-
+%flexColumn {
+  @extend %flex;
+  flex-direction: column;
+}
 %fullWidth {
   width: 100%;
+}
+
+%fontQuicksandBold {
+  font-family: var(--font-default);
+  font-weight: 700;
 }
 
 :global {
@@ -50,8 +63,7 @@
   height: 570px;
   border-radius: 20px;
   box-shadow: var(--shadow-2-xl);
-  display: flex;
-  flex-direction: column;
+  @extend %flexColumn;
   .content {
     display: flex;
     flex: 1;
@@ -66,8 +78,7 @@
         right: 0;
         bottom: 0;
         top: 0;
-        display: flex;
-        flex-direction: column;
+        @extend %flexColumn;
         @extend %zeroPaddingMargin;
         * {
           margin: 15px 0px;
@@ -78,14 +89,40 @@
         h2 {
           font-size: 0.825rem;
         }
+        .formLarge {
+          width: 100%;
+          @extend %flexColumn;
+          &.overflow {
+            input {
+              font-size: 1.8rem;
+              position: relative;
+              z-index: 0;
+            }
+          }
+          input {
+            text-align: center;
+            font-size: 3rem;
+            @extend %fontQuicksandBold;
+            opacity: 0.4;
+            border: none;
+            transition: all 0.18s;
+            background: transparent;
+            width: 100%;
+            &::placeholder {
+              text-transform: capitalize;
+            }
+            &:focus {
+              opacity: 1;
+            }
+          }
+        }
       }
     }
     .sidebar {
       .menu {
         @extend %zeroPaddingMargin;
-        display: flex;
+        @extend %flexColumn;
         justify-content: center;
-        flex-direction: column;
         li {
           list-style: none;
           padding: 10px 25px;

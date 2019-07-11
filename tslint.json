@@ -3,7 +3,7 @@
   "extends": ["tslint:latest", "tslint-react"],
   "rules": {
     "quotemark": [true, "single", "jsx-double"],
-    "jsx-wrap-multiline": true,
+    "jsx-wrap-multiline": false,
     "object-literal-sort-keys": false,
     "trailing-comma": false,
     "interface-name": [true, "never-prefix"],
