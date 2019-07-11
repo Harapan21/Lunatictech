@@ -58,7 +58,9 @@ export default () => {
           alert(JSON.stringfy(values));
         }}
         render={(formikBag: FormikProps<UserSetup>) => (
-          <Form id="setupForm">{Page[stepIndex]}</Form>
+          <Form style={{all: 'inherit'}} id="setupForm">
+            {Page[stepIndex]}
+          </Form>
         )}
       />
     </div>
