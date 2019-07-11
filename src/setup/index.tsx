@@ -10,24 +10,20 @@ const InputLarge = ({
   ...props
 }: FieldProps<UserSetup>) => {
   const isOverflow = field.value ? (field.value.length > 15 ? true : false) : 0;
+  console.log(field);
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
       <label>{props.label}</label>
       <input
-        maxLength={25}
+        maxLength={35}
         type={props.type}
         {...field}
         placeholder="type here"
       />
-
       <button
+        onClick={props.onClick}
         type="button"
-        style={{
-          fontSize: '.825rem',
-          all: 'unset',
-          cursor: 'pointer',
-          color: 'var(--pink)',
-        }}
+        className={style.buttonDefault}
       >
         next
       </button>
@@ -40,12 +36,8 @@ const Landing = ({onClick}: any) => {
     <>
       <h1>Make smile manage your content</h1>
       <Started />
-      <button
-        type="button"
-        onClick={onClick}
-        style={{all: 'unset', cursor: 'pointer'}}
-      >
-        <h2 style={{fontWeight: 500, color: 'var(--pink)'}}>Get Started</h2>
+      <button onClick={onClick} type="button" className={style.buttonDefault}>
+        Get Started
       </button>
     </>
   );
@@ -100,7 +92,16 @@ export default () => {
                   key={1}
                   type="text"
                   name="fullName"
-                  label="What is your name?"
+                  label="Enter Your Name"
+                  component={InputLarge}
+                  onClick={() => handleState()}
+                />,
+                <Field
+                  key={1}
+                  type="text"
+                  name="userName"
+                  label="Enter Your Username"
+                  onClick={() => handleState()}
                   component={InputLarge}
                 />,
               ];

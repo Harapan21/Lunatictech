@@ -113,6 +113,9 @@
             }
             &:focus {
               opacity: 1;
+              outline-style: none;
+              box-shadow: none;
+              border-color: transparent;
             }
           }
         }
@@ -151,5 +154,11 @@
       width: 20px;
       height: auto;
     }
+  }
+  .buttonDefault {
+    all: unset;
+    font-size: 0.825rem;
+    cursor: pointer;
+    color: var(--pink) !important;
   }
 }
