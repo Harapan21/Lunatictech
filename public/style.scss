@@ -34,6 +34,8 @@
     --white: #ffffff;
     --white-pink: #fffafb;
     --shadow-2-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --font-default: 'Quicksand', sans-serif;
     font-size: 24px;
   }
@@ -80,17 +82,22 @@
         top: 0;
         @extend %flexColumn;
         @extend %zeroPaddingMargin;
-        * {
-          margin: 15px 0px;
-        }
         h1 {
           font-size: 1rem;
         }
         h2 {
           font-size: 0.825rem;
         }
+        :global #setupForm {
+          > * {
+            margin: 20px 0px;
+          }
+        }
         .formLarge {
           width: 100%;
+          > * {
+            margin: 15px 0px;
+          }
           @extend %flexColumn;
           &.overflow {
             input {
@@ -160,5 +167,25 @@
     font-size: 0.825rem;
     cursor: pointer;
     color: var(--pink) !important;
+  }
+  .danger {
+    div {
+      color: var(--pink) !important;
+      font-weight: 500 !important;
+      font-size: 0.625rem;
+    }
+  }
+  .card {
+    @extend %flex;
+    margin: auto !important;
+    border-radius: 8px;
+    padding: 10px;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    svg {
+      max-width: 20px;
+      height: auto;
+      margin-right: 10px !important;
+    }
   }
 }

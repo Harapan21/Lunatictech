@@ -3,7 +3,7 @@ import style from '../../public/style.scss';
 import Started from '../../public/start.svg';
 import {Formik, Field, Form} from 'formik';
 import * as Yup from 'yup';
-
+import ErrorBox from '../ErrorBox.tsx';
 const Landing = ({onClick}: any) => (
   <>
     <h1>Make smile manage your content</h1>
@@ -58,12 +58,21 @@ export default () => {
       onClick={() => handleState()}
       component={InputLarge}
     />,
+    <Field
+      key={3}
+      type="password"
+      name="passwordUsr"
+      label="Enter Your Password"
+      onClick={() => handleState()}
+      component={InputLarge}
+    />,
   ];
   const handleState = () => {
-    if (stepIndex > Page.length - 1) {
+    if (stepIndex === Page.length - 1) {
       setIndex(0);
+    } else {
+      setIndex((state: number) => state + 1);
     }
-    setIndex((state: number) => state + 1);
   };
 
   return (
@@ -83,19 +92,25 @@ export default () => {
     </div>
   );
 };
-const InputLarge = ({form, field, ...props}: FieldProps<UserSetup>) => {
-  const isOverflow = field.value.length > 15 ? true : false;
+const InputLarge = ({
+  form: {touched, errors},
+  field,
+  label,
+  onClick,
+  ...props
+}: FieldProps<UserSetup>) => {
+  const isOverflow: boolean = field.value.length > 15;
+  console.log(errors[field.name]);
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
-      <label>{props.label}</label>
-      <input
-        maxLength={35}
-        type={props.type}
-        {...field}
-        placeholder="type here"
-      />
+      <label>{label}</label>
+      <input maxLength={35} {...field} {...props} placeholder="type here" />
+      {touched[field.name] && errors[field.name] && (
+        <ErrorBox errorMsg={errors[field.name]} />
+      )}
       <button
-        onClick={props.onClick}
+        disabled={errors[field.name]}
+        onClick={onClick}
         type="button"
         className={style.buttonDefault}
       >
