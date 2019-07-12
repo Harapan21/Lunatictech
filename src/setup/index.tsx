@@ -4,44 +4,15 @@ import Started from '../../public/start.svg';
 import {Formik, Field, Form} from 'formik';
 import * as Yup from 'yup';
 
-const InputLarge = ({
-  field,
-  form: {touched, errors},
-  ...props
-}: FieldProps<UserSetup>) => {
-  const isOverflow = field.value ? (field.value.length > 15 ? true : false) : 0;
-  console.log(field);
-  return (
-    <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
-      <label>{props.label}</label>
-      <input
-        maxLength={35}
-        type={props.type}
-        {...field}
-        placeholder="type here"
-      />
-      <button
-        onClick={props.onClick}
-        type="button"
-        className={style.buttonDefault}
-      >
-        next
-      </button>
-    </div>
-  );
-};
-
-const Landing = ({onClick}: any) => {
-  return (
-    <>
-      <h1>Make smile manage your content</h1>
-      <Started />
-      <button onClick={onClick} type="button" className={style.buttonDefault}>
-        Get Started
-      </button>
-    </>
-  );
-};
+const Landing = ({onClick}: any) => (
+  <>
+    <h1>Make smile manage your content</h1>
+    <Started />
+    <button onClick={onClick} type="button" className={style.buttonDefault}>
+      Get Started
+    </button>
+  </>
+);
 
 export default () => {
   const {initialState, setSetup} = React.useState({
@@ -81,7 +52,7 @@ export default () => {
           <Form style={{all: 'inherit'}} id="setupForm">
             {(() => {
               const handleState = () => {
-                if (stepIndex > Page.length) {
+                if (stepIndex > Page.length - 1) {
                   setIndex(0);
                 }
                 setIndex((state: number) => state + 1);
@@ -97,7 +68,7 @@ export default () => {
                   onClick={() => handleState()}
                 />,
                 <Field
-                  key={1}
+                  key={2}
                   type="text"
                   name="userName"
                   label="Enter Your Username"
@@ -110,6 +81,37 @@ export default () => {
           </Form>
         )}
       />
+    </div>
+  );
+};
+const InputLarge = ({
+  form,
+  field: {value, ...jeroan},
+  ...props
+}: FieldProps<UserSetup>) => {
+  const isOverflow = form.values[field.name]
+    ? form.values[field.name] > 15
+      ? true
+      : false
+    : 0;
+  console.log(jeroan);
+  return (
+    <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
+      <label>{props.label}</label>
+      <input
+        maxLength={35}
+        type={props.type}
+        value={form.values[form.name] ? form.values[form.name] : ''}
+        {...jeroan}
+        placeholder="type here"
+      />
+      <button
+        onClick={props.onClick}
+        type="button"
+        className={style.buttonDefault}
+      >
+        next
+      </button>
     </div>
   );
 };
