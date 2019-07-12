@@ -15,13 +15,13 @@ const Landing = ({onClick}: any) => (
 );
 
 export default () => {
-  const {initialState, setSetup} = React.useState({
+  const initialValues = {
     fullName: '',
     userName: '',
     emailAddress: '',
     passwordUsr: '',
     avatar: '',
-  });
+  };
   const userSetupSchema = Yup.object().shape({
     fullName: Yup.string().required(),
     userName: Yup.string().required(),
@@ -40,69 +40,58 @@ export default () => {
   const handleSetup = (changedState: UserSetup) => {
     setSetup(changedState);
   };
+  const Page: React.ReactNode[] = [
+    <Landing key={0} onClick={() => handleState()} />,
+    <Field
+      key={1}
+      type="text"
+      name="fullName"
+      label="Enter Your Name"
+      component={InputLarge}
+      onClick={() => handleState()}
+    />,
+    <Field
+      key={2}
+      type="text"
+      name="userName"
+      label="Enter Your Username"
+      onClick={() => handleState()}
+      component={InputLarge}
+    />,
+  ];
+  const handleState = () => {
+    if (stepIndex > Page.length - 1) {
+      setIndex(0);
+    }
+    setIndex((state: number) => state + 1);
+  };
+
   return (
     <div className={style.setup}>
       <Formik
-        initialValues={initialState}
+        initialValues={...initialValues}
         validationSchema={userSetupSchema}
         onSubmit={(values: UserSetup) => {
           alert(JSON.stringfy(values));
         }}
         render={(formikBag: FormikProps<UserSetup>) => (
           <Form style={{all: 'inherit'}} id="setupForm">
-            {(() => {
-              const handleState = () => {
-                if (stepIndex > Page.length - 1) {
-                  setIndex(0);
-                }
-                setIndex((state: number) => state + 1);
-              };
-              const Page: React.ReactNode[] = [
-                <Landing key={0} onClick={() => handleState()} />,
-                <Field
-                  key={1}
-                  type="text"
-                  name="fullName"
-                  label="Enter Your Name"
-                  component={InputLarge}
-                  onClick={() => handleState()}
-                />,
-                <Field
-                  key={2}
-                  type="text"
-                  name="userName"
-                  label="Enter Your Username"
-                  onClick={() => handleState()}
-                  component={InputLarge}
-                />,
-              ];
-              return Page[stepIndex];
-            })()}
+            {Page[stepIndex]}
           </Form>
         )}
       />
     </div>
   );
 };
-const InputLarge = ({
-  form,
-  field: {value, ...jeroan},
-  ...props
-}: FieldProps<UserSetup>) => {
-  const isOverflow = form.values[field.name]
-    ? form.values[field.name] > 15
-      ? true
-      : false
-    : 0;
-  console.log(jeroan);
+const InputLarge = ({form, field, ...props}: FieldProps<UserSetup>) => {
+  const isOverflow = field.value.length > 15 ? true : false;
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
       <label>{props.label}</label>
       <input
         maxLength={35}
         type={props.type}
-        value={form.values[form.name] ? form.values[form.name] : ''}
-        {...jeroan}
+        {...field}
         placeholder="type here"
       />
       <button
