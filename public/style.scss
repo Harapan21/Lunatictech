@@ -14,10 +14,12 @@
   justify-content: center;
   align-items: center;
 }
+
 %flexColumn {
   @extend %flex;
   flex-direction: column;
 }
+
 %fullWidth {
   width: 100%;
 }
@@ -43,7 +45,7 @@
   body,
   html,
   #smile {
-    paddding: 0px;
+    padding: 0px;
     margin: 0px;
     background: var(--white-pink);
     height: 100%;
@@ -51,6 +53,7 @@
     font-family: var(--font-default);
     color: var(--black);
   }
+
   #smile {
     display: flex;
     justify-content: center;
@@ -66,12 +69,15 @@
   border-radius: 20px;
   box-shadow: var(--shadow-2-xl);
   @extend %flexColumn;
+
   .content {
     display: flex;
     flex: 1;
+
     .children {
       padding: 5px;
       @extend %fullWidth;
+
       .setup {
         @extend %flexMiddle;
         text-align: center;
@@ -82,23 +88,60 @@
         top: 0;
         @extend %flexColumn;
         @extend %zeroPaddingMargin;
+
         h1 {
           font-size: 1rem;
         }
+
         h2 {
           font-size: 0.825rem;
         }
+
         :global #setupForm {
-          > * {
+          >* {
             margin: 20px 0px;
           }
         }
+
         .formLarge {
           width: 100%;
-          > * {
+
+          &.upload {
+
+            position: relative;
+
+            svg {
+              width: 100px;
+              opacity: .5;
+              height: auto;
+              margin: auto;
+            }
+
+            input {
+              font-size: .825rem;
+              position: absolute;
+
+              cursor: pointer;
+              top: 0;
+              text-indent: -9999px;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              opacity: 0;
+
+              &::hover,
+              &::focus {
+                opacity: 0;
+              }
+            }
+          }
+
+          >* {
             margin: 15px 0px;
           }
+
           @extend %flexColumn;
+
           &.overflow {
             input {
               font-size: 1.8rem;
@@ -106,6 +149,7 @@
               z-index: 0;
             }
           }
+
           input {
             text-align: center;
             font-size: 3rem;
@@ -115,9 +159,11 @@
             transition: all 0.18s;
             background: transparent;
             width: 100%;
+
             &::placeholder {
               text-transform: capitalize;
             }
+
             &:focus {
               opacity: 1;
               outline-style: none;
@@ -128,20 +174,25 @@
         }
       }
     }
+
     .sidebar {
       .menu {
         @extend %zeroPaddingMargin;
         @extend %flexColumn;
         justify-content: center;
+
         li {
           list-style: none;
           padding: 10px 25px;
           @extend %zeroPaddingMargin;
+
           svg {
             fill: transparent;
+
             rect {
               stroke: var(--black);
             }
+
             width: 23px;
             height: auto;
           }
@@ -149,25 +200,31 @@
       }
     }
   }
+
   .logo {
     display: flex;
     align-items: center;
     padding: 20px 30px;
+
     span {
       margin-left: 5px;
       font-size: 0.825rem;
     }
+
     svg {
       width: 20px;
       height: auto;
     }
   }
+
   .buttonDefault {
     all: unset;
     font-size: 0.825rem;
     cursor: pointer;
+    user-select: none;
     color: var(--pink) !important;
   }
+
   .danger {
     div {
       color: var(--pink) !important;
@@ -175,6 +232,7 @@
       font-size: 0.625rem;
     }
   }
+
   .card {
     @extend %flex;
     margin: auto !important;
@@ -182,6 +240,7 @@
     padding: 10px;
     align-items: center;
     box-shadow: var(--shadow-md);
+
     svg {
       max-width: 20px;
       height: auto;

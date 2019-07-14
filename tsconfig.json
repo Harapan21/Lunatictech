@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2017",
     "jsx": "react",
     "lib": ["es2017", "dom"],
     "strict": true,

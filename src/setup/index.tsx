@@ -1,10 +1,12 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
 import Started from '../../public/start.svg';
-import {Formik, Field, Form} from 'formik';
+import { Formik, Field, Form, FormikProps, FieldProps } from 'formik';
 import * as Yup from 'yup';
-import ErrorBox from '../ErrorBox.tsx';
-const Landing = ({onClick}: any) => (
+import ErrorBox from '../ErrorBox';
+import Upload from '../../public/upload.svg';
+
+const Landing = ({ onClick }: any) => (
   <>
     <h1>Make smile manage your content</h1>
     <Started />
@@ -20,26 +22,29 @@ export default () => {
     userName: '',
     emailAddress: '',
     passwordUsr: '',
-    avatar: '',
+    avatar: ''
+  };
+  const ValidationMessage = {
+    email: 'Must be email example: john@smile.me',
+    required: 'cannot be empty',
+    password: 'Weak'
   };
   const userSetupSchema = Yup.object().shape({
-    fullName: Yup.string().required(),
-    userName: Yup.string().required(),
+    fullName: Yup.string().required(ValidationMessage.required),
+    userName: Yup.string().required(ValidationMessage.required),
     emailAddress: Yup.string()
-      .email()
-      .required(),
+      .email(ValidationMessage.email)
+      .required(ValidationMessage.required),
     passwordUsr: Yup.string()
-      .required()
+      .required(ValidationMessage.required)
       .matches(
-        '^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$',
-        'Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character',
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        ValidationMessage.password
       ),
-    avatar: Yup.string().required(),
+    avatar: Yup.string().required(ValidationMessage.required)
   });
   const [stepIndex, setIndex] = React.useState(0);
-  const handleSetup = (changedState: UserSetup) => {
-    setSetup(changedState);
-  };
+  const [passwordShow, setPasswordShow] = React.useState(false);
   const Page: React.ReactNode[] = [
     <Landing key={0} onClick={() => handleState()} />,
     <Field
@@ -59,13 +64,30 @@ export default () => {
       component={InputLarge}
     />,
     <Field
+      key={2}
+      type="text"
+      name="emailAddress"
+      label="Enter Your Email"
+      onClick={() => handleState()}
+      component={InputLarge}
+    />,
+    <Field
       key={3}
       type="password"
+      passwordShow={passwordShow}
+      setPasswordShow={setPasswordShow}
       name="passwordUsr"
       label="Enter Your Password"
       onClick={() => handleState()}
       component={InputLarge}
     />,
+    <Field
+      key={4}
+      type="file"
+      name="avatar"
+      label="Upload your avatar"
+      component={Avatar}
+    />
   ];
   const handleState = () => {
     if (stepIndex === Page.length - 1) {
@@ -78,13 +100,13 @@ export default () => {
   return (
     <div className={style.setup}>
       <Formik
-        initialValues={...initialValues}
+        initialValues={initialValues}
         validationSchema={userSetupSchema}
         onSubmit={(values: UserSetup) => {
-          alert(JSON.stringfy(values));
+          alert(JSON.stringify(values));
         }}
         render={(formikBag: FormikProps<UserSetup>) => (
-          <Form style={{all: 'inherit'}} id="setupForm">
+          <Form style={{ all: 'inherit' }} id="setupForm">
             {Page[stepIndex]}
           </Form>
         )}
@@ -92,24 +114,64 @@ export default () => {
     </div>
   );
 };
-const InputLarge = ({
-  form: {touched, errors},
-  field,
-  label,
-  onClick,
-  ...props
-}: FieldProps<UserSetup>) => {
+
+const Avatar = (props: InputPageProps<FieldProps<UserSetup>>) => {
+  const { field, form, label, ...rest } = props;
+  const { setFieldValue } = form;
+  console.log(form.values);
+  return (
+    <div className={`${style.formLarge} ${style.upload}`}>
+      <label>{label}</label>
+      <Upload />
+      <input
+        {...field}
+        {...rest}
+        onChange={(event: any) => {
+          setFieldValue('avatar', event.currentTarget.files[0]);
+        }}
+      />
+    </div>
+  );
+};
+const InputLarge = (props: InputPageProps<FieldProps<UserSetup>>) => {
+  const {
+    field,
+    form,
+    label,
+    onClick,
+    passwordShow,
+    setPasswordShow,
+    type,
+    ...rest
+  } = props;
   const isOverflow: boolean = field.value.length > 15;
-  console.log(errors[field.name]);
+  const isPassword = type === 'password';
+  // idiotmatic
+  const checkIsPassword = isPassword ? (passwordShow ? 'text' : type) : type;
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
       <label>{label}</label>
-      <input maxLength={35} {...field} {...props} placeholder="type here" />
-      {touched[field.name] && errors[field.name] && (
-        <ErrorBox errorMsg={errors[field.name]} />
+      <input
+        type={checkIsPassword}
+        maxLength={35}
+        {...field}
+        {...rest}
+        placeholder="type here"
+      />
+      {form.touched[field.name] && form.errors[field.name] && (
+        <ErrorBox errorMsg={form.errors[field.name]} />
+      )}
+      {form.touched[field.name] && isPassword && (
+        <button
+          type="button"
+          className={style.buttonDefault}
+          onClick={() => setPasswordShow((state: boolean) => !state)}
+        >
+          {passwordShow ? 'hide' : 'show'}
+        </button>
       )}
       <button
-        disabled={errors[field.name]}
+        disabled={form.touched[field.name] && form.errors[field.name]}
         onClick={onClick}
         type="button"
         className={style.buttonDefault}

@@ -18,3 +18,13 @@ interface UserSetup {
   passwordUsr: string;
   avatar: string;
 }
+
+interface InputPageExtendsProps {
+  type: string;
+  label: string;
+  onClick?: any;
+  passwordShow?: boolean;
+  setPasswordShow?: any;
+}
+
+type InputPageProps<T> = InputPageExtendsProps & T;

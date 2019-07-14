@@ -1,10 +1,10 @@
 {
-  "name": "Smile",
+  "name": "smile",
   "version": "1.0.0",
   "description": "cms ",
   "main": "main.js",
   "scripts": {
-    "start": "clear && parcel public/index.html",
+    "start": "parcel public/index.html",
     "prebuild": "rm -Rf dist .cache && npm start",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
