@@ -22,7 +22,7 @@ export default () => {
     userName: '',
     emailAddress: '',
     passwordUsr: '',
-    avatar: ''
+    avatar: null
   };
   const ValidationMessage = {
     email: 'Must be email example: john@smile.me',
@@ -101,34 +101,46 @@ export default () => {
     <div className={style.setup}>
       <Formik
         initialValues={initialValues}
+        enableReinitialize={true}
         validationSchema={userSetupSchema}
         onSubmit={(values: UserSetup) => {
           alert(JSON.stringify(values));
         }}
-        render={(formikBag: FormikProps<UserSetup>) => (
-          <Form style={{ all: 'inherit' }} id="setupForm">
-            {Page[stepIndex]}
-          </Form>
-        )}
+        render={(formikBag: FormikProps<UserSetup>) => {
+          console.log(formikBag.values);
+          return (
+            <Form style={{ all: 'inherit' }} id="setupForm">
+              {Page[stepIndex]}
+            </Form>
+          );
+        }}
       />
     </div>
   );
 };
 
 const Avatar = (props: InputPageProps<FieldProps<UserSetup>>) => {
-  const { field, form, label, ...rest } = props;
-  const { setFieldValue } = form;
-  console.log(form.values);
+  const {
+    field: { name },
+    form,
+    label,
+    type
+  } = props;
+  const { handleBlur, setFieldValue } = form;
+  //  const Image = ({name}: any)=> {
+  //  <div>
+  //    <img src={url}/>
+  //  </div>
+  // }
   return (
     <div className={`${style.formLarge} ${style.upload}`}>
       <label>{label}</label>
       <Upload />
       <input
-        {...field}
-        {...rest}
-        onChange={(event: any) => {
-          setFieldValue('avatar', event.currentTarget.files[0]);
-        }}
+        name={name}
+        type={type}
+        onBlur={handleBlur}
+        onChange={(e: any) => setFieldValue('avatar', e.currentTarget.files[0])}
       />
     </div>
   );
@@ -156,6 +168,8 @@ const InputLarge = (props: InputPageProps<FieldProps<UserSetup>>) => {
         maxLength={35}
         {...field}
         {...rest}
+        onChange={form.handleChange}
+        onBlur={form.handleBlur}
         placeholder="type here"
       />
       {form.touched[field.name] && form.errors[field.name] && (

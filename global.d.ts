@@ -16,7 +16,7 @@ interface UserSetup {
   userName: string;
   emailAddress: string;
   passwordUsr: string;
-  avatar: string;
+  avatar: null | Object;
 }
 
 interface InputPageExtendsProps {
