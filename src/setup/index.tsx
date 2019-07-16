@@ -1,11 +1,10 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
 import Started from '../../public/start.svg';
-import { Formik, Field, Form, FormikProps, FieldProps } from 'formik';
+import { Formik, Field, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import ErrorBox from '../ErrorBox';
-import Upload from '../../public/upload.svg';
-
+import InputLarge from './InputLarge';
+import Avatar from './Avatar';
 const Landing = ({ onClick }: any) => (
   <>
     <h1>Make smile manage your content</h1>
@@ -107,7 +106,6 @@ export default () => {
           alert(JSON.stringify(values));
         }}
         render={(formikBag: FormikProps<UserSetup>) => {
-          console.log(formikBag.values);
           return (
             <Form style={{ all: 'inherit' }} id="setupForm">
               {Page[stepIndex]}
@@ -115,83 +113,6 @@ export default () => {
           );
         }}
       />
-    </div>
-  );
-};
-
-const Avatar = (props: InputPageProps<FieldProps<UserSetup>>) => {
-  const {
-    field: { name },
-    form,
-    label,
-    type
-  } = props;
-  const { handleBlur, setFieldValue } = form;
-  //  const Image = ({name}: any)=> {
-  //  <div>
-  //    <img src={url}/>
-  //  </div>
-  // }
-  return (
-    <div className={`${style.formLarge} ${style.upload}`}>
-      <label>{label}</label>
-      <Upload />
-      <input
-        name={name}
-        type={type}
-        onBlur={handleBlur}
-        onChange={(e: any) => setFieldValue('avatar', e.currentTarget.files[0])}
-      />
-    </div>
-  );
-};
-const InputLarge = (props: InputPageProps<FieldProps<UserSetup>>) => {
-  const {
-    field,
-    form,
-    label,
-    onClick,
-    passwordShow,
-    setPasswordShow,
-    type,
-    ...rest
-  } = props;
-  const isOverflow: boolean = field.value.length > 15;
-  const isPassword = type === 'password';
-  // idiotmatic
-  const checkIsPassword = isPassword ? (passwordShow ? 'text' : type) : type;
-  return (
-    <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
-      <label>{label}</label>
-      <input
-        type={checkIsPassword}
-        maxLength={35}
-        {...field}
-        {...rest}
-        onChange={form.handleChange}
-        onBlur={form.handleBlur}
-        placeholder="type here"
-      />
-      {form.touched[field.name] && form.errors[field.name] && (
-        <ErrorBox errorMsg={form.errors[field.name]} />
-      )}
-      {form.touched[field.name] && isPassword && (
-        <button
-          type="button"
-          className={style.buttonDefault}
-          onClick={() => setPasswordShow((state: boolean) => !state)}
-        >
-          {passwordShow ? 'hide' : 'show'}
-        </button>
-      )}
-      <button
-        disabled={form.touched[field.name] && form.errors[field.name]}
-        onClick={onClick}
-        type="button"
-        className={style.buttonDefault}
-      >
-        next
-      </button>
     </div>
   );
 };
