@@ -1,1 +1,4 @@
 .vscode/
+
+# macos
+.DS_Store
