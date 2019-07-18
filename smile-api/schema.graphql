@@ -1,0 +1,64 @@
+scalar Upload
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  fullName: String!
+  password: String!
+  avatar: String
+  isAdmin: Boolean!
+  post: [Post!]
+}
+
+type Comment {
+  id: ID!
+  comment: String!
+  createdAt: Int!
+  reply: [Comment]
+}
+
+type Comments {
+  node: ID!
+  total: Int!
+  isOpen: Boolean!
+  comment: [Comment]
+}
+
+type Rating {
+  id: ID!
+  parentID: ID!
+  share: Int!
+  views: Int!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String
+  creator: User!
+  contributor: [User]
+  createdAt: Int!
+  lastEditedat: Int!
+  thumbnail: String!
+  lastEdited: User!
+  rating: Rating!
+  comments: Comments
+}
+
+type Query {
+  posts: [Post!]
+}
+
+input SetupField {
+  id: ID!
+  name: String!
+  email: String!
+  fullName: String!
+  password: String!
+  isAdmin: Boolean
+  avatar: Upload!
+}
+
+type Mutation {
+  register(data: SetupField!): User!
+}
