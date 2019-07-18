@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Setup from './setup';
 export default function AshaRouter() {
   return (

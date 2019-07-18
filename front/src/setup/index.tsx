@@ -1,10 +1,10 @@
+import { Field, Form, Formik, FormikProps } from 'formik';
 import * as React from 'react';
-import style from '../../public/style.scss';
-import Started from '../../public/start.svg';
-import { Formik, Field, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import InputLarge from './InputLarge';
+import Started from '../../public/start.svg';
+import style from '../../public/style.scss';
 import Avatar from './Avatar';
+import InputLarge from './InputLarge';
 const Landing = ({ onClick }: any) => (
   <>
     <h1>Make smile manage your content</h1>

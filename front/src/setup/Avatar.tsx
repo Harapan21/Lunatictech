@@ -1,8 +1,7 @@
-import * as React from 'react';
 import { FieldProps } from 'formik';
+import * as React from 'react';
 import style from '../../public/style.scss';
 // import ErrorBox from '../ErrorBox';
-
 import Upload from '../../public/upload.svg';
 
 export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {

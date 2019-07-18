@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
-import Sidebar from './sidebar';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Smile from '../public/Smile.svg';
 import style from '../public/style.scss';
+import Sidebar from './sidebar';
 export default function Layout(props) {
   return (
     <Router>

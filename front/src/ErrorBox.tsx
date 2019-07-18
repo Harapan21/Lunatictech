@@ -6,10 +6,10 @@ interface ErrorBoxProps {
   errorMsg: string;
 }
 
-const ErrorBox = ({errorMsg}: ErrorBoxProps) => {
+const ErrorBox = ({ errorMsg }: ErrorBoxProps) => {
   return (
     <div
-      style={{maxWidth: '230px'}}
+      style={{ maxWidth: '230px' }}
       className={`${style.card} ${style.danger}`}
     >
       <Danger />

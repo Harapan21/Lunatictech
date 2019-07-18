@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { FieldProps } from 'formik';
+import * as React from 'react';
 import style from '../../public/style.scss';
 import ErrorBox from '../ErrorBox';
 
