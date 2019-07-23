@@ -1,0 +1,122 @@
+# create databases is exists or not
+DROP DATABASE IF EXISTS smile;
+CREATE DATABASE smile;
+use smile;
+
+CREATE TABLE usr_smile (
+    user_id CHAR(36) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255),
+    joinAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lastEditedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    fullname VARCHAR(255),
+    password VARCHAR(255) NOT NULL,
+    avatar VARCHAR(255),
+    isAdmin BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (user_id)
+);
+
+
+# create trigger for generete id for user
+# triggered before insert user data
+DELIMITER $$
+	CREATE TRIGGER auto_generate_id
+	before insert
+    on usr_smile
+    FOR EACH ROW 
+    BEGIN
+			SET NEW.user_id = MD5(UUID());
+	END $$
+DELIMITER ;
+
+
+CREATE TABLE post (
+    id INT NOT NULL AUTO_INCREMENT,
+    author_id CHAR(36),
+    title VARCHAR(255),
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content LONGTEXT,
+    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
+    last_edited_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_edited_by CHAR(36),
+    PRIMARY KEY (id),
+    FOREIGN KEY (author_id)
+        REFERENCES usr_smile (user_id)
+        ON DELETE SET NULL
+);
+
+CREATE TABLE embed (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    thumbnail VARCHAR(255) NULL,
+    video LONGTEXT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE rating (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    view INT NOT NULL DEFAULT 0,
+    share INT NOT NULL DEFAULT 0,
+    comment INT NOT NULL DEFAULT 0,
+    video_rate int,
+    PRIMARY KEY (id),
+    FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+
+# push rating after publish post
+DELIMITER $$
+	CREATE TRIGGER push_rating_if_status_publish
+	AFTER  INSERT
+    ON post
+    FOR EACH ROW 
+    BEGIN
+			INSERT INTO rating(postId) VALUES(new.id);
+	END $$
+DELIMITER ;
+
+CREATE TABLE contributor_user (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    contribAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id CHAR(36) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE comment (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    content LONGTEXT,
+    reply BOOLEAN NOT NULL DEFAULT FALSE,
+    reply_for_id INT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (reply_for_id)
+        REFERENCES comment (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+# trigger for increment rating.comment if comment insert to post
+DELIMITER $$
+	CREATE TRIGGER increment_rating_comment
+	AFTER INSERT
+    ON comment
+    FOR EACH ROW 
+    BEGIN
+		UPDATE rating SET comment = ((SELECT comment FROM rating WHERE postid = new.postId) + 1) WHERE postId = new.postId;
+	END $$
+DELIMITER ;
