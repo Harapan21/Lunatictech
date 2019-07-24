@@ -1,0 +1,32 @@
+hash: e7522866a5db1af3853fe86cfd37f6f0ca7568fd233b61197748210049f64805
+updated: 2019-07-25T01:55:35.86896+07:00
+imports:
+- name: github.com/99designs/gqlgen
+  version: b128a29122e8ca8ada5f34cc18338fa7c10fc5b4
+  subpackages:
+  - graphql
+  - graphql/introspection
+- name: github.com/agnivade/levenshtein
+  version: d6649a458d45cfa1349f4e99a866206af865330d
+- name: github.com/dgrijalva/jwt-go
+  version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
+- name: github.com/go-sql-driver/mysql
+  version: 72cd26f257d44c1114970e19afddcd812016007e
+- name: github.com/vektah/gqlparser
+  version: 05741cdb0871330d8bc980d4afd21ab34eceee83
+  subpackages:
+  - ast
+  - gqlerror
+  - lexer
+  - parser
+  - validator
+  - validator/rules
+- name: go.mongodb.org/mongo-driver
+  version: 0d1270edf53072da4da781b76d2e1db58831152f
+  subpackages:
+  - mongo
+- name: google.golang.org/appengine
+  version: b2f4a3cf3c67576a2ee09e1fe62656a5086ce880
+  subpackages:
+  - cloudsql
+testImports: []

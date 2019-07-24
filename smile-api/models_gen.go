@@ -3,61 +3,196 @@
 package smile_api
 
 import (
-	"github.com/99designs/gqlgen/graphql"
+	"fmt"
+	"io"
+	"strconv"
+	"time"
 )
 
+type Auth struct {
+	Login bool   `json:"login"`
+	Token string `json:"token"`
+}
+
 type Comment struct {
-	ID        string     `json:"id"`
-	Comment   string     `json:"comment"`
-	CreatedAt int        `json:"createdAt"`
+	ID        int        `json:"id"`
+	PostID    int        `json:"postId"`
+	Commenter *User      `json:"commenter"`
+	CreatedAt time.Time  `json:"createdAt"`
+	Content   string     `json:"content"`
 	Reply     []*Comment `json:"reply"`
 }
 
-type Comments struct {
-	Node    string     `json:"node"`
-	Total   int        `json:"total"`
-	IsOpen  bool       `json:"isOpen"`
-	Comment []*Comment `json:"comment"`
+type CommentField struct {
+	PostID  int    `json:"postId"`
+	Content string `json:"content"`
+	UserID  string `json:"user_id"`
+	ReplyID *int   `json:"reply_id"`
+}
+
+type ContributorUser struct {
+	ID          int       `json:"id"`
+	ContribAt   time.Time `json:"contribAt"`
+	Contributor *User     `json:"contributor"`
+}
+
+type EditCommentField struct {
+	ID      int    `json:"id"`
+	Content string `json:"content"`
+}
+
+type Embed struct {
+	ID        int     `json:"id"`
+	PostID    int     `json:"postId"`
+	Thumbnail *int    `json:"thumbnail"`
+	Video     *string `json:"video"`
+}
+
+type LoginUser struct {
+	Email    *string `json:"email"`
+	Username *string `json:"username"`
+	Password string  `json:"password"`
 }
 
 type Post struct {
-	ID           string    `json:"id"`
-	Title        string    `json:"title"`
-	Content      *string   `json:"content"`
-	Creator      *User     `json:"creator"`
-	Contributor  []*User   `json:"contributor"`
-	CreatedAt    int       `json:"createdAt"`
-	LastEditedat int       `json:"lastEditedat"`
-	Thumbnail    string    `json:"thumbnail"`
-	LastEdited   *User     `json:"lastEdited"`
-	Rating       *Rating   `json:"rating"`
-	Comments     *Comments `json:"comments"`
+	ID           int                `json:"id"`
+	Author       *User              `json:"author"`
+	Title        string             `json:"title"`
+	CreatedAt    time.Time          `json:"createdAt"`
+	Content      string             `json:"content"`
+	Status       Status             `json:"status"`
+	LastEditedAt *time.Time         `json:"last_edited_at"`
+	LastEditedBy *string            `json:"last_edited_by"`
+	Embed        *Embed             `json:"embed"`
+	Rating       *Rating            `json:"rating"`
+	Contributor  []*ContributorUser `json:"contributor"`
+	Comment      []*Comment         `json:"comment"`
+}
+
+type PostField struct {
+	AuthorID string `json:"author_id"`
+	Title    string `json:"title"`
+	Content  string `json:"content"`
+	Status   Status `json:"status"`
 }
 
 type Rating struct {
-	ID       string `json:"id"`
-	ParentID string `json:"parentID"`
-	Share    int    `json:"share"`
-	Views    int    `json:"views"`
+	ID        int   `json:"id"`
+	Post      *Post `json:"post"`
+	View      int   `json:"view"`
+	Share     int   `json:"share"`
+	Comment   int   `json:"comment"`
+	VideoRate *int  `json:"video_rate"`
 }
 
-type SetupField struct {
-	ID       string         `json:"id"`
-	Name     string         `json:"name"`
-	Email    string         `json:"email"`
-	FullName string         `json:"fullName"`
-	Password string         `json:"password"`
-	IsAdmin  bool           `json:"isAdmin"`
-	Avatar   graphql.Upload `json:"avatar"`
+type RemoveByIDField struct {
+	ID  int        `json:"id"`
+	For DeleteEnum `json:"for"`
 }
 
 type User struct {
-	ID       string  `json:"id"`
-	Name     string  `json:"name"`
+	UserID       string    `json:"user_id"`
+	Username     string    `json:"username"`
+	JoinAt       time.Time `json:"joinAt"`
+	LastEditedAt time.Time `json:"lastEditedAt"`
+	Fullname     string    `json:"fullname"`
+	Password     string    `json:"password"`
+	Avatar       string    `json:"avatar"`
+	IsAdmin      *bool     `json:"isAdmin"`
+	Post         []*Post   `json:"post"`
+}
+
+type UserField struct {
+	ID       *string `json:"id"`
+	Username string  `json:"username"`
 	Email    string  `json:"email"`
-	FullName string  `json:"fullName"`
+	Fullname string  `json:"fullname"`
 	Password string  `json:"password"`
-	Avatar   *string `json:"avatar"`
-	IsAdmin  bool    `json:"isAdmin"`
-	Post     []*Post `json:"post"`
+	Avatar   string  `json:"avatar"`
+}
+
+type DeleteEnum string
+
+const (
+	DeleteEnumUser    DeleteEnum = "user"
+	DeleteEnumComment DeleteEnum = "comment"
+	DeleteEnumPost    DeleteEnum = "post"
+)
+
+var AllDeleteEnum = []DeleteEnum{
+	DeleteEnumUser,
+	DeleteEnumComment,
+	DeleteEnumPost,
+}
+
+func (e DeleteEnum) IsValid() bool {
+	switch e {
+	case DeleteEnumUser, DeleteEnumComment, DeleteEnumPost:
+		return true
+	}
+	return false
+}
+
+func (e DeleteEnum) String() string {
+	return string(e)
+}
+
+func (e *DeleteEnum) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = DeleteEnum(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid DeleteEnum", str)
+	}
+	return nil
+}
+
+func (e DeleteEnum) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Status string
+
+const (
+	StatusPublish Status = "publish"
+	StatusDraft   Status = "draft"
+	StatusHide    Status = "hide"
+)
+
+var AllStatus = []Status{
+	StatusPublish,
+	StatusDraft,
+	StatusHide,
+}
+
+func (e Status) IsValid() bool {
+	switch e {
+	case StatusPublish, StatusDraft, StatusHide:
+		return true
+	}
+	return false
+}
+
+func (e Status) String() string {
+	return string(e)
+}
+
+func (e *Status) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Status(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Status", str)
+	}
+	return nil
+}
+
+func (e Status) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

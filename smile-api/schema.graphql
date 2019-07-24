@@ -1,64 +1,127 @@
-scalar Upload
+scalar Time
+
+enum Status {
+  publish
+  draft
+  hide
+}
 type User {
-  id: ID!
-  name: String!
-  email: String!
-  fullName: String!
+  user_id: ID!
+  username: String!
+  joinAt: Time!
+  lastEditedAt: Time!
+  fullname: String!
   password: String!
-  avatar: String
-  isAdmin: Boolean!
-  post: [Post!]
+  avatar: String!
+  isAdmin: Boolean
+  post: [Post]
 }
 
-type Comment {
-  id: ID!
-  comment: String!
-  createdAt: Int!
-  reply: [Comment]
-}
-
-type Comments {
-  node: ID!
-  total: Int!
-  isOpen: Boolean!
-  comment: [Comment]
+type Embed {
+  id: Int!
+  postId: Int!
+  thumbnail: Int
+  video: String
 }
 
 type Rating {
-  id: ID!
-  parentID: ID!
+  id: Int!
+  post: Post!
+  view: Int!
   share: Int!
-  views: Int!
+  comment: Int!
+  video_rate: Int
+}
+
+type ContributorUser {
+  id: Int!
+  contribAt: Time!
+  contributor: User!
+}
+
+type Comment {
+  id: Int!
+  postId: Int!
+  commenter: User!
+  createdAt: Time!
+  content: String!
+  reply: [Comment]
 }
 
 type Post {
-  id: ID!
+  id: Int!
+  author: User!
   title: String!
-  content: String
-  creator: User!
-  contributor: [User]
-  createdAt: Int!
-  lastEditedat: Int!
-  thumbnail: String!
-  lastEdited: User!
+  createdAt: Time!
+  content: String!
+  status: Status!
+  last_edited_at: Time
+  last_edited_by: String
+  embed: Embed!
   rating: Rating!
-  comments: Comments
+  contributor: [ContributorUser]
+  comment: [Comment]
 }
 
 type Query {
-  posts: [Post!]
+  post: [Post]
+  trending: [Post]
+  author: [User]
 }
 
-input SetupField {
-  id: ID!
-  name: String!
+input UserField {
+  id: ID
+  username: String!
   email: String!
-  fullName: String!
+  fullname: String!
   password: String!
-  isAdmin: Boolean
-  avatar: Upload!
+  avatar: String!
 }
 
+input LoginUser {
+  email: String
+  username: String
+  password: String!
+}
+
+type Auth {
+  login: Boolean!
+  token: String!
+}
+input CommentField {
+  postId: Int!
+  content: String!
+  user_id: ID!
+  reply_id: Int
+}
+input PostField {
+  author_id: ID!
+  title: String!
+  content: String!
+  status: Status!
+}
+input EditCommentField {
+  id: Int!
+  content: String!
+}
+
+enum DeleteEnum {
+  user
+  comment
+  post
+}
+
+input RemoveByIdField {
+  id: Int!
+  for: DeleteEnum!
+}
 type Mutation {
-  register(data: SetupField!): User!
+  UserRegistration(input: UserField!): Auth!
+  LoginUser(input: LoginUser!): Auth!
+  Comment(input: CommentField!): Boolean!
+  Post(input: PostField!): Post!
+  EditUser(Input: UserField!): User!
+  EditPost(input: PostField!): Post!
+  EditComment(input: EditCommentField!): Boolean
+  RemoveById(input: RemoveByIdField): Boolean
 }

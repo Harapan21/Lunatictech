@@ -8,7 +8,7 @@ CREATE TABLE usr_smile (
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255),
     joinAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    lastEditedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    lastEditedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fullname VARCHAR(255),
     password VARCHAR(255) NOT NULL,
     avatar VARCHAR(255),
@@ -37,14 +37,14 @@ CREATE TABLE post (
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
-    last_edited_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
     PRIMARY KEY (id),
     FOREIGN KEY (author_id)
         REFERENCES usr_smile (user_id)
+        ON UPDATE CASCADE
         ON DELETE SET NULL
 );
-
 CREATE TABLE embed (
     id INT NOT NULL AUTO_INCREMENT,
     postId INT NOT NULL,
@@ -55,6 +55,17 @@ CREATE TABLE embed (
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+# push rating after publish post
+DELIMITER $$
+	CREATE TRIGGER push_embed_if_status_publish
+	AFTER  INSERT
+    ON post
+    FOR EACH ROW 
+    BEGIN
+			INSERT INTO embed(postId) VALUES(new.id);
+	END $$
+DELIMITER ;
 
 CREATE TABLE rating (
     id INT NOT NULL AUTO_INCREMENT,
@@ -88,20 +99,38 @@ CREATE TABLE contributor_user (
     contribAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id CHAR(36) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (id)
+    FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+# push contributor if id not equal to author_id
+DELIMITER $$
+	CREATE TRIGGER push_contributor
+	AFTER UPDATE
+    ON post
+    FOR EACH ROW 
+    BEGIN
+		IF (new.last_edited_by != old.author_id) THEN
+			IF NOT EXISTS (SELECT * FROM contributor_user WHERE postId=old.id AND user_id=new.last_edited_by) THEN
+				INSERT INTO contributor_user(postId, user_id) VALUES(old.id, new.last_edited_by);
+			END IF;
+        END IF;
+	END $$
+DELIMITER ;
 
 CREATE TABLE comment (
     id INT NOT NULL AUTO_INCREMENT,
     postId INT NOT NULL,
+    userId CHAR(36),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
     reply BOOLEAN NOT NULL DEFAULT FALSE,
     reply_for_id INT NULL,
     PRIMARY KEY (id),
+    FOREIGN KEY (userId)  
+    REFERENCES usr_smile (user_id)
+		ON UPDATE CASCADE
+        ON DELETE SET NULL,
     FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -109,14 +138,26 @@ CREATE TABLE comment (
         REFERENCES comment (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 # trigger for increment rating.comment if comment insert to post
 DELIMITER $$
 	CREATE TRIGGER increment_rating_comment
 	AFTER INSERT
     ON comment
     FOR EACH ROW 
-    BEGIN
-		UPDATE rating SET comment = ((SELECT comment FROM rating WHERE postid = new.postId) + 1) WHERE postId = new.postId;
+    BEGIN	
+		DECLARE old_rating INT;
+        SET old_rating = (SELECT comment FROM rating WHERE postid = new.postId) + 1;
+		UPDATE rating SET comment = old_rating WHERE postId = new.postId;
+	END $$
+DELIMITER ;
+DELIMITER $$
+	CREATE TRIGGER decrement_rating_comment
+	BEFORE DELETE
+    ON comment
+    FOR EACH ROW 
+    BEGIN	
+		DECLARE old_rating INT;
+        SET old_rating = (SELECT comment FROM rating WHERE postid = old.postId) - 1;
+		UPDATE rating SET comment = old_rating WHERE postId = old.postId;
 	END $$
 DELIMITER ;

@@ -1,6 +1,14 @@
 version: '3.7'
 
 services:
+  no_sql:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Smile:)00
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
