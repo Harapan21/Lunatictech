@@ -70,7 +70,6 @@ type Query {
 }
 
 input UserField {
-  id: ID
   username: String!
   email: String!
   fullname: String!
@@ -79,8 +78,7 @@ input UserField {
 }
 
 input LoginUser {
-  email: String
-  username: String
+  username: String!
   password: String!
 }
 
@@ -100,21 +98,24 @@ input PostField {
   content: String!
   status: Status!
 }
+
 input EditCommentField {
   id: Int!
   content: String!
 }
 
-enum DeleteEnum {
+enum genericEnum {
   user
   comment
   post
 }
-
-input RemoveByIdField {
-  id: Int!
-  for: DeleteEnum!
+enum genericOptionEnum {
+  remove
+  find
 }
+
+union DoingByIdUnion = Comment | User | Post
+
 type Mutation {
   UserRegistration(input: UserField!): Auth!
   LoginUser(input: LoginUser!): Auth!
@@ -123,5 +124,9 @@ type Mutation {
   EditUser(Input: UserField!): User!
   EditPost(input: PostField!): Post!
   EditComment(input: EditCommentField!): Boolean
-  RemoveById(input: RemoveByIdField): Boolean
+  DoingByIdMut(
+    id: ID!
+    for: genericEnum!
+    to: genericOptionEnum!
+  ): DoingByIdUnion
 }

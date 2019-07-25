@@ -30,6 +30,16 @@ SET
 WHERE
     `user_id` = 'd0c2499c48dc906b7538a36fe9773ec2';
 
+UPDATE `smile`.`usr_smile`
+SET
+`user_id` = <{user_id: }>,
+`username` = <{username: }>,
+`email` = <{email: }>,
+`fullname` = <{fullname: }>,
+`password` = <{password: }>,
+`avatar` = <{avatar: }>,
+`isAdmin` = <{isAdmin: 0}>
+WHERE `user_id` = <{expr}>;
 
 # push posting by author_id ( user id )
 INSERT INTO `smile`.`post`
@@ -117,5 +127,11 @@ FROM
 
 DELETE FROM `smile`.`comment`
 WHERE id=3;
+UPDATE `smile`.`comment`
+SET
+`content` = <{content: }>,
+`reply_for_id` = <{reply_for_id: }>
+WHERE `id` = <{expr}>;
+
 
 
