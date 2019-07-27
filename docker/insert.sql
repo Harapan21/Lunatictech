@@ -23,7 +23,7 @@ SELECT
     *
 FROM
     smile.usr_smile;
-
+TRUNCATE TABLE usr_smile;
 UPDATE `smile`.`usr_smile` 
 SET 
     `email` = 'harapanpardamean@gmail.net'
