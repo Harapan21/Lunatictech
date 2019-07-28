@@ -2,7 +2,6 @@ package resolver
 
 import (
 	"context"
-
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/harapan21/Smile/smile"
 	"github.com/harapan21/Smile/smile/db"
@@ -12,6 +11,7 @@ import (
 
 // Resolver THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
 type Resolver struct {
+	posts []*models.Post
 }
 
 // Mutation for mutation
@@ -41,10 +41,14 @@ func (r *mutationResolver) LoginUser(ctx context.Context, input models.LoginUser
 	return auth, err
 }
 func (r *mutationResolver) Comment(ctx context.Context, input models.CommentField) (bool, error) {
-	panic("not implemented")
+	return false, nil
 }
 func (r *mutationResolver) Post(ctx context.Context, input models.PostField) (bool, error) {
-	panic("not implemented")
+	isPost, err := db.InserPost(&input)
+	if err != nil {
+		graphql.AddError(ctx, gqlerror.Errorf("failed Post"))
+	}
+	return isPost, nil
 }
 func (r *mutationResolver) EditUser(ctx context.Context, input models.UserField) (*models.User, error) {
 	panic("not implemented")

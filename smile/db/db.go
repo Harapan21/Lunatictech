@@ -9,10 +9,13 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	// import models from models
-	"github.com/harapan21/Smile/smile/models"
+	models "github.com/harapan21/Smile/smile/models"
 
 	// import jwt
 	"github.com/dgrijalva/jwt-go"
+
+	// import resolver
+	resolver "github.com/harapan21/Smile/smile/resolver"
 )
 
 const (
@@ -151,4 +154,21 @@ func InserPost(post *models.PostField) (bool, error) {
 	defer prepare.Close()
 	prepare.Exec(post.AuthorID, post.Title, post.Content, post.Status)
 	return true, nil
+}
+// GetPost function push to posts resolver
+func (r *resolver.queryResolver) GetPost() ([]*PostDB, error) {
+	db := dbConn()
+	defer db.Close()
+	result, err := db.Query("SELECT * FROM post limit 10")
+	if err != nil {
+		fmt.Println("error di getPost")
+	}
+	for result.Next() {
+		var post PostDB
+		err := result.Scan(&post.)
+		if err != nil {
+			fmt.Println("error in scan")
+		}
+	}
+	return false, err
 }
