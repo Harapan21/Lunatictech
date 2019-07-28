@@ -9,13 +9,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	// import models from models
-	models "github.com/harapan21/Smile/smile/models"
+	"github.com/harapan21/Smile/smile/models"
 
 	// import jwt
 	"github.com/dgrijalva/jwt-go"
-
 	// import resolver
-	resolver "github.com/harapan21/Smile/smile/resolver"
 )
 
 const (
@@ -155,6 +153,7 @@ func InserPost(post *models.PostField) (bool, error) {
 	prepare.Exec(post.AuthorID, post.Title, post.Content, post.Status)
 	return true, nil
 }
+
 // GetPost function push to posts resolver
 func (r *resolver.queryResolver) GetPost() ([]*PostDB, error) {
 	db := dbConn()
@@ -165,10 +164,33 @@ func (r *resolver.queryResolver) GetPost() ([]*PostDB, error) {
 	}
 	for result.Next() {
 		var post PostDB
-		err := result.Scan(&post.)
+		err := result.Scan(&post.ID, &post.AuthorID, &post.Title, &post.CreatedAt, &post.Content, &post.Status, &post.LastEditedAt, &post.LastEditedBy)
 		if err != nil {
 			fmt.Println("error in scan")
 		}
+		r.posts = append(r.posts, post)
 	}
-	return false, err
+	return r.posts, err
+}
+
+func (r *resolver.queryResolver) FindByID(input *models.GenericInput) ([]*models.Comment, error) {
+	db := dbConn()
+	defer db.Close()
+	switch input.For {
+	case models.GenericEnumUser:
+		var user models.User
+		err := db.QueryRow("SELECT * FROM usr_smile WHERE user_id=?", input.ID).Scan(&user.UserID, &user.Username, &user.JoinAt, &user.LastEditedAt, &user.Fullname, &user.Password, &user.Avatar, &user.IsAdmin)
+	case models.GenericEnumPost:
+		var post models.Post
+		err := db.QueryRow("SELECT * FROM post WHERE id=?", input.ID).Scan()
+	case models.GenericEnumComment:
+		err := db.QueryRow("SELECT * FROM comment WHERE id=?", input.ID).Scan()
+	default:
+		query = ""
+	}
+
+	if err != nil {
+		panic(err.Error())
+	}
+	return false, nil
 }

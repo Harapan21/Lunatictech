@@ -2,6 +2,7 @@ package resolver
 
 import (
 	"context"
+
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/harapan21/Smile/smile"
 	"github.com/harapan21/Smile/smile/db"
@@ -11,7 +12,7 @@ import (
 
 // Resolver THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
 type Resolver struct {
-	posts []*models.Post
+	posts []*db.PostDB
 }
 
 // Mutation for mutation
