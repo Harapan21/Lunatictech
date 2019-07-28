@@ -42,6 +42,7 @@ func (r *mutationResolver) LoginUser(ctx context.Context, input models.LoginUser
 	return auth, err
 }
 func (r *mutationResolver) Comment(ctx context.Context, input models.CommentField) (bool, error) {
+	
 	return false, nil
 }
 func (r *mutationResolver) Post(ctx context.Context, input models.PostField) (bool, error) {
@@ -64,7 +65,7 @@ func (r *mutationResolver) RemoveByID(ctx context.Context, input *models.Generic
 	panic("not implemented")
 }
 func (r *mutationResolver) FindByID(ctx context.Context, input *models.GenericInput) (*bool, error) {
-	panic("not implemented")
+	
 }
 
 type queryResolver struct{ *Resolver }
