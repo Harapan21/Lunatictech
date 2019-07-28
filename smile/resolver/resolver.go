@@ -7,6 +7,7 @@ import (
 	"github.com/harapan21/Smile/smile"
 	"github.com/harapan21/Smile/smile/db"
 	"github.com/harapan21/Smile/smile/models"
+	"github.com/vektah/gqlparser/gqlerror"
 )
 
 // Resolver THIS CODE IS A STARTING POINT ONLY. IT WILL NOT BE UPDATED WITH SCHEMA CHANGES.
@@ -27,16 +28,15 @@ type mutationResolver struct{ *Resolver }
 
 func (r *mutationResolver) UserRegistration(ctx context.Context, input models.UserField) (*models.Auth, error) {
 	auth, err := db.InsertQuery(&input)
-
 	if err != nil {
-		graphql.AddErrorf(ctx, "error in UserRegistration %d", 1)
+		graphql.AddError(ctx, gqlerror.Errorf("failed Registration"))
 	}
 	return auth, nil
 }
 func (r *mutationResolver) LoginUser(ctx context.Context, input models.LoginUser) (*models.Auth, error) {
 	auth, err := db.LoginQuery(&input)
 	if err != nil {
-		graphql.AddErrorf(ctx, "error in LoginUser %d", 1)
+		graphql.AddError(ctx, gqlerror.Errorf("failed Login"))
 	}
 	return auth, err
 }

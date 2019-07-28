@@ -50,6 +50,7 @@ func InsertQuery(user *models.UserField) (*models.Auth, error) {
 	}
 	defer prepare.Close()
 	prepare.Exec(user.Username, user.Email, user.Fullname, user.Password, user.Avatar)
+
 	userLoginPayload := &models.LoginUser{
 		Username: user.Username,
 		Password: user.Password,
@@ -60,7 +61,6 @@ func InsertQuery(user *models.UserField) (*models.Auth, error) {
 // LoginQuery login query to mysql db
 func LoginQuery(user *models.LoginUser) (*models.Auth, error) {
 	db := dbConn()
-
 	defer db.Close()
 	var result string
 	err := db.QueryRow("SELECT user_id FROM usr_smile WHERE username=? AND password=?", user.Username, user.Password).Scan(&result)
@@ -121,4 +121,34 @@ func ParseJwtTokenReturnID(token string) (string, error) {
 	}
 
 	return claims.ID, nil
+}
+
+// InsertComment func to insert comment to db
+func InsertComment(comment *models.CommentField) (bool, error) {
+	db := dbConn()
+	defer db.Close()
+	prepare, err := db.Prepare("INSERT comment(postId, content,userId) VALUES(?,?,?)")
+	if err != nil {
+		fmt.Println("error di insert comment")
+		return false, err
+	}
+	defer prepare.Close()
+	fmt.Println(comment.ReplyID)
+	prepare.Exec(comment.PostID, comment.Content, comment.UserID)
+
+	return true, nil
+}
+
+// InserPost func to insert comment to db
+func InserPost(post *models.PostField) (bool, error) {
+	db := dbConn()
+	defer db.Close()
+	prepare, err := db.Prepare("INSERT post(author_id, title,content,status) VALUES(?,?,?,?)")
+	if err != nil {
+		fmt.Println("errror di insert post")
+		return false, err
+	}
+	defer prepare.Close()
+	prepare.Exec(post.AuthorID, post.Title, post.Content, post.Status)
+	return true, nil
 }
