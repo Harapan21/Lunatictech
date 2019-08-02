@@ -1,10 +1,12 @@
 const { ApolloServer } = require("apollo-server")
+const { InMemoryCache } = require('apollo-cache-inmemory')
 const typeDefs = require("./schema")
 const resolvers = require("./resolvers")
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    cache: new InMemoryCache()
 })
 
 server

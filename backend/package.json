@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "parcel": "parcel src/index.js",
     "start": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-cache-inmemory": "^1.6.2",
     "apollo-server": "^2.8.0",
     "bcrypt": "^3.0.6",
     "dotenv": "^8.0.0",

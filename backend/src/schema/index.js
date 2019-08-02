@@ -10,8 +10,8 @@ const typeDefs = gql`
     type Mutation {
         daftar(input: UserField!): Auth!
         login(input: LoginUser!): Auth!
-        Comment(input: CommentField!): Boolean!
-        Post(input: PostField!): Boolean!
+        comment(input: CommentField!): Boolean!
+        post(input: PostField!): Boolean!
         EditUser(Input: UserField!): User!
         EditPost(input: PostField!): Post!
         EditComment(input: EditCommentField!): Boolean

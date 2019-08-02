@@ -2,23 +2,25 @@ const fs = require('fs')
 // handle database
 // doc : https://sequelize.org/master/
 const Sequelize = require('sequelize');
-// import jeson web token
+
+// jwt
+// import json web token
 // doc : https://www.npmjs.com/package/jsonwebtoken
 const jwt = require('jsonwebtoken');
-
-const db = process.env.PRODUCTION ? 'db' : 'localhost';
-
 const privateKEY = fs.readFileSync(__dirname + '/key/private.key', 'utf8');
 const publicKEY = fs.readFileSync(__dirname + '/key/public.key', 'utf8');
+
 const signOption = {
     expiresIn: '1d',
     algorithm: 'RS256'
 }
+// /jwt
 const sequelize = new Sequelize('smile', 'root', 'Smile:)00', {
-    host: db,
+    host: "localhost",
     dialect: 'mysql'
 });
 
+// models
 const Comment = sequelize.import('./models/comment');
 const ContributorUser = sequelize.import('./models/contributor_user');
 const Embed = sequelize.import('./models/embed');
@@ -37,12 +39,6 @@ async function RegisterUser({ username, password, ...rest }) {
             fields: ["username", "email", "fullname", "password", "avatar"]
         }
     )
-    if (!user) {
-        return {
-            login: false,
-            token: ""
-        }
-    }
     return Login(username, password)
 }
 
