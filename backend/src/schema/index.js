@@ -14,11 +14,15 @@ const typeDefs = gql`
         post(input: PostField!): Boolean!
         EditUser(Input: UserField!): User!
         EditPost(input: PostField!): Post!
-        EditComment(input: EditCommentField!): Boolean
-        RemoveByID(input: genericInput): Boolean
-        FindByID(input: genericInput): Boolean
+        EditComment(input: EditCommentField!): Boolean!
+        RemoveByID(input: genericInput): Boolean!
+        FindByID(input: genericInput): Boolean!
+        validation(username:String email: String): Validation!
     }
-
+    type Validation {
+        username: Boolean
+        email: Boolean
+    }
     enum Status {
         publish
         draft
@@ -27,6 +31,7 @@ const typeDefs = gql`
     type User {
         user_id: ID!
         username: String!
+        email: String!
         joinAt: Date!
         lastEditedAt: Date!
         fullname: String!
@@ -96,7 +101,7 @@ const typeDefs = gql`
 
     type Auth {
         login: Boolean!
-        token: String!
+        token: String
     }
     input CommentField {
         postId: Int!
@@ -105,7 +110,6 @@ const typeDefs = gql`
         reply_id: Int
     }
     input PostField {
-        author_id: ID!
         title: String!
         content: String!
         status: Status!

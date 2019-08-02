@@ -6,7 +6,7 @@ use smile;
 CREATE TABLE usr_smile (
     user_id CHAR(36) NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255),
+    email VARCHAR(255)  UNIQUE,
     joinAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     lastEditedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fullname VARCHAR(255),

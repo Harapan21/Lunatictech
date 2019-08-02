@@ -36,10 +36,45 @@ async function RegisterUser({ username, password, ...rest }) {
             ...rest
         },
         {
+            validation: true,
             fields: ["username", "email", "fullname", "password", "avatar"]
         }
     )
+    if (!user) {
+        return {
+            login: false,
+            token: null
+        }
+    }
     return Login(username, password)
+}
+
+
+async function isValid(usernameField, emailField) {
+    const isUsername = usernameField != undefined ? await User.findAndCountAll({ where: { username: usernameField } }).then(({ count }) => count > 0) : false
+    const isEmail = emailField != undefined ? await User.findAndCountAll({ where: { email: emailField } }).then(({ count }) => count > 0) : false
+
+    return {
+        username: isUsername,
+        email: isEmail
+    }
+}
+
+async function getMe(id) {
+    const user = await User.findOne({
+        where: {
+            user_id: id
+        }
+    })
+    const post = await Post.findAll({
+        where: {
+            author_id: id
+        }
+    })
+    return {
+        ...user.dataValues,
+        post: [...post]
+    }
 }
 
 async function Login(username, password) {
@@ -49,6 +84,12 @@ async function Login(username, password) {
             password
         }
     })
+    if (!user_id || user_id === undefined) {
+        return {
+            login: false,
+            token: null
+        }
+    }
     const auth = Auth(user_id)
     return auth
 }
@@ -62,5 +103,19 @@ function Auth(id) {
     }
     return auth
 }
+function VerifyAuth(token) {
+    const parse = jwt.verify(token, publicKEY)
+    return parse
+}
 
-module.exports = { Login, RegisterUser };
+
+function inputPost(post, id) {
+    return Post.create({
+        author_id: id,
+        ...post
+    }).then((post, created) => {
+        console.log(post, created)
+        return true
+    })
+}
+module.exports = { Login, RegisterUser, isValid, VerifyAuth, getMe, inputPost };
