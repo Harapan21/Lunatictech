@@ -16,8 +16,18 @@ const typeDefs = gql`
     EditPost(postId: Int!, input: PostField!): EditPost!
     EditComment(commentId: Int!, content: String!): Boolean!
     RemoveByID(input: genericInput): Boolean!
-    FindByID(input: genericInput): Boolean!
     validation(username: String, email: String): Validation!
+  }
+
+  input genericInput {
+    id: ID!
+    for: genericEnum!
+  }
+
+  enum genericEnum {
+    user
+    comment
+    post
   }
   type Validation {
     username: Boolean
@@ -110,24 +120,12 @@ const typeDefs = gql`
   input CommentField {
     postId: Int!
     content: String!
-    userId: ID!
     reply_for_id: Int
   }
   input PostField {
     title: String
     content: String
     status: Status
-  }
-
-  enum genericEnum {
-    user
-    comment
-    post
-  }
-
-  input genericInput {
-    id: ID!
-    for: genericEnum!
   }
 `;
 module.exports = typeDefs;

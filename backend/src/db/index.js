@@ -162,9 +162,10 @@ function inputPost(post, id) {
   });
 }
 
-function inputComment(comment) {
+function inputComment(comment, userId) {
   return Comment.create({
-    ...comment
+    ...comment,
+    userId
   }).then(() => {
     return true;
   });
@@ -232,6 +233,51 @@ async function setComment(commentId, content, id) {
   ).then(() => true);
 }
 
+async function removeByID(input, authId) {
+  switch (input.for) {
+    case 'user':
+      if (input.id === authId) {
+        return User.destroy({
+          where: {
+            user_id: input.id
+          }
+        }).then(() => true);
+      }
+      return false;
+    case 'comment':
+      const { userId } = await getCommentByID(input.id);
+      if (userId === authId) {
+        return Comment.destroy({
+          where: {
+            id: input.id
+          }
+        }).then(() => true);
+      }
+      return false;
+    case 'post':
+      const { author_id } = await getPostByID(input.id);
+      if (author_id === authId) {
+        return Post.destroy({
+          where: {
+            id: input.id
+          }
+        }).then(() => true);
+      }
+      return false;
+    default:
+      return false;
+  }
+}
+
+function getContributor(postId) {
+  const contrib = ContributorUser.findAll({
+    where: {
+      postId
+    }
+  });
+  return [...contrib];
+}
+
 module.exports = {
   Login,
   RegisterUser,
@@ -247,5 +293,7 @@ module.exports = {
   getCommentByParentID,
   setUser,
   setPost,
-  setComment
+  setComment,
+  removeByID,
+  getContributor
 };

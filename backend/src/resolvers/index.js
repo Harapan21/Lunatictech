@@ -12,7 +12,9 @@ const {
   getCommentByParentID,
   setUser,
   setPost,
-  setComment
+  setComment,
+  removeByID,
+  getContributor
 } = require('../db/index');
 
 module.exports = {
@@ -39,6 +41,16 @@ module.exports = {
     comments: (parent, _) => {
       const comments = getCommentByParentID(parent.id);
       return comments;
+    },
+    contributor: (parent, _) => {
+      const contrib = getContributor(parent.postId);
+      return contrib;
+    }
+  },
+  ContributorUser: {
+    contributor: (parent, _) => {
+      const profil = getUserByID(parent.user_id);
+      return profil
     }
   },
   Rating: {
@@ -73,7 +85,7 @@ module.exports = {
     post: (_, { input }, _context) => {
       return inputPost(input, _context.id);
     },
-    postcomment: (_, { input }) => {
+    postcomment: (_, { input }, _context) => {
       return inputComment(input);
     },
     EditUser: (_, { input }, _context) => {
@@ -84,6 +96,7 @@ module.exports = {
     },
     EditComment: (_, { commentId, content }, _context) => {
       return setComment(commentId, content, _context.id);
-    }
+    },
+    RemoveByID: (_, { input }, _context) => removeByID(input, _context.id)
   }
 };
