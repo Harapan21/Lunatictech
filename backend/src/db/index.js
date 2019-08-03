@@ -183,21 +183,22 @@ function setUser(input, id) {
   ).then(() => true);
 }
 
-function setPost(id, input, authId) {
-  if (authId != id) {
+async function setPost(postId, input, authId) {
+  const find = await getPostByID(postId);
+  if (authId != find.author_id) {
     return {
       access: false,
       success: true
     };
   } else {
-    User.update(
+    return Post.update(
       {
         ...input,
         last_edited_by: authId
       },
       {
         where: {
-          id
+          id: postId
         }
       }
     ).then(() => ({
