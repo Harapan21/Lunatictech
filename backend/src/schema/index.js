@@ -14,7 +14,7 @@ const typeDefs = gql`
     post(input: PostField!): Boolean!
     EditUser(input: UserField!): Boolean!
     EditPost(postId: Int!, input: PostField!): EditPost!
-    EditComment(input: EditCommentField!): Boolean!
+    EditComment(commentId: Int!, content: String!): Boolean!
     RemoveByID(input: genericInput): Boolean!
     FindByID(input: genericInput): Boolean!
     validation(username: String, email: String): Validation!
@@ -111,17 +111,12 @@ const typeDefs = gql`
     postId: Int!
     content: String!
     userId: ID!
-    reply_id: Int
+    reply_for_id: Int
   }
   input PostField {
     title: String
     content: String
     status: Status
-  }
-
-  input EditCommentField {
-    id: Int!
-    content: String!
   }
 
   enum genericEnum {

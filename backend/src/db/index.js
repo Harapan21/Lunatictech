@@ -184,8 +184,8 @@ function setUser(input, id) {
 }
 
 async function setPost(postId, input, authId) {
-  const find = await getPostByID(postId);
-  if (authId != find.author_id) {
+  const { author_id } = await getPostByID(postId);
+  if (authId != author_id) {
     return {
       access: false,
       success: true
@@ -207,6 +207,31 @@ async function setPost(postId, input, authId) {
     }));
   }
 }
+async function getCommentByID(id) {
+  const comments = await Comment.findOne({
+    where: {
+      id
+    }
+  });
+  return comments;
+}
+async function setComment(commentId, content, id) {
+  const { userId } = await getCommentByID(commentId);
+  if (userId !== id) {
+    return false;
+  }
+  return Comment.update(
+    {
+      content
+    },
+    {
+      where: {
+        id: commentId
+      }
+    }
+  ).then(() => true);
+}
+
 module.exports = {
   Login,
   RegisterUser,
@@ -221,5 +246,6 @@ module.exports = {
   getPostByID,
   getCommentByParentID,
   setUser,
-  setPost
+  setPost,
+  setComment
 };

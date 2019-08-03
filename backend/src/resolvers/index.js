@@ -11,7 +11,8 @@ const {
   getPostByID,
   getCommentByParentID,
   setUser,
-  setPost
+  setPost,
+  setComment
 } = require('../db/index');
 
 module.exports = {
@@ -80,6 +81,9 @@ module.exports = {
     },
     EditPost: (_, { postId, input }, _context) => {
       return setPost(postId, input, _context.id);
+    },
+    EditComment: (_, { commentId, content }, _context) => {
+      return setComment(commentId, content, _context.id);
     }
   }
 };
