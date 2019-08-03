@@ -21,7 +21,7 @@ const {
 module.exports = {
   Query: {
     me: async (_, __, _context) => {
-      if (_context) {
+      if (!_context.id) {
         return null;
       }
       const { dataValues } = await getMe(_context.id);

@@ -7,8 +7,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    const auth = (req.headers && VerifyAuth(req.headers.token)) || '';
-    return auth;
+    const auth = req.headers ? VerifyAuth(req.headers.token) : '';
+    console.log(auth);
+    return ' ';
   }
 });
 
