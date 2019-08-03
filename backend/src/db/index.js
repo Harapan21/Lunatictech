@@ -61,21 +61,58 @@ async function isValid(usernameField, emailField) {
 }
 
 async function getMe(id) {
-    const user = await User.findOne({
-        where: {
-            user_id: id
-        }
-    })
+    const user = await getUserByID(id)
     const post = await Post.findAll({
         where: {
             author_id: id
         }
     })
     return {
-        ...user.dataValues,
+        ...user,
         post: [...post]
     }
 }
+
+async function getPostByID(id) {
+    const { dataValues } = await Post.findOne({
+        where: {
+            id
+        }
+    })
+    return dataValues
+}
+
+async function getPost() {
+    return await Post.findAll()
+}
+
+async function getUserByID(id) {
+    const { dataValues } = await User.findOne({
+        where: {
+            user_id: id
+        }
+    })
+    return dataValues
+}
+
+async function getRatingByParentID(postId) {
+    const { dataValues } = await Rating.findOne({
+        where: {
+            postId
+        }
+    })
+    return dataValues
+}
+
+async function getCommentByParentID(id) {
+    const comments = await Comment.findAll({
+        where: {
+            postId: id
+        }
+    })
+    return comments
+}
+
 
 async function Login(username, password) {
     const { user_id } = await User.findOne({
@@ -113,9 +150,18 @@ function inputPost(post, id) {
     return Post.create({
         author_id: id,
         ...post
-    }).then((post, created) => {
-        console.log(post, created)
+    }).then(() => {
         return true
     })
 }
-module.exports = { Login, RegisterUser, isValid, VerifyAuth, getMe, inputPost };
+
+function inputComment(comment) {
+    return Comment.create({
+        ...comment
+    }).then(() => {
+        return true
+    })
+}
+
+
+module.exports = { Login, RegisterUser, isValid, VerifyAuth, getMe, inputPost, getUserByID, inputComment, getPost, getRatingByParentID, getPostByID, getCommentByParentID };

@@ -3,14 +3,14 @@ const typeDefs = gql`
     scalar Date
     type Query {
         me: User
-        post: [Post]
+        posts: [Post]
         trending: [Post]
         author: [User]
     }
     type Mutation {
         daftar(input: UserField!): Auth!
         login(input: LoginUser!): Auth!
-        comment(input: CommentField!): Boolean!
+        postcomment(input: CommentField!): Boolean!
         post(input: PostField!): Boolean!
         EditUser(Input: UserField!): User!
         EditPost(input: PostField!): Post!
@@ -84,7 +84,7 @@ const typeDefs = gql`
         embed: Embed!
         rating: Rating!
         contributor: [ContributorUser]
-        comment: [Comment]
+        comments: [Comment]
     }
     input UserField {
         username: String!
@@ -106,7 +106,7 @@ const typeDefs = gql`
     input CommentField {
         postId: Int!
         content: String!
-        user_id: ID!
+        userId: ID!
         reply_id: Int
     }
     input PostField {

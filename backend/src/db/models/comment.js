@@ -1,11 +1,12 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('comment', {
     id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-      primaryKey: true
+      autoIncrement: true,
+      primaryKey: true,
     },
     postId: {
       type: DataTypes.INTEGER(11),
@@ -46,6 +47,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    tableName: 'comment'
-  });
+      timestamps: false,
+      tableName: 'comment'
+    });
 };
