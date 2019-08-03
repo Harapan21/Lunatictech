@@ -14,20 +14,29 @@ const {
   setPost,
   setComment,
   removeByID,
-  getContributor
+  getContributor,
+  getAllPostByAuthorID
 } = require('../db/index');
 
 module.exports = {
   Query: {
     me: async (_, __, _context) => {
-      const me = await getMe(_context.id);
-      return me;
+      if (_context) {
+        return null;
+      }
+      const { dataValues } = await getMe(_context.id);
+      return dataValues;
     },
     posts: () => {
       const post = getPost();
       return post;
     },
     trending: () => {}
+  },
+  User: {
+    post: (parent, _) => {
+      return getAllPostByAuthorID(parent.user_id);
+    }
   },
   Post: {
     author: (parent, _) => {
@@ -48,9 +57,9 @@ module.exports = {
     }
   },
   ContributorUser: {
-    contributor: (parent, _) => {
-      const profil = getUserByID(parent.user_id);
-      return profil
+    contributor: async (parent, _) => {
+      const profil = await getUserByID(parent.user_id);
+      return profil;
     }
   },
   Rating: {
@@ -60,8 +69,9 @@ module.exports = {
     }
   },
   Comment: {
-    commenter: (parent, _) => {
-      const user = getUserByID(parent.userId);
+    commenter: async (parent, _) => {
+      console.log(parent.userId);
+      const user = await getUserByID(parent.userId);
       return user;
     },
     reply: (parent, _) => {
@@ -86,7 +96,7 @@ module.exports = {
       return inputPost(input, _context.id);
     },
     postcomment: (_, { input }, _context) => {
-      return inputComment(input);
+      return inputComment(input, _context.id);
     },
     EditUser: (_, { input }, _context) => {
       return setUser(input, _context.id);

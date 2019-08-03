@@ -90,18 +90,25 @@ async function getPostByID(id) {
   });
   return dataValues;
 }
-
+async function getAllPostByAuthorID(author_id) {
+  const posts = await Post.findAll({
+    where: {
+      author_id
+    }
+  });
+  return posts;
+}
 async function getPost() {
   return await Post.findAll();
 }
 
 async function getUserByID(id) {
-  const { dataValues } = await User.findOne({
+  const user = await User.findOne({
     where: {
       user_id: id
     }
   });
-  return dataValues;
+  return user;
 }
 
 async function getRatingByParentID(postId) {
@@ -295,5 +302,6 @@ module.exports = {
   setPost,
   setComment,
   removeByID,
-  getContributor
+  getContributor,
+  getAllPostByAuthorID
 };
