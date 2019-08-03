@@ -12,8 +12,8 @@ const typeDefs = gql`
         login(input: LoginUser!): Auth!
         postcomment(input: CommentField!): Boolean!
         post(input: PostField!): Boolean!
-        EditUser(Input: UserField!): User!
-        EditPost(input: PostField!): Post!
+        EditUser(input: UserField!): Boolean!
+        EditPost(input: PostField!): Boolean!
         EditComment(input: EditCommentField!): Boolean!
         RemoveByID(input: genericInput): Boolean!
         FindByID(input: genericInput): Boolean!
@@ -27,6 +27,10 @@ const typeDefs = gql`
         publish
         draft
         hide
+    }
+    type EditPost {
+        access: Boolean!
+        success: Boolean!
     }
     type User {
         user_id: ID!
@@ -87,11 +91,11 @@ const typeDefs = gql`
         comments: [Comment]
     }
     input UserField {
-        username: String!
-        email: String!
-        fullname: String!
-        password: String!
-        avatar: String!
+        username: String
+        email: String
+        fullname: String
+        password: String
+        avatar: String
     }
 
     input LoginUser {
@@ -110,6 +114,7 @@ const typeDefs = gql`
         reply_id: Int
     }
     input PostField {
+        id: Int!
         title: String!
         content: String!
         status: Status!

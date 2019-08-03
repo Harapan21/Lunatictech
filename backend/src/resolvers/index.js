@@ -1,4 +1,4 @@
-const { Login, RegisterUser, isValid, getMe, inputPost, getUserByID, inputComment, getPost, getRatingByParentID, getPostByID, getCommentByParentID } = require("../db/index")
+const { Login, RegisterUser, isValid, getMe, inputPost, getUserByID, inputComment, getPost, getRatingByParentID, getPostByID, getCommentByParentID, setUser, setPost } = require("../db/index")
 
 module.exports = {
     Query: {
@@ -9,6 +9,9 @@ module.exports = {
         posts: () => {
             const post = getPost()
             return post
+        },
+        trending: () => {
+
         }
     },
     Post: {
@@ -59,6 +62,12 @@ module.exports = {
         },
         postcomment: (_, { input }) => {
             return inputComment(input)
+        },
+        EditUser: (_, { input }, _context) => {
+            return setUser(input, _context.id)
+        },
+        EditPost: (_, { input }, _context) => {
+            return setPost(postId, input, _context.id)
         }
     }
 }
