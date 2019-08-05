@@ -15,13 +15,13 @@ const {
   setComment,
   removeByID,
   getContributor,
-  getAllPostByAuthorID
+  getAllPostByAuthorID,
+  getEmbed
 } = require('../db/index');
 
 module.exports = {
   Query: {
     me: async (_, __, _context) => {
-      console.log(_context)
       if (!_context.id) {
         return null;
       }
@@ -53,9 +53,10 @@ module.exports = {
       return comments;
     },
     contributor: (parent, _) => {
-      const contrib = getContributor(parent.postId);
+      const contrib = getContributor(parent.id);
       return contrib;
-    }
+    },
+    embed: (parent, _) => getEmbed(parent.id)
   },
   ContributorUser: {
     contributor: async (parent, _) => {
@@ -71,7 +72,6 @@ module.exports = {
   },
   Comment: {
     commenter: async (parent, _) => {
-      console.log(parent.userId);
       const user = await getUserByID(parent.userId);
       return user;
     },

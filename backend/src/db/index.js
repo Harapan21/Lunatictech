@@ -9,12 +9,13 @@ const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
 const privateKEY = fs.readFileSync(__dirname + '/key/private.key', 'utf8');
 const publicKEY = fs.readFileSync(__dirname + '/key/public.key', 'utf8');
-
 const signOption = {
   expiresIn: '1d',
   algorithm: 'RS256'
 };
 // /jwt
+
+//db
 const sequelize = new Sequelize('smile', 'root', 'Smile:)00', {
   host: 'localhost',
   dialect: 'mysql'
@@ -156,11 +157,11 @@ function Auth(id) {
   return auth;
 }
 function VerifyAuth(token) {
-  const parse = jwt.verify(token, publicKEY, (err,decoded)=> {
-    if(!err) {
-      return decoded
+  const parse = jwt.verify(token, publicKEY, (err, decoded) => {
+    if (!err) {
+      return decoded;
     }
-    return
+    return;
   });
   return parse;
 }
@@ -281,13 +282,20 @@ async function removeByID(input, authId) {
   }
 }
 
-function getContributor(postId) {
-  const contrib = ContributorUser.findAll({
+async function getContributor(postId) {
+  return await ContributorUser.findAll({
     where: {
       postId
     }
   });
-  return [...contrib];
+}
+
+function getEmbed(postId) {
+  return Embed.findOne({
+    where: {
+      postId
+    }
+  }).then(embed => embed);
 }
 
 module.exports = {
@@ -308,5 +316,6 @@ module.exports = {
   setComment,
   removeByID,
   getContributor,
-  getAllPostByAuthorID
+  getAllPostByAuthorID,
+  getEmbed
 };
