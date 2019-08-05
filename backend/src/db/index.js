@@ -156,7 +156,12 @@ function Auth(id) {
   return auth;
 }
 function VerifyAuth(token) {
-  const parse = jwt.verify(token, publicKEY);
+  const parse = jwt.verify(token, publicKEY, (err,decoded)=> {
+    if(!err) {
+      return decoded
+    }
+    return
+  });
   return parse;
 }
 

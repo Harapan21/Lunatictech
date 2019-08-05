@@ -21,6 +21,7 @@ const {
 module.exports = {
   Query: {
     me: async (_, __, _context) => {
+      console.log(_context)
       if (!_context.id) {
         return null;
       }
