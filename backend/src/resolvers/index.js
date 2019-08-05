@@ -35,22 +35,25 @@ module.exports = {
   User: {
     post: (parent, _) => {
       return getAllPostByAuthorID(parent.user_id);
+    },
+    firstLetter: ({ username }) => {
+      return username[0];
     }
   },
   Post: {
-    author: ({ author_id }, _) => {
+    author: ({ author_id }) => {
       return getUserByID(author_id);
     },
-    rating: ({ id }, _) => {
+    rating: ({ id }) => {
       return getRatingByParentID(id);
     },
-    comments: ({ id }, _) => {
+    comments: ({ id }) => {
       return getCommentByParentID(id);
     },
-    contributor: ({ id }, _) => {
+    contributor: ({ id }) => {
       return getContributor(id);
     },
-    embed: ({ id }, _) => getEmbed(id)
+    embed: ({ id }) => getEmbed(id)
   },
   ContributorUser: {
     contributor: async (parent, _) => {

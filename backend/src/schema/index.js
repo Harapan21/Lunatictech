@@ -52,6 +52,7 @@ const typeDefs = gql`
     avatar: String!
     isAdmin: Boolean
     post: [Post]
+    firstLetter: String!
   }
 
   type Embed {

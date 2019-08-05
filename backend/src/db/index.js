@@ -40,7 +40,7 @@ function isVerify(field_password, password) {
   return bcrypt.compare(field_password, password).then(result => result);
 }
 async function RegisterUser({ username, password, ...rest }) {
-  const bcryptPass = HashPass(password);
+  const bcryptPass = await HashPass(password);
   const user = await User.create(
     {
       username,
@@ -202,16 +202,6 @@ async function setUser(input, id) {
   if (input.password) {
     const hash = await HashPass(input.password);
     input.password = hash;
-    User.update(
-      {
-        ...input
-      },
-      {
-        where: {
-          user_id: id
-        }
-      }
-    ).then(() => true);
   }
   return User.update(
     {
@@ -249,6 +239,7 @@ async function setPost(postId, input, authId) {
     }));
   }
 }
+
 async function getCommentByID(id) {
   const comments = await Comment.findOne({
     where: {
