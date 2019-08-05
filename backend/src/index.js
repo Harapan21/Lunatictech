@@ -5,11 +5,12 @@ const resolvers = require('./resolvers');
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
-  context: ({ req }) => {
-    const auth = req.headers ? VerifyAuth(req.headers.token) : '';
-    console.log(auth);
-    return ' ';
+  resolvers,  
+  context:({req}) => {
+    if(req.headers && req.headers.token) {
+      return VerifyAuth(req.headers.token)
+    }
+    return
   }
 });
 
