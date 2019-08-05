@@ -6,7 +6,7 @@ use smile;
 CREATE TABLE usr_smile (
     user_id CHAR(36) NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255)  UNIQUE,
+    email VARCHAR(255) UNIQUE,
     joinAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     lastEditedAt TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     fullname VARCHAR(255),
@@ -42,9 +42,25 @@ CREATE TABLE post (
     PRIMARY KEY (id),
     FOREIGN KEY (author_id)
         REFERENCES usr_smile (user_id)
-        ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+
+CREATE TABLE contrib_post_temp (
+    id INT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    content LONGTEXT,
+    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
+    accepted BOOLEAN DEFAULT FALSE,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    author_id CHAR(36) NOT NULL,
+    last_edited_by CHAR(36),
+    PRIMARY KEY (id),
+    FOREIGN KEY (author_id)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TABLE embed (
     id INT NOT NULL AUTO_INCREMENT,
     postId INT NOT NULL,
@@ -73,7 +89,7 @@ CREATE TABLE rating (
     view INT NOT NULL DEFAULT 0,
     share INT NOT NULL DEFAULT 0,
     comment INT NOT NULL DEFAULT 0,
-    video_rate int,
+    video_rate INT,
     PRIMARY KEY (id),
     FOREIGN KEY (postId)
         REFERENCES post (id)
@@ -127,10 +143,9 @@ CREATE TABLE comment (
     reply BOOLEAN NOT NULL DEFAULT FALSE,
     reply_for_id INT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (userId)  
-    REFERENCES usr_smile (user_id)
-		ON UPDATE CASCADE
-        ON DELETE SET NULL,
+    FOREIGN KEY (userId)
+        REFERENCES usr_smile (user_id)
+        ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE,

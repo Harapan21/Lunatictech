@@ -29,11 +29,22 @@ const Post = sequelize.import('./models/post');
 const Rating = sequelize.import('./models/rating');
 const User = sequelize.import('./models/usr_smile');
 
+// bcrypt
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+function HashPass(pass) {
+  return bcrypt.hash(pass, saltRounds).then(pass => pass);
+}
+function isVerify(field_password, password) {
+  return bcrypt.compare(field_password, password).then(result => result);
+}
 async function RegisterUser({ username, password, ...rest }) {
+  const bcryptPass = HashPass(password);
   const user = await User.create(
     {
       username,
-      password,
+      password: bcryptPass,
       ...rest
     },
     {
@@ -77,10 +88,12 @@ async function getMe(id) {
       author_id: id
     }
   });
-  return {
-    ...user,
+  const { password, ...userData } = user.dataValues;
+  const me = {
+    ...userData,
     post: [...post]
   };
+  return me;
 }
 
 async function getPostByID(id) {
@@ -130,14 +143,14 @@ async function getCommentByParentID(id) {
   return comments;
 }
 
-async function Login(username, password) {
-  const { user_id } = await User.findOne({
+async function Login(username, field_password) {
+  const { user_id, password } = await User.findOne({
     where: {
-      username,
-      password
+      username
     }
   });
-  if (!user_id || user_id === undefined) {
+  const verify = await isVerify(field_password, password);
+  if (!user_id || user_id === undefined || !verify) {
     return {
       login: false,
       token: null
@@ -156,6 +169,7 @@ function Auth(id) {
   };
   return auth;
 }
+
 function VerifyAuth(token) {
   const parse = jwt.verify(token, publicKEY, (err, decoded) => {
     if (!err) {
@@ -184,7 +198,21 @@ function inputComment(comment, userId) {
   });
 }
 
-function setUser(input, id) {
+async function setUser(input, id) {
+  if (input.password) {
+    const hash = await HashPass(input.password);
+    input.password = hash;
+    User.update(
+      {
+        ...input
+      },
+      {
+        where: {
+          user_id: id
+        }
+      }
+    ).then(() => true);
+  }
   return User.update(
     {
       ...input

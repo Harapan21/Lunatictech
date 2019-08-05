@@ -25,12 +25,10 @@ module.exports = {
       if (!_context.id) {
         return null;
       }
-      const { dataValues } = await getMe(_context.id);
-      return dataValues;
+      return getMe(_context.id);
     },
     posts: () => {
-      const post = getPost();
-      return post;
+      return getPost();
     },
     trending: () => {}
   },
@@ -40,23 +38,19 @@ module.exports = {
     }
   },
   Post: {
-    author: (parent, _) => {
-      const user = getUserByID(parent.author_id);
-      return user;
+    author: ({ author_id }, _) => {
+      return getUserByID(author_id);
     },
-    rating: (parent, _) => {
-      const rating = getRatingByParentID(parent.id);
-      return rating;
+    rating: ({ id }, _) => {
+      return getRatingByParentID(id);
     },
-    comments: (parent, _) => {
-      const comments = getCommentByParentID(parent.id);
-      return comments;
+    comments: ({ id }, _) => {
+      return getCommentByParentID(id);
     },
-    contributor: (parent, _) => {
-      const contrib = getContributor(parent.id);
-      return contrib;
+    contributor: ({ id }, _) => {
+      return getContributor(id);
     },
-    embed: (parent, _) => getEmbed(parent.id)
+    embed: ({ id }, _) => getEmbed(id)
   },
   ContributorUser: {
     contributor: async (parent, _) => {
