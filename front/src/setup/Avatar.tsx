@@ -1,17 +1,28 @@
 import { FieldProps } from 'formik';
 import * as React from 'react';
 import style from '../../public/style.scss';
-// import ErrorBox from '../ErrorBox';
 import Upload from '../../public/upload.svg';
+import gql from 'graphql-tag';
+
+export const UPLOAD_FILE = gql`
+  mutation singleUpload($file: Upload!) {
+    singleUpload(file: $file) {
+      id
+      path
+      filename
+      mimetype
+      encoding
+    }
+  }
+`;
 
 export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {
   const {
     field: { name, value },
-    form,
+    form: { handleBlur, handleChange },
     label,
     type
   } = props;
-  const { handleBlur, setFieldValue } = form;
 
   return (
     <div className={`${style.formLarge} ${style.upload}`}>
@@ -28,13 +39,7 @@ export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {
             name={name}
             type={type}
             onBlur={handleBlur}
-            onChange={(e: any) => {
-              const reader = new FileReader();
-              reader.onload = (r: any) => {
-                setFieldValue('avatar', r.target.result);
-              };
-              reader.readAsDataURL(e.target.files[0]);
-            }}
+            onChange={handleChange}
           />
         </>
       )}

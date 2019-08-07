@@ -2,6 +2,8 @@ import { FieldProps } from 'formik';
 import * as React from 'react';
 import style from '../../public/style.scss';
 import ErrorBox from '../ErrorBox';
+import Hide from '../../public/hide.svg';
+import Show from '../../public/view.svg';
 
 export default function InputLarge(
   props: InputPageProps<FieldProps<UserSetup>>
@@ -41,11 +43,18 @@ export default function InputLarge(
           className={style.buttonDefault}
           onClick={() => setPasswordShow((state: boolean) => !state)}
         >
-          {passwordShow ? 'hide' : 'show'}
+          {passwordShow ? (
+            <Hide className={style.password} />
+          ) : (
+            <Show className={style.password} />
+          )}
         </button>
       )}
       <button
-        disabled={form.touched[field.name] && form.errors[field.name]}
+        disabled={
+          (form.touched[field.name] && form.errors[field.name]) ||
+          !form.touched[field.name]
+        }
         onClick={onClick}
         type="button"
         className={style.buttonDefault}

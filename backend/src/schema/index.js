@@ -7,6 +7,13 @@ const typeDefs = gql`
     trending: [Post]
     author: [User]
   }
+  type File {
+    id: String!
+    path: String!
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
   type Mutation {
     daftar(input: UserField!): Auth!
     login(input: LoginUser!): Auth!
@@ -17,8 +24,8 @@ const typeDefs = gql`
     EditComment(commentId: Int!, content: String!): Boolean!
     RemoveByID(input: genericInput): Boolean!
     validation(username: String, email: String): Validation!
+    singleUpload(file: Upload!): File!
   }
-
   input genericInput {
     id: ID!
     for: genericEnum!

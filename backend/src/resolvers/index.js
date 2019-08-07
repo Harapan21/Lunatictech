@@ -18,6 +18,33 @@ const {
   getAllPostByAuthorID,
   getEmbed
 } = require('../db/index');
+const mkdirp = require('mkdirp');
+const fs = require('fs');
+const UPLOAD_DIR = './uploads';
+mkdirp.sync(UPLOAD_DIR);
+const shortid = require('shortid');
+const storeFS = ({ stream, filename }) => {
+  const id = shortid.generate();
+  const path = `${id}-${filename}`;
+  return new Promise((resolve, reject) =>
+    stream
+      .on('error', error => {
+        if (stream.truncated)
+          // Delete the truncated file.
+          fs.unlinkSync(path);
+        reject(error);
+      })
+      .pipe(fs.createWriteStream(`${UPLOAD_DIR}/${path}`))
+      .on('error', error => reject(error))
+      .on('finish', () => resolve({ id, path }))
+  );
+};
+const proccessUpload = async upload => {
+  const { createReadStream, filename, mimetype, encoding } = await upload;
+  const stream = createReadStream();
+  const { id, path } = await storeFS({ stream, filename });
+  return { id, path, filename, mimetype, encoding };
+};
 
 module.exports = {
   Query: {
@@ -105,6 +132,7 @@ module.exports = {
     EditComment: (_, { commentId, content }, _context) => {
       return setComment(commentId, content, _context.id);
     },
-    RemoveByID: (_, { input }, _context) => removeByID(input, _context.id)
+    RemoveByID: (_, { input }, _context) => removeByID(input, _context.id),
+    singleUpload: async (parent, args) => await proccessUpload(args.file)
   }
 };

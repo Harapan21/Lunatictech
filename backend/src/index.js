@@ -11,6 +11,10 @@ const server = new ApolloServer({
       return VerifyAuth(req.headers.token);
     }
     return;
+  },
+  uploads: {
+    maxFileSize: 10000000, // 10 MB
+    maxFiles: 20
   }
 });
 

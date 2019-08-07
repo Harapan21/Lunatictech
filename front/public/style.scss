@@ -227,6 +227,9 @@
     cursor: pointer;
     user-select: none;
     color: var(--pink) !important;
+    .password {
+      max-width: 25px !important;
+    }
   }
 
   .danger {

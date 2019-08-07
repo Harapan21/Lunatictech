@@ -18,12 +18,13 @@ VALUES
 "dewantara abimanyu",
 "password2",
 "https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=3759e09a5b9fbe53088b23c615b6312e");
-
+SELECT * FROM usr_smile ;
+alter table usr_smile;
 SELECT 
     *
 FROM
     smile.usr_smile;
-TRUNCATE TABLE usr_smile;
+TRUNCATE TABLE smile.usr_smile;
 UPDATE `smile`.`usr_smile` 
 SET 
     `email` = 'harapanpardamean@gmail.net'
@@ -115,13 +116,7 @@ VALUES
 
 
 SELECT 
-    `comment`.`id`,
-    `comment`.`postId`,
-    `comment`.`createdAt`,
-    `comment`.`content`,
-    `comment`.`reply`,
-    `comment`.`reply_for_id`,
-    `comment`.`userId`
+    *
 FROM
     `smile`.`comment`;
 
@@ -132,6 +127,31 @@ SET
 `content` = <{content: }>,
 `reply_for_id` = <{reply_for_id: }>
 WHERE `id` = <{expr}>;
+SELECT `contributor_user`.`id`,
+    `contributor_user`.`postId`,
+    `contributor_user`.`contribAt`,
+    `contributor_user`.`user_id`
+FROM `smile`.`contributor_user`;
 
+select * from usr_smile;
+select * from rating;
+select * from comment;
+DELETE FROM `smile`.`comment`
+WHERE id=1;
+ 
+select * from post;
+select count(*) from comment;
+alter table comment;
+SELECT `contributor_user`.`id`,
+    `contributor_user`.`postId`,
+    `contributor_user`.`contribAt`,
+    `contributor_user`.`user_id`
+FROM `smile`.`contributor_user`;
 
+select * from usr_smile where user_id="ba4ced5b3fc14061e3e3236b9f3807c2";
 
+SELECT `embed`.`id`,
+    `embed`.`postId`,
+    `embed`.`thumbnail`,
+    `embed`.`video`
+FROM `smile`.`embed`;
