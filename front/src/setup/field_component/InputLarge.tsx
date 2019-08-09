@@ -1,9 +1,9 @@
 import { FieldProps } from 'formik';
 import * as React from 'react';
-import style from '../../public/style.scss';
-import ErrorBox from '../ErrorBox';
-import Hide from '../../public/hide.svg';
-import Show from '../../public/view.svg';
+import style from '../../../public/style.scss';
+import ErrorBox from '../../ErrorBox';
+import Hide from '../../../public/hide.svg';
+import Show from '../../../public/view.svg';
 
 export default function InputLarge(
   props: InputPageProps<FieldProps<UserSetup>>
@@ -20,7 +20,6 @@ export default function InputLarge(
   } = props;
   const isOverflow: boolean = field.value.length > 15;
   const isPassword = type === 'password';
-  // idiotmatic
   const checkIsPassword = isPassword ? (passwordShow ? 'text' : type) : type;
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
@@ -41,7 +40,7 @@ export default function InputLarge(
         <button
           type="button"
           className={style.buttonDefault}
-          onClick={() => setPasswordShow((state: boolean) => !state)}
+          onClick={() => setPasswordShow()}
         >
           {passwordShow ? (
             <Hide className={style.password} />
