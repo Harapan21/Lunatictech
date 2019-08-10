@@ -48,15 +48,16 @@ CREATE TABLE post (
 
 CREATE TABLE contrib_post_temp (
     id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     content LONGTEXT,
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     accepted BOOLEAN DEFAULT FALSE,
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updateAt TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     author_id CHAR(36) NOT NULL,
-    last_edited_by CHAR(36),
     PRIMARY KEY (id),
-    FOREIGN KEY (author_id)
+    FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -95,7 +96,9 @@ CREATE TABLE rating (
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-
+ 
+DELIMITER $$
+	CREATE TRIGGER delete_contributor
 
 
 # push rating after publish post
@@ -121,15 +124,19 @@ CREATE TABLE contributor_user (
 );
 # push contributor if id not equal to author_id
 DELIMITER $$
-	CREATE TRIGGER push_contributor
+	CREATE TRIGGER push_contrib
 	AFTER UPDATE
-    ON post
+    ON contrib_post_temp
     FOR EACH ROW 
     BEGIN
-		IF (new.last_edited_by != old.author_id) THEN
-			IF NOT EXISTS (SELECT * FROM contributor_user WHERE postId=old.id AND user_id=new.last_edited_by) THEN
-				INSERT INTO contributor_user(postId, user_id) VALUES(old.id, new.last_edited_by);
-			END IF;
+		IF (new.accepted = TRUE) THEN
+			INSERT INTO smile.contributor_user
+			(postId,
+			user_id)
+			VALUES
+			(new.postId),
+			(new.author_id);
+            DELETE FROM contrib_post_temp WHERE new.id;
         END IF;
 	END $$
 DELIMITER ;

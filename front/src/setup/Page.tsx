@@ -10,73 +10,70 @@ interface PageProps {
 }
 interface PageState {
   isPasswordShow: boolean;
-  content: React.ReactNode[];
 }
 
 export default class Page extends React.Component<PageProps, PageState> {
-  // tslint:disable-next-line:member-access
-  handleState = () => {
-    if (this.isFinish) {
-      this.props.setStateIndex(0);
-    } else {
-      this.props.setStateIndex(this.props.state + 1);
-    }
-    // tslint:disable-next-line: semicolon
-  };
-  // tslint:disable-next-line:member-ordering
-  public isFinish = this.state.content.length - 1 === this.props.state;
-  // tslint:disable-next-line:member-ordering
+  // tslint:disable-next-line: member-access
   public state = {
-    isPasswordShow: false,
-    content: [
-      <Landing key={0} onClick={this.handleState} />,
-      <Field
-        key={1}
-        type="text"
-        name="fullName"
-        label="Enter Your Name"
-        component={InputLarge}
-        onClick={this.handleState}
-      />,
-      <Field
-        key={2}
-        type="text"
-        name="userName"
-        label="Enter Your Username"
-        onClick={this.handleState}
-        component={InputLarge}
-      />,
-      <Field
-        key={2}
-        type="text"
-        name="emailAddress"
-        label="Enter Your Email"
-        onClick={this.handleState}
-        component={InputLarge}
-      />,
-      <Field
-        key={3}
-        type="password"
-        passwordShow={this.state.isPasswordShow}
-        setPasswordShow={this.setState}
-        name="passwordUsr"
-        label="Enter Your Password"
-        onClick={this.handleState}
-        component={InputLarge}
-      />,
-      <Field
-        key={4}
-        type="file"
-        name="avatar"
-        label="Upload your avatar"
-        onClick={this.handleState}
-        isFinish={this.isFinish}
-        component={Avatar}
-      />
-    ]
+    isPasswordShow: false
   };
+  // tslint:disable-next-line:member-ordering
+  // tslint:disable-next-line:member-access
+  public content = (handleState?: () => void) => [
+    <Landing key={0} onClick={handleState} />,
+    <Field
+      key={1}
+      type="text"
+      name="fullName"
+      label="Enter Your Name"
+      component={InputLarge}
+      onClick={handleState}
+    />,
+    <Field
+      key={2}
+      type="text"
+      name="userName"
+      label="Enter Your Username"
+      onClick={handleState}
+      component={InputLarge}
+    />,
+    <Field
+      key={2}
+      type="text"
+      name="emailAddress"
+      label="Enter Your Email"
+      onClick={handleState}
+      component={InputLarge}
+    />,
+    <Field
+      key={3}
+      type="password"
+      passwordShow={this.state.isPasswordShow}
+      setPasswordShow={() =>
+        this.setState((state: any) => ({
+          isPasswordShow: !state.isPasswordShow
+        }))
+      }
+      name="passwordUsr"
+      label="Enter Your Password"
+      onClick={handleState}
+      component={InputLarge}
+    />,
+    <Field
+      key={4}
+      type="file"
+      name="avatar"
+      label="Upload your avatar"
+      component={Avatar}
+    />
+  ];
+  public handleState = () =>
+    this.content().length - 1 !== this.props.state
+      ? this.props.setStateIndex(this.props.state + 1)
+      : this.props.setStateIndex(0);
+
   public render() {
-    return this.state.content[this.props.state];
+    return this.content(this.handleState)[this.props.state];
   }
 }
 

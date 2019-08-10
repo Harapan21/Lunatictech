@@ -40,7 +40,7 @@ export default function InputLarge(
         <button
           type="button"
           className={style.buttonDefault}
-          onClick={() => setPasswordShow()}
+          onClick={setPasswordShow}
         >
           {passwordShow ? (
             <Hide className={style.password} />

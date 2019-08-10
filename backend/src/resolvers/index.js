@@ -23,7 +23,9 @@ const fs = require('fs');
 const UPLOAD_DIR = './uploads';
 mkdirp.sync(UPLOAD_DIR);
 const shortid = require('shortid');
-const storeFS = ({ stream, filename }) => {
+const storeFS = ({ stream, filename }, username) => {
+  const UPLOAD_DIR_ID = `${UPLOAD_DIR}/${username}`;
+  mkdirp.sync(UPLOAD_DIR_ID);
   const id = shortid.generate();
   const path = `${id}-${filename}`;
   return new Promise((resolve, reject) =>
@@ -34,15 +36,16 @@ const storeFS = ({ stream, filename }) => {
           fs.unlinkSync(path);
         reject(error);
       })
-      .pipe(fs.createWriteStream(`${UPLOAD_DIR}/${path}`))
+      .pipe(fs.createWriteStream(`${UPLOAD_DIR_ID}/${path}`))
       .on('error', error => reject(error))
       .on('finish', () => resolve({ id, path }))
   );
 };
-const proccessUpload = async upload => {
-  const { createReadStream, filename, mimetype, encoding } = await upload;
+const proccessUpload = async (file, user_id) => {
+  const { createReadStream, filename, mimetype, encoding } = await file;
+
   const stream = createReadStream();
-  const { id, path } = await storeFS({ stream, filename });
+  const { id, path } = await storeFS({ stream, filename }, user_id);
   return { id, path, filename, mimetype, encoding };
 };
 
@@ -65,6 +68,9 @@ module.exports = {
     },
     firstLetter: ({ username }) => {
       return username[0];
+    },
+    avatar: (parent, _) => {
+      return `http://localhost:4000/static/${parent.username}/${parent.avatar}`;
     }
   },
   Post: {
@@ -133,6 +139,7 @@ module.exports = {
       return setComment(commentId, content, _context.id);
     },
     RemoveByID: (_, { input }, _context) => removeByID(input, _context.id),
-    singleUpload: async (parent, args) => await proccessUpload(args.file)
+    singleUpload: async (_, args) =>
+      await proccessUpload(args.file, args.username)
   }
 };

@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   scalar Date
   type Query {
@@ -24,7 +24,7 @@ const typeDefs = gql`
     EditComment(commentId: Int!, content: String!): Boolean!
     RemoveByID(input: genericInput): Boolean!
     validation(username: String, email: String): Validation!
-    singleUpload(file: Upload!): File!
+    singleUpload(file: Upload!, username: String!): File!
   }
   input genericInput {
     id: ID!

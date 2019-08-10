@@ -28,3 +28,8 @@ interface InputPageExtendsProps {
 }
 
 type InputPageProps<T> = InputPageExtendsProps & T;
+
+declare enum Menu {
+  Dahboard,
+  Post
+}

@@ -6,10 +6,9 @@ import Upload from '../../../public/upload.svg';
 export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {
   const {
     field: { name, value },
-    form: { handleBlur, setFieldValue, touched, errors },
+    form: { handleBlur, setFieldValue, errors },
     label,
-    type,
-    onClick
+    type
   } = props;
   const [picture, setPicture] = React.useState('');
 
@@ -26,7 +25,6 @@ export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {
       uploadAvatar();
     }
   }, [value]);
-
   return (
     <div className={`${style.formLarge} ${style.upload}`}>
       <label>{label}</label>
@@ -52,14 +50,15 @@ export default function Avatar(props: InputPageProps<FieldProps<UserSetup>>) {
           />
         </>
       )}
-      <button
-        disabled={(touched[name] && errors[name]) || !touched[name]}
-        onClick={onClick}
-        type="button"
-        className={style.buttonDefault}
-      >
-        next
-      </button>
+      {!errors[name] && (
+        <button
+          disabled={errors[name]}
+          type="submit"
+          className={style.buttonDefault}
+        >
+          finish
+        </button>
+      )}
     </div>
   );
 }
