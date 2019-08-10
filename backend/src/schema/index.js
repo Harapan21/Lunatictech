@@ -65,7 +65,7 @@ const typeDefs = gql`
   type Embed {
     id: Int!
     postId: Int!
-    thumbnail: Int
+    thumbnail: String
     video: String
   }
 

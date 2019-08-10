@@ -255,3 +255,24 @@
     }
   }
 }
+
+.postField {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  transition: all 4s;
+  .button {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    font-size: 0.625rem;
+    opacity: 0.8;
+    color: var(--black);
+    border: none;
+    background: transparent;
+    font-weight: 500;
+  }
+}

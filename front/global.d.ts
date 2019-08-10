@@ -19,6 +19,21 @@ interface UserSetup {
   avatar: null | object;
 }
 
+declare enum Status {
+  publish,
+  draft,
+  hide
+}
+
+interface PostField {
+  title: string;
+  author: string;
+  content: string;
+  rating?: number;
+  thumbnail?: string;
+  video?: string;
+  status: Status;
+}
 interface InputPageExtendsProps {
   type: string;
   label: string;

@@ -11,20 +11,19 @@ enum Menu {
 
 export default function Sidebar() {
   const client = useApolloClient();
-  const data = (menu: Menu) => ({ data: { MenuToggle: menu } });
-  client.writeData(data(Menu.Dahboard));
-
+  const setMenu = (menu: Menu) => ({ data: { MenuToggle: menu } });
+  client.writeData(setMenu(Menu.Dahboard));
   return (
     <div className={style.sidebar}>
       <ul className={style.menu}>
         <li
-          onClick={() => client.writeData(data(Menu.Dahboard))}
+          onClick={() => client.writeData(setMenu(Menu.Dahboard))}
           style={{ cursor: 'pointer' }}
         >
           <Dashboard />
         </li>
         <li
-          onClick={() => client.writeData(data(Menu.Post))}
+          onClick={() => client.writeData(setMenu(Menu.Post))}
           style={{ cursor: 'pointer' }}
         >
           <PaperPlane />
