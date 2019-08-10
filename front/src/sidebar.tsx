@@ -5,13 +5,15 @@ import style from '../public/style.scss';
 import { useApolloClient } from '@apollo/react-hooks';
 
 enum Menu {
-  Dahboard = 'dashboard',
-  Post = 'post'
+  Dahboard = 0,
+  Post
 }
 
 export default function Sidebar() {
   const client = useApolloClient();
   const data = (menu: Menu) => ({ data: { MenuToggle: menu } });
+  client.writeData(data(Menu.Dahboard));
+
   return (
     <div className={style.sidebar}>
       <ul className={style.menu}>
