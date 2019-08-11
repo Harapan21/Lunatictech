@@ -2,28 +2,35 @@ import * as React from 'react';
 import Dashboard from '../public/dashboard.svg';
 import PaperPlane from '../public/paper-plane.svg';
 import style from '../public/style.scss';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import { DASHBOARD_MENU } from './redux/constan';
 
 enum Menu {
   Dahboard = 0,
   Post
 }
 
-export default function Sidebar() {
-  const client = useApolloClient();
-  const setMenu = (menu: Menu) => ({ data: { MenuToggle: menu } });
-  client.writeData(setMenu(Menu.Dahboard));
+function SidebarM() {
+  const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
+  const dispatch = useDispatch();
   return (
-    <div className={style.sidebar}>
+    <div
+      className={style.sidebar}
+      style={{
+        zIndex: IS_POST_TOGGLE ? 0 : 3
+      }}
+    >
       <ul className={style.menu}>
         <li
-          onClick={() => client.writeData(setMenu(Menu.Dahboard))}
+          onClick={() =>
+            dispatch({ type: DASHBOARD_MENU, payload: Menu.Dahboard })
+          }
           style={{ cursor: 'pointer' }}
         >
           <Dashboard />
         </li>
         <li
-          onClick={() => client.writeData(setMenu(Menu.Post))}
+          onClick={() => dispatch({ type: DASHBOARD_MENU, payload: Menu.Post })}
           style={{ cursor: 'pointer' }}
         >
           <PaperPlane />
@@ -32,3 +39,7 @@ export default function Sidebar() {
     </div>
   );
 }
+
+const Sidebar = React.memo(SidebarM);
+
+export default Sidebar;

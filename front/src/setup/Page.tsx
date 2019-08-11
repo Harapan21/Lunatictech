@@ -66,11 +66,13 @@ export default class Page extends React.Component<PageProps, PageState> {
       label="Upload your avatar"
       component={Avatar}
     />
+    // tslint:disable-next-line:semicolon
   ];
   public handleState = () =>
     this.content().length - 1 !== this.props.state
       ? this.props.setStateIndex(this.props.state + 1)
-      : this.props.setStateIndex(0);
+      : // tslint:disable-next-line:semicolon
+        this.props.setStateIndex(0);
 
   public render() {
     return this.content(this.handleState)[this.props.state];

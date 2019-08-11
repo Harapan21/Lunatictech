@@ -48,7 +48,7 @@ export default withRouter(({ history }: any) => {
         enableReinitialize={true}
         validationSchema={validation}
         onSubmit={(values: UserSetup) => handleSubmit(values)}
-        render={(formikBag: FormikProps<UserSetup>) => {
+        render={(_FORMIK_PROPS: FormikProps<UserSetup>) => {
           return (
             <Form style={{ all: 'inherit' }} id="setupForm">
               <Page

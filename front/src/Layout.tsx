@@ -6,12 +6,15 @@ import Sidebar from './sidebar';
 import createSagaMiddleware from 'redux-saga';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import reducer from './redux/reducers';
-import rootSaga from './redux/sagas';
+import reducer from './redux/reducer';
+import { composeWithDevTools } from 'redux-devtools-extension';
+// import rootSaga from './redux/sagas';
 // redux
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(reducer, applyMiddleware(sagaMiddleware, logger));
-sagaMiddleware.run(rootSaga);
+const store = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
 
 interface LayoutProps {
   children: React.ReactNode;
