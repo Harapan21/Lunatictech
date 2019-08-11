@@ -3,6 +3,15 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Smile from '../public/Smile.svg';
 import style from '../public/style.scss';
 import Sidebar from './sidebar';
+import createSagaMiddleware from 'redux-saga';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import reducer from './redux/reducers';
+import rootSaga from './redux/sagas';
+// redux
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(reducer, applyMiddleware(sagaMiddleware, logger));
+sagaMiddleware.run(rootSaga);
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,18 +22,20 @@ interface LayoutState {
 export default class Layout extends React.Component<LayoutProps, LayoutState> {
   public render() {
     return (
-      <Router>
-        <div className={style.layout}>
-          <div className={style.logo}>
-            <Smile />
-            <span>smile</span>
+      <Provider store={store}>
+        <Router>
+          <div className={style.layout}>
+            <div className={style.logo}>
+              <Smile />
+              <span>smile</span>
+            </div>
+            <div className={style.content}>
+              <Route exact={true} path="/" component={Sidebar} />
+              <div className={style.children}>{this.props.children}</div>
+            </div>
           </div>
-          <div className={style.content}>
-            <Route exact={true} path="/" component={Sidebar} />
-            <div className={style.children}>{this.props.children}</div>
-          </div>
-        </div>
-      </Router>
+        </Router>
+      </Provider>
     );
   }
 }
