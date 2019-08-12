@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31"><g class="a" transform="translate(0.5 0.5)"><rect class="b" width="13.612" height="10.209" rx="3" transform="translate(16.388)"/><rect class="b" width="13.612" height="17.015" rx="3"/><rect class="b" width="13.612" height="10.209" rx="3" transform="translate(0 19.791)"/><rect class="b" width="13.612" height="17.015" rx="3" transform="translate(16.388 12.985)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31">
+    <g class="a" transform="translate(0.5 0.5)">
+        <rect width="13.612" height="10.209" class="b" rx="3" transform="translate(16.388)"/>
+        <rect width="13.612" height="17.015" class="b" rx="3"/>
+        <rect width="13.612" height="10.209" class="b" rx="3" transform="translate(0 19.791)"/>
+        <rect width="13.612" height="17.015" class="b" rx="3" transform="translate(16.388 12.985)"/>
+    </g>
+</svg>

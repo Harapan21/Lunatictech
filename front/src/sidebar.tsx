@@ -1,16 +1,18 @@
 import * as React from 'react';
 import Dashboard from '../public/dashboard.svg';
 import PaperPlane from '../public/paper-plane.svg';
+import FileUpload from '../public/server.svg';
 import style from '../public/style.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { DASHBOARD_MENU } from './redux/constan';
 
 enum Menu {
   Dahboard = 0,
-  Post
+  Post,
+  Upload
 }
 
-function SidebarM() {
+function Sidebar() {
   const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
   const dispatch = useDispatch();
   return (
@@ -35,11 +37,17 @@ function SidebarM() {
         >
           <PaperPlane />
         </li>
+        <li
+          onClick={() =>
+            dispatch({ type: DASHBOARD_MENU, payload: Menu.Upload })
+          }
+          style={{ cursor: 'pointer' }}
+        >
+          <FileUpload />
+        </li>
       </ul>
     </div>
   );
 }
 
-const Sidebar = React.memo(SidebarM);
-
-export default Sidebar;
+export default React.memo(Sidebar);

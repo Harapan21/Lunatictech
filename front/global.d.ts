@@ -40,5 +40,6 @@ type InputPageProps<T> = InputPageExtendsProps & T;
 
 declare enum Menu {
   Dahboard,
-  Post
+  Post,
+  Upload
 }

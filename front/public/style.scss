@@ -50,6 +50,7 @@
     margin: 0px;
     background: var(--white-pink);
     height: 100%;
+    overflow: hidden;
     width: 100%;
     font-family: var(--font-default);
     color: var(--black);
@@ -77,48 +78,60 @@
 
     .children {
       @extend %fullWidth;
-      .postField {
-        width: 100% !important;
+      .dashboard_title {
+        padding: 5px 15px;
+      }
+      .formPost {
+        width: 100%;
         height: 100%;
-        background: #ffffff;
-        transition: all 4s;
-        overflow: hidden;
-        border-radius: 5px;
-        .content {
-          border: none;
-          outline: none;
-          resize: none;
-          padding: 10px;
-          font-size: 0.625rem;
-          @extend %fullWidth;
-          max-width: 100%;
-          height: 100%;
-          font-family: var(--font-default);
-          &:focus {
-            @extend %fullWidth;
-          }
-        }
-        .title {
-          position: relative;
+        .postField {
           display: flex;
-          padding: 10px;
-          background: var(--grey);
-          justify-content: space-between;
-          .form {
+          flex-direction: column;
+          justify-content: stretch;
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 100%;
+          background: #ffffff;
+          overflow: hidden;
+          .content {
             border: none;
-            background: transparent;
-            font-size: 0.825rem;
-            width: 100%;
-            @extend %fontQuicksandBold;
-          }
-          .button {
-            cursor: pointer;
+            outline: none;
+            resize: none;
+            height: 100% !important;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
             font-size: 0.625rem;
-            opacity: 0.8;
-            color: var(--black);
-            border: none;
-            background: transparent;
-            font-weight: 500;
+            @extend %fullWidth;
+            font-family: var(--font-default);
+            &:focus {
+              @extend %fullWidth;
+              border-radius: 5px;
+              box-sizing: border-box;
+            }
+          }
+          .title {
+            position: relative;
+            display: flex;
+            background: var(--grey);
+            justify-content: space-between;
+            .form {
+              padding: 10px;
+              border: none;
+              background: transparent;
+              font-size: 0.825rem;
+              @extend %fullWidth;
+              @extend %fontQuicksandBold;
+            }
+            .button {
+              cursor: pointer;
+              font-size: 0.625rem;
+              opacity: 0.8;
+              color: var(--black);
+              border: none;
+              background: transparent;
+              font-weight: 500;
+            }
           }
         }
       }
@@ -232,7 +245,7 @@
 
         li {
           list-style: none;
-          padding: 10px 25px;
+          padding: 15px 20px;
           @extend %zeroPaddingMargin;
 
           svg {
