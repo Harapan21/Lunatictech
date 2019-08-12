@@ -23,7 +23,7 @@
     "mkdirp": "^0.5.1",
     "mysql2": "^1.6.5",
     "nodemon": "^1.19.1",
-    "sequelize": "^5.12.3",
+    "sequelize": "^5.13.1",
     "shortid": "^2.2.14"
   },
   "devDependencies": {}

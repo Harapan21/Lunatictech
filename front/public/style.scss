@@ -80,6 +80,17 @@
       @extend %fullWidth;
       .dashboard_title {
         padding: 5px 15px;
+        display: flex;
+        align-items: center;
+      }
+      .dashboard_create_new {
+        all: unset;
+
+        margin: 5px 15px;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+        padding: 5px;
+        font-size: 0.425rem;
       }
       .formPost {
         width: 100%;
@@ -131,6 +142,7 @@
               border: none;
               background: transparent;
               font-weight: 500;
+              padding: 5px 15px;
             }
           }
         }
@@ -305,7 +317,19 @@
     padding: 10px;
     align-items: center;
     box-shadow: var(--shadow-md);
-
+    &.postcard {
+      padding: 15px;
+      margin: 10px 8px !important;
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      * {
+        @extend %fullWidth;
+      }
+    }
+    .title {
+      font-size: 0.825rem;
+    }
     svg {
       max-width: 20px;
       height: auto;

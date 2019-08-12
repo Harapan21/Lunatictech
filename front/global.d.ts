@@ -28,6 +28,11 @@ interface PostField {
   video?: string;
   status: any;
 }
+
+interface Post extends PostField {
+  id: string;
+}
+
 interface InputPageExtendsProps {
   type: string;
   label: string;
@@ -42,4 +47,8 @@ declare enum Menu {
   Dahboard,
   Post,
   Upload
+}
+
+interface Toggle {
+  toggle: () => void;
 }
