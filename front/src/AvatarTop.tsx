@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-export default function AvatarTop(user: any) {
-  return (
-    <div>
-      <div>{user.fullname}</div>
-    </div>
-  );
+// interface AvatarTopProps {
+//     user:
+// }
+
+export default function AvatarTop(props: ReduxUserState) {
+  console.log(props);
+  return <div />;
 }

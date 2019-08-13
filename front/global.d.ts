@@ -19,6 +19,28 @@ interface UserSetup {
   avatar: null | object;
 }
 
+interface ReduxUserState {
+  isLogin?: boolean;
+  user?:
+    | {
+        me?: User;
+      }
+    | any;
+}
+
+interface User {
+  user_id?: string;
+  username?: string;
+  email?: string;
+  joinAt?: string;
+  lastEditedAt?: string;
+  fullname?: string;
+  avatar?: string;
+  isAdmin?: boolean;
+  post?: Post[];
+  firstLetter?: string;
+}
+
 interface PostField {
   title: string;
   author: string;
@@ -29,8 +51,18 @@ interface PostField {
   status: any;
 }
 
-interface Post extends PostField {
-  id: string;
+interface Post {
+  id?: number;
+  author?: User;
+  title?: string;
+  content?: string;
+  status?: string;
+  last_edited_at?: string;
+  last_edited_by?: string;
+  embed?: any;
+  rating?: any;
+  contributor?: any;
+  comments?: any;
 }
 
 interface InputPageExtendsProps {
