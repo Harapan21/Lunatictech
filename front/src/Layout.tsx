@@ -3,16 +3,14 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Smile from '../public/Smile.svg';
 import style from '../public/style.scss';
 import Sidebar from './sidebar';
-
 import Avatar from './AvatarTop';
 import { useSelector } from 'react-redux';
-// redux
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 export default function Layout(props: LayoutProps) {
-  const { user } = useSelector((state: any) => state.user);
+  const user = useSelector((state: any) => state.user);
   return (
     <Router>
       <div className={style.layout}>
