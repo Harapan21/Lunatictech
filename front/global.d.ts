@@ -21,11 +21,8 @@ interface UserSetup {
 
 interface ReduxUserState {
   isLogin?: boolean;
-  user?:
-    | {
-        me?: User;
-      }
-    | any;
+  data: { me: User };
+  loading: boolean;
 }
 
 interface User {

@@ -1,10 +1,5 @@
 import * as React from 'react';
 
-// interface AvatarTopProps {
-//     user:
-// }
-
-export default function AvatarTop(props: ReduxUserState) {
-  console.log(props);
-  return <div />;
+export default function AvatarTop({ user: { loading, data } }: any) {
+  return loading ? <div>Loading ...</div> : <div>{data.me.username}</div>;
 }

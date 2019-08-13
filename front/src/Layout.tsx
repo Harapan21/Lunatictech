@@ -16,7 +16,7 @@ export default function Layout(props: LayoutProps) {
       <div className={style.layout}>
         <div className={style.logo}>
           {user.isLogin ? (
-            <Avatar user={user as ReduxUserState} />
+            <Avatar user={user} />
           ) : (
             <>
               <Smile />
