@@ -1,11 +1,12 @@
 import * as React from 'react';
 import style from '../../../public/style.scss';
+import Gear from '../../../public/settings.svg';
 export default () => {
   const [isSetting, setSetting] = React.useState(false);
   const menu = {
     main: [
       {
-        text: <span style={{ fontSize: '.5rem' }}>Setting</span>,
+        text: <Gear style={{ width: '15px' }} />,
         onClick: () => {
           setSetting((state: any) => !state);
         }
@@ -40,7 +41,7 @@ export default () => {
     ],
     setting: [
       {
-        text: <span style={{ fontSize: '.5rem' }}>x</span>,
+        text: <span style={{ fontSize: '.650rem', fontWeight: 700 }}>x</span>,
         onClick: () => {
           setSetting((state: any) => !state);
         }
@@ -57,18 +58,13 @@ export default () => {
         }
       }}
     >
-      {isSetting
+      {!isSetting
         ? menu.main.map(({ text, onClick }: any, index) => (
             <button
               type="button"
               onClick={onClick}
+              className={style.item_toolbar}
               key={index}
-              style={{
-                all: 'unset',
-                cursor: 'pointer',
-                margin: '0px 15px',
-                userSelect: 'none'
-              }}
             >
               {text}
             </button>
@@ -77,13 +73,8 @@ export default () => {
             <button
               type="button"
               onClick={onClick}
+              className={style.item_toolbar}
               key={index}
-              style={{
-                all: 'unset',
-                cursor: 'pointer',
-                margin: '0px 15px',
-                userSelect: 'none'
-              }}
             >
               {text}
             </button>

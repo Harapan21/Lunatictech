@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18.32" viewBox="0 0 20 18.32"><defs><style>.a{fill:#fff;}</style></defs><rect class="a" width="20" height="4.382" transform="translate(0)"/><rect class="a" width="10.328" height="4.382" transform="translate(0 6.969)"/><rect class="a" width="20" height="4.382" transform="translate(0 13.939)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="18.32" viewBox="0 0 20 18.32">
+    <defs>
+        <style>
+            .a{fill:#fff;}
+        </style>
+    </defs>
+    <rect width="20" height="4.382" class="a" transform="translate(0)"/>
+    <rect width="10.328" height="4.382" class="a" transform="translate(0 6.969)"/>
+    <rect width="20" height="4.382" class="a" transform="translate(0 13.939)"/>
+</svg>

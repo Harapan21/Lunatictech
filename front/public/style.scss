@@ -6,7 +6,7 @@
 }
 
 %flex {
-  display: flex;
+  display: flex !important;
 }
 
 %flexMiddle {
@@ -62,7 +62,10 @@
     align-items: center;
   }
 }
-
+button,
+input {
+  outline: none !important;
+}
 .layout {
   background: var(--white);
   width: 88%;
@@ -318,10 +321,22 @@
     align-items: center;
     box-shadow: var(--shadow-md);
     &.toolbar {
-      display: flex;
+      align-items: center !important;
       font-size: 0.635rem;
       width: max-content;
-      
+      .item_toolbar {
+        all: unset;
+        @extend %flex;
+        align-items: center !important;
+        padding: 0px;
+        cursor: pointer;
+        margin: 0px 15px;
+        text-align: center;
+        svg {
+          padding: 0px;
+          margin: 0px !important;
+        }
+      }
       * {
         user-select: none;
       }

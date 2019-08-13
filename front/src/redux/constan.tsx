@@ -1,3 +1,7 @@
 // Menu action constant
 export const TRIGGER_MENU = 'TRIGGER_MENU';
 export const DASHBOARD_MENU = 'DASHBOARD_MENU';
+export const USER_LOGIN = 'USER_LOGIN';
+export const USER_FETCH_REQUESTED = 'USER_FETCH_REQUESTED';
+export const USER_FETCH_FAILED = 'USER_FETCH_FAILED';
+export const USER_FETCH_SUCCEEDED = 'USER_FETCH_SUCCEEDED';

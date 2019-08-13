@@ -8,6 +8,22 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
+import createSagaMiddleware from 'redux-saga';
+import { Provider } from 'react-redux';
+
+import reducer from './src/redux/reducer';
+import rootSaga from './src/redux/sagas';
+
+import { createStore, applyMiddleware } from 'redux';
+// tslint:disable-next-line:no-implicit-dependencies
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  reducer,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
+sagaMiddleware.run(rootSaga);
 const client = new ApolloClient({
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
@@ -25,16 +41,23 @@ const client = new ApolloClient({
       }
     }),
     createUploadLink({
-      uri: 'http://localhost:4000/graphql'
+      uri: 'http://localhost:4000/graphql',
+      headers: {
+        token: localStorage.getItem('token')
+          ? localStorage.getItem('token')
+          : ''
+      }
     })
   ]),
   cache: new InMemoryCache()
 });
 const AshaRoot: React.FC = () => (
   <ApolloProvider client={client}>
-    <Layout>
-      <AshaRouter />
-    </Layout>
+    <Provider store={store}>
+      <Layout>
+        <AshaRouter />
+      </Layout>
+    </Provider>
   </ApolloProvider>
 );
 

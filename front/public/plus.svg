@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.a{fill:#fff;}</style></defs><rect class="a" width="2.768" height="20" transform="translate(8.616)"/><rect class="a" width="2.768" height="20" transform="translate(20 8.616) rotate(90)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <style>
+            .a{fill:#fff;}
+        </style>
+    </defs>
+    <rect width="2.768" height="20" class="a" transform="translate(8.616)"/>
+    <rect width="2.768" height="20" class="a" transform="translate(20 8.616) rotate(90)"/>
+</svg>
