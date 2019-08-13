@@ -1,6 +1,6 @@
 import * as React from 'react';
 import style from '../../../public/style.scss';
-export default React.memo(() => {
+export default () => {
   const [isSetting, setSetting] = React.useState(false);
   const menu = {
     main: [
@@ -11,13 +11,29 @@ export default React.memo(() => {
         }
       },
       { text: <span style={{ fontSize: '.5rem' }}>Preview</span> },
+
       {
-        text: 'B'
+        text: <span style={{ fontSize: '.6rem', fontWeight: 700 }}>h1</span>
       },
       {
-        text: <span style={{ fontStyle: 'italic' }}>I</span>
+        text: <span style={{ fontSize: '.520rem', fontWeight: 700 }}>h2</span>
       },
-      { text: <span style={{ textDecoration: 'underline' }}>U</span> },
+      {
+        text: <span style={{ fontSize: '.460rem', fontWeight: 700 }}>h3</span>
+      },
+      {
+        text: <span style={{ fontSize: '.6rem', fontWeight: 700 }}>B</span>
+      },
+      {
+        text: <span style={{ fontStyle: 'italic', fontWeight: 700 }}>I</span>
+      },
+      {
+        text: (
+          <span style={{ textDecoration: 'underline', fontWeight: 700 }}>
+            U
+          </span>
+        )
+      },
       { text: <span style={{ fontSize: '.5rem' }}>Left</span> },
       { text: <span style={{ fontSize: '.5rem' }}>Center</span> },
       { text: <span style={{ fontSize: '.5rem' }}>Right</span> }
@@ -29,17 +45,12 @@ export default React.memo(() => {
           setSetting((state: any) => !state);
         }
       },
-      { text: <span style={{ fontSize: '.5rem' }}>Movie</span> }
+      { text: <span style={{ fontSize: '.5rem' }}>Thumbnail</span> }
     ]
   };
   return (
     <div
-      className={style.card}
-      style={{
-        display: 'flex',
-        fontSize: '.625rem',
-        width: 'max-content'
-      }}
+      className={`${style.card} ${style.toolbar}`}
       ref={(el: any) => {
         if (el) {
           el.style.setProperty('margin', '2px 5px', 'important');
@@ -79,4 +90,4 @@ export default React.memo(() => {
           ))}
     </div>
   );
-});
+};

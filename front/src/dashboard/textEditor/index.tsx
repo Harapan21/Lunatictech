@@ -18,6 +18,7 @@ function logSelection(event) {
     event.target.selectionStart,
     event.target.selectionEnd
   );
+  console.log(selection)
 }
 
 function TextEditor({ toggle }: Toggle) {

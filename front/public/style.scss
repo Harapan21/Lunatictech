@@ -317,6 +317,15 @@
     padding: 10px;
     align-items: center;
     box-shadow: var(--shadow-md);
+    &.toolbar {
+      display: flex;
+      font-size: 0.635rem;
+      width: max-content;
+      
+      * {
+        user-select: none;
+      }
+    }
     &.postcard {
       padding: 15px;
       margin: 10px 8px !important;
