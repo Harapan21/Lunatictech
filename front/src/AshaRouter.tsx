@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import Setup from './setup';
 import Dashboard from './dashboard';
 import { useDispatch } from 'react-redux';
@@ -14,13 +14,19 @@ export default function AshaRouter() {
       <Route
         exact={true}
         path="/"
-        render={({ history }: any) => {
+        render={() => {
           const token = localStorage.getItem('token');
           if (token) {
             return <Dashboard />;
+          } else {
+            return (
+              <Redirect
+                to={{
+                  pathname: '/login'
+                }}
+              />
+            );
           }
-          history.push('/login');
-          return;
         }}
       />
     </>

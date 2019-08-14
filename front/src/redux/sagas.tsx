@@ -4,6 +4,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_USER } from '../apollo/query';
 import { USER_FETCH_SUCCEEDED, USER_FETCH_REQUESTED } from './constan';
 
+
+
 function* FetchUserData() {
   const { data, loading } = useQuery(GET_USER);
   yield put({ type: USER_FETCH_SUCCEEDED, payload: { data, loading } });

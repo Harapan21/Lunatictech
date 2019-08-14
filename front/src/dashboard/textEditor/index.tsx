@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Formik, Form, FormikProps, Field } from 'formik';
 import style from '../../../public/style.scss';
-import { useSelector, useDispatch } from 'react-redux';
-import { TRIGGER_MENU } from '../../redux/constan';
-import Maximize from '../../../public/maximize.svg';
-import Reduce from '../../../public/reduce.svg';
+import { useSelector } from 'react-redux';
 import AreaText from './AreaText';
 import ToolBar from './ToolBar';
+import * as Yup from 'yup';
 export enum Status {
   PUBLISH = 'publish',
   DRAFT = 'draft',
@@ -18,16 +16,14 @@ function logSelection(event) {
     event.target.selectionStart,
     event.target.selectionEnd
   );
-  console.log(selection);
 }
 
 function TextEditor({ toggle }: Toggle) {
-  const dispatch = useDispatch();
   const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
-
+  const author = useSelector((state: any) => state.user.data.me.user_id);
   const initialValues = {
     title: '',
-    author: '',
+    author,
     content: '',
     status: Status.DRAFT
   };
@@ -40,48 +36,55 @@ function TextEditor({ toggle }: Toggle) {
   return (
     <Formik
       initialValues={initialValues}
-      // tslint:disable-next-line:no-console
+      validationSchema={Yup.object().shape({
+        title: Yup.string().required(),
+        content: Yup.string().required()
+      })}
       onSubmit={(values: PostField) => console.log(values)}
       render={(_FORMIK_PROPS: FormikProps<PostField>) => {
         return (
-          <Form className={style.formPost}>
-            <div
-              className={style.postField}
-              style={
-                IS_POST_TOGGLE
-                  ? {
-                      position: 'fixed',
-                      top: '0px',
-                      left: '0px',
-                      right: '0px',
-                      bottom: '0px',
-                      width: '100%'
-                    }
-                  : {
-                      position: 'initial'
-                    }
-              }
-            >
+          <Form
+            className={style.formPost}
+            style={
+              IS_POST_TOGGLE
+                ? {
+                    position: 'fixed',
+                    top: '0px',
+                    left: '0px',
+                    right: '0px',
+                    bottom: '0px',
+                    width: '100%'
+                  }
+                : {
+                    position: 'initial'
+                  }
+            }
+          >
+            <div className={style.postField}>
               <div className={style.title}>
                 <Field
                   name="title"
                   placeholder="Title"
                   className={style.form}
                 />
-                <button
-                  type="button"
-                  className={style.button}
-                  onClick={() => dispatch({ type: TRIGGER_MENU })}
-                >
-                  {IS_POST_TOGGLE ? (
-                    <Reduce style={{ width: '20px' }} />
-                  ) : (
-                    <Maximize style={{ width: '20px' }} />
-                  )}
-                </button>
-                <button type="button" className={style.button} onClick={toggle}>
-                  Close
-                </button>
+                {_FORMIK_PROPS.isValid ? (
+                  <button
+                    type="button"
+                    style={{ fontSize: '.6rem', color: 'var(--blue)' }}
+                    className={style.button}
+                  >
+                    Post
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    style={{ fontSize: '.7rem', color: 'var(--pink)' }}
+                    className={style.button}
+                    onClick={toggle}
+                  >
+                    X
+                  </button>
+                )}
               </div>
               <ToolBar />
               <Field
@@ -93,7 +96,6 @@ function TextEditor({ toggle }: Toggle) {
                 placeholder="Type Here..."
                 component={AreaText}
               />
-              <div id="review" />
             </div>
           </Form>
         );

@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Smile from '../public/Smile.svg';
 import style from '../public/style.scss';
 import Sidebar from './sidebar';
-import Avatar from './AvatarTop';
+import { AvatarTop } from './AvatarTop';
 import { useSelector } from 'react-redux';
-
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -14,9 +13,13 @@ export default function Layout(props: LayoutProps) {
   return (
     <Router>
       <div className={style.layout}>
-        <div className={style.logo}>
+        <div
+          className={`${style.logo} ${
+            user.isLogin ? style.avatar_section : ''
+          }`}
+        >
           {user.isLogin ? (
-            <Avatar user={user} />
+            <AvatarTop {...user} />
           ) : (
             <>
               <Smile />

@@ -1,8 +1,17 @@
 import * as React from 'react';
 import style from '../../../public/style.scss';
 import Gear from '../../../public/settings.svg';
+import { Field } from 'formik';
+import { Status } from './index';
+
+import Maximize from '../../../public/maximize.svg';
+import Reduce from '../../../public/reduce.svg';
+import { TRIGGER_MENU } from '../../redux/constan';
+import { useDispatch, useSelector } from 'react-redux';
 export default () => {
   const [isSetting, setSetting] = React.useState(false);
+  const dispatch = useDispatch();
+  const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
   const menu = {
     main: [
       {
@@ -11,16 +20,18 @@ export default () => {
           setSetting((state: any) => !state);
         }
       },
-      { text: <span style={{ fontSize: '.5rem' }}>Preview</span> },
-
       {
-        text: <span style={{ fontSize: '.6rem', fontWeight: 700 }}>h1</span>
+        text: (
+          <Field component="select" name="status" className={style.select}>
+            <option value={Status.DRAFT}>Draft</option>
+            <option value={Status.HIDE}>Hide</option>
+            <option value={Status.PUBLISH}>Publish</option>
+          </Field>
+        )
       },
+      { text: <span style={{ fontSize: '.5rem' }}>Image</span> },
       {
-        text: <span style={{ fontSize: '.520rem', fontWeight: 700 }}>h2</span>
-      },
-      {
-        text: <span style={{ fontSize: '.460rem', fontWeight: 700 }}>h3</span>
+        text: <span style={{ fontSize: '.6rem', fontWeight: 700 }}>H</span>
       },
       {
         text: <span style={{ fontSize: '.6rem', fontWeight: 700 }}>B</span>
@@ -37,7 +48,15 @@ export default () => {
       },
       { text: <span style={{ fontSize: '.5rem' }}>Left</span> },
       { text: <span style={{ fontSize: '.5rem' }}>Center</span> },
-      { text: <span style={{ fontSize: '.5rem' }}>Right</span> }
+      { text: <span style={{ fontSize: '.5rem' }}>Right</span> },
+      {
+        text: IS_POST_TOGGLE ? (
+          <Reduce style={{ width: '12px' }} />
+        ) : (
+          <Maximize style={{ width: '12px' }} />
+        ),
+        onClick: () => dispatch({ type: TRIGGER_MENU })
+      }
     ],
     setting: [
       {
