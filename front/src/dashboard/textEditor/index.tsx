@@ -4,6 +4,9 @@ import style from '../../../public/style.scss';
 import { useSelector } from 'react-redux';
 import AreaText from './AreaText';
 import ToolBar from './ToolBar';
+import * as Showdown from 'showdown';
+import 'showdown-youtube';
+
 import * as Yup from 'yup';
 export enum Status {
   PUBLISH = 'publish',
@@ -11,19 +14,17 @@ export enum Status {
   HIDE = 'hide'
 }
 
-function logSelection(event) {
-  const selection = event.target.value.substring(
-    event.target.selectionStart,
-    event.target.selectionEnd
-  );
-}
-
 function TextEditor({ toggle }: Toggle) {
   const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
-  const author = useSelector((state: any) => state.user.data.me.user_id);
+  const [isPreview, setPreview] = React.useState(false);
+  const logSelection = (event: any) => {
+    const selection = event.target.value.substring(
+      event.target.selectionStart,
+      event.target.selectionEnd
+    );
+  };
   const initialValues = {
     title: '',
-    author,
     content: '',
     status: Status.DRAFT
   };
@@ -42,6 +43,13 @@ function TextEditor({ toggle }: Toggle) {
       })}
       onSubmit={(values: PostField) => console.log(values)}
       render={(_FORMIK_PROPS: FormikProps<PostField>) => {
+        const converter = new Showdown.Converter({
+          extensions: ['youtube']
+        });
+        const _MTHML = {
+          __html: converter.makeHtml(_FORMIK_PROPS.values.content)
+        };
+        console.log(_FORMIK_PROPS.values);
         return (
           <Form
             className={style.formPost}
@@ -86,16 +94,22 @@ function TextEditor({ toggle }: Toggle) {
                   </button>
                 )}
               </div>
-              <ToolBar />
-              <Field
-                name="content"
-                className={style.content}
-                style={{
-                  width: '100%'
-                }}
-                placeholder="Type Here..."
-                component={AreaText}
-              />
+              <ToolBar setPreview={() => setPreview((state: any) => !state)} />
+              {isPreview ? (
+                <div className={style.preview}>
+                  <div dangerouslySetInnerHTML={_MTHML} />
+                </div>
+              ) : (
+                <Field
+                  name="content"
+                  className={style.content}
+                  style={{
+                    width: '100%'
+                  }}
+                  placeholder="Type Here..."
+                  component={AreaText}
+                />
+              )}
             </div>
           </Form>
         );

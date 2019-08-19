@@ -8,7 +8,12 @@ import Maximize from '../../../public/maximize.svg';
 import Reduce from '../../../public/reduce.svg';
 import { TRIGGER_MENU } from '../../redux/constan';
 import { useDispatch, useSelector } from 'react-redux';
-export default () => {
+
+interface ToolbarProps {
+  setPreview: () => void;
+}
+
+export default ({ setPreview }: ToolbarProps) => {
   const [isSetting, setSetting] = React.useState(false);
   const dispatch = useDispatch();
   const IS_POST_TOGGLE = useSelector(({ menu }: any) => menu.toggle);
@@ -28,6 +33,10 @@ export default () => {
             <option value={Status.PUBLISH}>Publish</option>
           </Field>
         )
+      },
+      {
+        text: <span style={{ fontSize: '.5rem' }}>Preview</span>,
+        onClick: setPreview
       },
       { text: <span style={{ fontSize: '.5rem' }}>Image</span> },
       {

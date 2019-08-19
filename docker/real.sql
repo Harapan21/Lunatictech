@@ -29,6 +29,12 @@ DELIMITER $$
 	END $$
 DELIMITER ;
 
+CREATE TABLE category (
+	id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    parentId INT,
+    PRIMARY KEY(id)
+);
 
 CREATE TABLE post (
     id INT NOT NULL AUTO_INCREMENT,
@@ -36,13 +42,14 @@ CREATE TABLE post (
     title VARCHAR(255),
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
+    categoryId INT NOT NULL DEFAULT 0,
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
     PRIMARY KEY (id),
     FOREIGN KEY (author_id)
         REFERENCES usr_smile (user_id)
-        ON UPDATE CASCADE ON DELETE SET NULL
+        ON UPDATE CASCADE ON DELETE SET NULL,	
 );
 
 

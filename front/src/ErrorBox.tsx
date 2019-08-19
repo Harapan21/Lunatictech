@@ -9,6 +9,7 @@ interface ErrorBoxProps {
 const ErrorBox = ({ errorMsg }: ErrorBoxProps) => {
   return (
     <div
+      id={style.error ? style.error : ''}
       style={{ maxWidth: '230px' }}
       className={`${style.card} ${style.danger}`}
     >

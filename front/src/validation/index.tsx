@@ -5,6 +5,18 @@ const ValidationMessage = {
   required: 'cannot be empty',
   password: 'Weak'
 };
+
+export const LoginValidation = () =>
+  Yup.object().shape({
+    userName: Yup.string().required(ValidationMessage.required),
+    passwordUsr: Yup.string()
+      .required(ValidationMessage.required)
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        ValidationMessage.password
+      )
+  });
+
 export default () =>
   Yup.object().shape({
     fullName: Yup.string().required(ValidationMessage.required),

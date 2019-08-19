@@ -11,11 +11,14 @@ declare module '*.jpeg' {
   export default content;
 }
 
-interface UserSetup {
-  fullName: string;
-  userName: string;
-  emailAddress: string;
+interface LoginPage {
   passwordUsr: string;
+  userName: string;
+}
+
+interface UserSetup extends LoginPage {
+  fullName: string;
+  emailAddress: string;
   avatar: null | object;
 }
 
@@ -40,7 +43,6 @@ interface User {
 
 interface PostField {
   title: string;
-  author: string;
   content: string;
   rating?: number;
   thumbnail?: string;

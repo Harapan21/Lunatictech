@@ -5,9 +5,7 @@ import ErrorBox from '../../ErrorBox';
 import Hide from '../../../public/hide.svg';
 import Show from '../../../public/view.svg';
 
-export default function InputLarge(
-  props: InputPageProps<FieldProps<UserSetup>>
-) {
+export default function InputLarge<T>(props: InputPageProps<FieldProps<T>>) {
   const {
     field,
     form,

@@ -17,6 +17,8 @@ export default class Page extends React.Component<PageProps, PageState> {
   public state = {
     isPasswordShow: false
   };
+
+  public FieldInput = (props: any) => InputLarge<UserSetup>(props);
   // tslint:disable-next-line:member-ordering
   // tslint:disable-next-line:member-access
   public content = (handleState?: () => void) => [
@@ -26,7 +28,7 @@ export default class Page extends React.Component<PageProps, PageState> {
       type="text"
       name="fullName"
       label="Enter Your Name"
-      component={InputLarge}
+      component={this.FieldInput}
       onClick={handleState}
     />,
     <Field
@@ -35,7 +37,7 @@ export default class Page extends React.Component<PageProps, PageState> {
       name="userName"
       label="Enter Your Username"
       onClick={handleState}
-      component={InputLarge}
+      component={this.FieldInput}
     />,
     <Field
       key={2}
@@ -43,7 +45,7 @@ export default class Page extends React.Component<PageProps, PageState> {
       name="emailAddress"
       label="Enter Your Email"
       onClick={handleState}
-      component={InputLarge}
+      component={this.FieldInput}
     />,
     <Field
       key={3}
@@ -57,7 +59,7 @@ export default class Page extends React.Component<PageProps, PageState> {
       name="passwordUsr"
       label="Enter Your Password"
       onClick={handleState}
-      component={InputLarge}
+      component={this.FieldInput}
     />,
     <Field
       key={4}
