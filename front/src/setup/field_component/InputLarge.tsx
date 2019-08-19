@@ -19,6 +19,7 @@ export default function InputLarge<T>(props: InputPageProps<FieldProps<T>>) {
   const isOverflow: boolean = field.value.length > 15;
   const isPassword = type === 'password';
   const checkIsPassword = isPassword ? (passwordShow ? 'text' : type) : type;
+
   return (
     <div className={`${style.formLarge} ${isOverflow ? style.overflow : ''}`}>
       <label>{label}</label>
@@ -47,17 +48,30 @@ export default function InputLarge<T>(props: InputPageProps<FieldProps<T>>) {
           )}
         </button>
       )}
-      <button
-        disabled={
-          (form.touched[field.name] && form.errors[field.name]) ||
-          !form.touched[field.name]
-        }
-        onClick={onClick}
-        type="button"
-        className={style.buttonDefault}
-      >
-        next
-      </button>
+      {form.isValid ? (
+        <button
+          disabled={
+            (form.touched[field.name] && form.errors[field.name]) ||
+            !form.touched[field.name]
+          }
+          type="submit"
+          className={style.buttonDefault}
+        >
+          finish
+        </button>
+      ) : (
+        <button
+          disabled={
+            (form.touched[field.name] && form.errors[field.name]) ||
+            !form.touched[field.name]
+          }
+          onClick={onClick}
+          type="button"
+          className={style.buttonDefault}
+        >
+          next
+        </button>
+      )}
     </div>
   );
 }
