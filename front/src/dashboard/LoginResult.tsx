@@ -6,17 +6,31 @@ import { LOGIN } from '../apollo/mutation';
 import style from '../../public/style.scss';
 import { LoginValidation } from '../validation';
 import InputLarge from '../setup/field_component/InputLarge';
+import { useDispatch } from 'react-redux';
+import { USER_FETCH_REQUESTED } from '../redux/constan';
+
 export default withRouter(({ history }) => {
   const InitValuesLogin = {
     userName: '',
     passwordUsr: ''
   };
+
   const [login] = useMutation(LOGIN, {
     onCompleted({ login }) {
       localStorage.setItem('token', login.token);
-      history.push('/');
     }
   });
+
+  const dispatch = useDispatch();
+  const handleSubmit = (values: LoginPage) => {
+    login({
+      variables: {
+        username: values.userName,
+        password: values.passwordUsr
+      }
+    });
+    dispatch({ type: USER_FETCH_REQUESTED });
+  };
   const [step, setStep] = React.useState(0);
   const handleState = () => setStep((state: number) => state + 1);
 
@@ -32,7 +46,7 @@ export default withRouter(({ history }) => {
     />,
     <Field
       key={1}
-      type="text"
+      type="password"
       name="passwordUsr"
       onClick={handleState}
       label="Enter Your Password"
@@ -44,14 +58,7 @@ export default withRouter(({ history }) => {
     <div className={style.setup}>
       <Formik
         validationSchema={LoginValidation}
-        onSubmit={(values: LoginPage) => {
-          login({
-            variables: {
-              username: values.userName,
-              password: values.passwordUsr
-            }
-          });
-        }}
+        onSubmit={(values: LoginPage) => handleSubmit(values)}
         initialValues={InitValuesLogin}
         render={() => <Form>{LoginStep(handleState)[step]}</Form>}
       />

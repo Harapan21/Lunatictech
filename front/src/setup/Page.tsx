@@ -14,9 +14,6 @@ interface PageState {
 
 export default class Page extends React.Component<PageProps, PageState> {
   // tslint:disable-next-line: member-access
-  public state = {
-    isPasswordShow: false
-  };
 
   public FieldInput = (props: any) => InputLarge<UserSetup>(props);
   // tslint:disable-next-line:member-ordering
@@ -50,12 +47,6 @@ export default class Page extends React.Component<PageProps, PageState> {
     <Field
       key={3}
       type="password"
-      passwordShow={this.state.isPasswordShow}
-      setPasswordShow={() =>
-        this.setState((state: any) => ({
-          isPasswordShow: !state.isPasswordShow
-        }))
-      }
       name="passwordUsr"
       label="Enter Your Password"
       onClick={handleState}

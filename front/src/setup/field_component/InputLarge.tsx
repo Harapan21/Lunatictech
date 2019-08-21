@@ -6,17 +6,9 @@ import Hide from '../../../public/hide.svg';
 import Show from '../../../public/view.svg';
 
 export default function InputLarge<T>(props: InputPageProps<FieldProps<T>>) {
-  const {
-    field,
-    form,
-    label,
-    onClick,
-    passwordShow,
-    setPasswordShow,
-    type,
-    ...rest
-  } = props;
+  const { field, form, label, onClick, type, ...rest } = props;
   const isOverflow: boolean = field.value.length > 15;
+  const [passwordShow, setPasswordShow] = React.useState(false);
   const isPassword = type === 'password';
   const checkIsPassword = isPassword ? (passwordShow ? 'text' : type) : type;
 
@@ -39,7 +31,8 @@ export default function InputLarge<T>(props: InputPageProps<FieldProps<T>>) {
         <button
           type="button"
           className={style.buttonDefault}
-          onClick={setPasswordShow}
+          style={{ margin: '0px' }}
+          onClick={() => setPasswordShow((isShow: boolean) => !isShow)}
         >
           {passwordShow ? (
             <Hide className={style.password} />
