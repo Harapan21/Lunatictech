@@ -1,6 +1,8 @@
 import * as React from 'react';
 import style from '../public/style.scss';
-
+import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { USER_LOGOOUT_EVENT } from './redux/constan';
 export const AvatarTop: React.SFC<ReduxUserState> = ({ data, loading }) => {
   return loading ? (
     <Loading />
@@ -30,16 +32,24 @@ const Profile = ({ profileName }: any) => (
   </button>
 );
 
-const Logout = () => (
-  <button
-    style={{
-      all: 'unset',
-      cursor: 'pointer',
-      color: 'var(--pink)',
-      fontSize: '.425rem',
-      margin: '0px 10px'
-    }}
-  >
-    Logout
-  </button>
-);
+const Logout = withRouter(({ history }) => {
+  const dispatch = useDispatch();
+  return (
+    <button
+      onClick={() => {
+        localStorage.removeItem('token');
+        dispatch({ type: USER_LOGOOUT_EVENT });
+        history.push('/login');
+      }}
+      style={{
+        all: 'unset',
+        cursor: 'pointer',
+        color: 'var(--pink)',
+        fontSize: '.425rem',
+        margin: '0px 10px'
+      }}
+    >
+      Logout
+    </button>
+  );
+});

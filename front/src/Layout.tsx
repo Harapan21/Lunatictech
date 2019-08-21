@@ -5,9 +5,11 @@ import style from '../public/style.scss';
 import Sidebar from './sidebar';
 import { AvatarTop } from './AvatarTop';
 import { useSelector } from 'react-redux';
+
 interface LayoutProps {
   children: React.ReactNode;
 }
+
 export default function Layout(props: LayoutProps) {
   const user: ReduxUserState = useSelector((state: any) => state.user);
   return (

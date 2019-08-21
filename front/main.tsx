@@ -24,6 +24,7 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 sagaMiddleware.run(rootSaga);
+const token = localStorage.getItem('token');
 const client = new ApolloClient({
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
@@ -43,9 +44,7 @@ const client = new ApolloClient({
     createUploadLink({
       uri: 'http://localhost:4000/graphql',
       headers: {
-        token: localStorage.getItem('token')
-          ? localStorage.getItem('token')
-          : ''
+        token: token ? token : ''
       }
     })
   ]),
