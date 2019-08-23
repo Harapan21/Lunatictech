@@ -1,7 +1,6 @@
 // tslint:disable-next-line:no-submodule-imports
-import { all, put, takeLatest } from 'redux-saga/effects';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_USER } from '../apollo/query';
+import { all, put, takeLatest, call } from 'redux-saga/effects';
+import { getUser } from '../apollo/actionMutation';
 import {
   USER_FETCH_SUCCEEDED,
   USER_FETCH_REQUESTED,
@@ -9,17 +8,15 @@ import {
 } from './constan';
 
 function* FetchUserData() {
-  const { data, loading } = useQuery(GET_USER);
-  // tslint:disable-next-line:curly
-  if (!loading) {
-    if (data.me) {
-      yield put({
-        type: USER_FETCH_SUCCEEDED,
-        payload: { data, loading, isLogin: true }
-      });
-    } else {
-      yield put({ type: USER_FETCH_FAILED, payload: { loading } });
-    }
+  try {
+    const user = yield call(getUser);
+    yield console.log(user);
+    yield put({
+      type: USER_FETCH_SUCCEEDED,
+      payload: { data, loading, isLogin: true }
+    });
+  } catch {
+    yield put({ type: USER_FETCH_FAILED, payload: { loading: false } });
   }
 }
 
