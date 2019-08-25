@@ -4,55 +4,41 @@ import Setup from './setup';
 import LoginResult from './dashboard/LoginResult';
 import Dashboard from './dashboard';
 import { connect } from 'react-redux';
-import { USER_FETCH_REQUESTED } from './redux/constan';
 
 interface AshaRouterProps {
   user: ReduxUserState;
-  fetchUser: any;
 }
 
-class AshaRouter extends React.Component<AshaRouterProps> {
-  public componentDidMount() {
-    this.props.fetchUser();
+const HandleRoute = ({ user }: any) => {
+  if (user.loading) {
+    return <div>Loading...</div>;
   }
-  public HandleRoute = () => {
-    const { isLogin, loading } = this.props.user;
-    if (loading) {
-      return <div>Loading...</div>;
-    } else {
-      return isLogin ? (
-        <Dashboard />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/login'
-          }}
-        />
-      );
-    }
-    // tslint:disable-next-line:semicolon
-  };
-
-  public render() {
+  if (user.data.me) {
+    return <Dashboard />;
+  } else {
     return (
-      <>
-        <Route exact={true} path="/setup" component={Setup} />
-        <Route exact={true} path="/login" render={() => <LoginResult />} />
-        <Route exact={true} path="/" component={this.HandleRoute} />
-      </>
+      <Redirect
+        to={{
+          pathname: '/login'
+        }}
+      />
     );
   }
+  // tslint:disable-next-line:semicolon
+};
+
+function AshaRouter({ user }: AshaRouterProps) {
+  return (
+    <>
+      <Route exact={true} path="/setup" component={Setup} />
+      <Route exact={true} path="/login" component={LoginResult} />
+      <Route exact={true} path="/" render={() => <HandleRoute user={user} />} />
+    </>
+  );
 }
 
 const mapStateToProps = (state: any) => ({
   user: state.user
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-  fetchUser: () => dispatch({ type: USER_FETCH_REQUESTED })
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AshaRouter);
+export default connect(mapStateToProps)(AshaRouter);

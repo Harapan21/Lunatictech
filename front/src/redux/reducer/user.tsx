@@ -1,7 +1,7 @@
 import {
   USER_FETCH_SUCCEEDED,
-  USER_FETCH_FAILED,
-  USER_LOGOOUT_EVENT
+  USER_LOGOOUT_EVENT,
+  USER_FETCH_FAILED
 } from '../constan';
 
 const initialState = { isLogin: false, data: {} };

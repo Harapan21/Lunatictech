@@ -4,10 +4,10 @@ import PostResult from './PostResult';
 import DashboardResult from './DashboardResult';
 import DriveResult from './DriveResult';
 
-export default React.memo(() => {
+export default () => {
   // tslint:disable-next-line:jsx-key
   const menu = [<DashboardResult />, <PostResult />, <DriveResult />];
   const INDEX_ACTIVE = useSelector(({ menu }: any) => menu.dashboard);
 
   return menu[INDEX_ACTIVE];
-});
+};

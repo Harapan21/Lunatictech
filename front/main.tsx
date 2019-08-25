@@ -12,7 +12,6 @@ import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
 
 import reducer from './src/redux/reducer';
-import rootSaga from './src/redux/sagas';
 
 import { createStore, applyMiddleware } from 'redux';
 // tslint:disable-next-line:no-implicit-dependencies
@@ -23,7 +22,6 @@ const store = createStore(
   reducer,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
-sagaMiddleware.run(rootSaga);
 const token = localStorage.getItem('token');
 const client = new ApolloClient({
   link: ApolloLink.from([

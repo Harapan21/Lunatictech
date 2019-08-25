@@ -1,13 +1,35 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { LOGIN } from '../apollo/mutation';
 import style from '../../public/style.scss';
 import { LoginValidation } from '../validation';
 import InputLarge from '../setup/field_component/InputLarge';
+import { useSelector, useDispatch } from 'react-redux';
+import { GET_USER } from '../apollo/query';
+import { USER_FETCH_SUCCEEDED, USER_FETCH_FAILED } from '../redux/constan';
 
-export default withRouter(({ history }: any) => {
+function LoginResult() {
+  const user = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+  const { data, loading, called, refetch } = useQuery(GET_USER);
+
+  React.useEffect(() => {
+    console.log(loading, called, data);
+    // if (!loading && called) {
+    //   data && data.me !== null
+    //     ? dispatch({
+    //         type: USER_FETCH_SUCCEEDED,
+    //         payload: { data, loading, isLogin: true }
+    //       })
+    //     : dispatch({
+    //         type: USER_FETCH_FAILED,
+    //         payload: { data, loading, isLogin: false }
+    //       });
+    // }
+  }, [loading, data, called]);
+
   const InitValuesLogin = {
     userName: '',
     passwordUsr: ''
@@ -18,7 +40,6 @@ export default withRouter(({ history }: any) => {
       localStorage.setItem('token', login.token);
     }
   });
-
   // const dispatch = useDispatch();
   const HandleSubmit = React.useCallback(
     (values: LoginPage) => {
@@ -28,8 +49,9 @@ export default withRouter(({ history }: any) => {
           password: values.passwordUsr
         }
       });
+      refetch();
     },
-    [login, history]
+    [localStorage.getItem('token')]
   );
 
   const [step, setStep] = React.useState(0);
@@ -55,7 +77,9 @@ export default withRouter(({ history }: any) => {
     />
   ];
 
-  return (
+  return !user.loading && user.isLogin ? (
+    <Redirect to="/" />
+  ) : (
     <div className={style.setup}>
       <Formik
         validationSchema={LoginValidation}
@@ -65,4 +89,6 @@ export default withRouter(({ history }: any) => {
       />
     </div>
   );
-});
+}
+
+export default LoginResult;
