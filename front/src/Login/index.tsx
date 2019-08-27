@@ -5,21 +5,27 @@ import style from '../../public/style.scss';
 import Logo from '../../public/Smile.svg';
 import * as Yup from 'yup';
 import Quotes from '../components/Quotes';
-export default ({ switcher }: LoginProps) => {
+import { useMutation } from '@apollo/react-hooks';
+import { LOGIN } from '../apollo/mutation';
+export default ({ switcher, handleLogin }: LoginProps) => {
   const { quote, author } = Quotes();
-
+  const [login] = useMutation(LOGIN, {
+    onCompleted(data) {
+      // tslint:disable-next-line: no-unused-expression
+      data && handleLogin(data.login);
+    }
+  });
   return (
     <Formik
       validationSchema={Yup.object().shape({
         username: Yup.string().required(),
-        password: Yup.string()
-          .matches(/^(?=.*\\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/)
-          .min(8)
-          .required('Password is required!')
+        password: Yup.string().required('Password is required!')
       })}
       initialValues={{ username: '', password: '' }}
-      onSubmit={(values: LoginFormValues) => console.log(values)}
-      render={() => (
+      onSubmit={(values: LoginFormValues) => {
+        login({ variables: { ...values } });
+      }}
+      render={({ isValid, isSubmitting }) => (
         <div className={style.section}>
           <div className={style.flexCenter}>
             <Form
@@ -45,27 +51,32 @@ export default ({ switcher }: LoginProps) => {
                 name="username"
                 style={{ margin: '10px 0px' }}
                 component={FormSmileField}
-                placeholder="username"
+                placeholder="Username"
               />
               <Field
                 type="password"
                 name="password"
                 style={{ margin: '10px 0px' }}
                 component={FormSmileField}
-                placeholder="password"
+                placeholder="Password"
               />
               {switcher}
-              <button
-                style={{
-                  all: 'inherit',
-                  fontSize: 'var(--font-size-default)',
-                  cursor: 'pointer',
-                  padding: 'var(--padding-small)'
-                }}
-                type="submit"
-              >
-                Login
-              </button>
+              {isValid &&
+                (isSubmitting ? (
+                  <div> Loading...</div>
+                ) : (
+                  <button
+                    type="submit"
+                    style={{
+                      all: 'unset',
+                      fontSize: 'var(--font-size-default)',
+                      cursor: 'pointer',
+                      padding: 'var(--padding-small)'
+                    }}
+                  >
+                    Login
+                  </button>
+                ))}
             </Form>
           </div>
           <div

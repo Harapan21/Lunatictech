@@ -5,9 +5,11 @@ import style from '../../public/style.scss';
 import Logo from '../../public/Smile.svg';
 import * as Yup from 'yup';
 import Quotes from '../components/Quotes';
-export default ({ switcher }: LoginProps) => {
-  const { quote, author } = Quotes();
+import { LOGIN } from '../apollo/mutation';
+import { useMutation } from '@apollo/react-hooks';
 
+export default ({ switcher }: RegisterProps) => {
+  const { quote, author } = Quotes();
   return (
     <Formik
       validationSchema={Yup.object().shape({
@@ -20,7 +22,13 @@ export default ({ switcher }: LoginProps) => {
           .email()
           .required()
       })}
-      initialValues={{ username: '', password: '', email: '' }}
+      initialValues={{
+        username: '',
+        password: '',
+        email: '',
+        fullname: '',
+        avatar: ''
+      }}
       onSubmit={(values: RegisterFormValues) => console.log(values)}
       render={({ touched, errors }: FormikProps<RegisterFormValues>) => {
         return (
@@ -51,7 +59,7 @@ export default ({ switcher }: LoginProps) => {
                   component={FormSmileField}
                   placeholder="username"
                 />
-                {touched["username"] && !errors["username"] &&
+                {touched.username && !errors.username && (
                   <Field
                     type="password"
                     name="password"
@@ -59,7 +67,7 @@ export default ({ switcher }: LoginProps) => {
                     component={FormSmileField}
                     placeholder="password"
                   />
-                }
+                )}
                 {switcher}
                 <button
                   style={{

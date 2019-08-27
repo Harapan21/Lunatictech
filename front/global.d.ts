@@ -26,11 +26,25 @@ declare enum ContentChild {
 }
 
 interface ChildrenLayoutProps extends LayoutState {
-  handleLayoutState?: (payload: LayoutState) => void;
+  handleLayoutState: any;
   switcher?: React.ReactNode;
+  user: {
+    data: UserData | null;
+    loading: boolean;
+  };
 }
 interface LayoutProps {
   children: (ChildrenLayoutProps) => React.ReactNode | null;
+}
+
+interface UserData {
+  me: {
+    user_id: string;
+    avatar: string;
+    joinAt: Date;
+    username: string;
+    firstLetter: string;
+  };
 }
 
 interface ContentProps {
@@ -43,10 +57,17 @@ interface LoginFormValues {
   password: string;
 }
 
-interface RegisterFormValues extends LoginFormValues {
-  email: string;
-}
-
 interface LoginProps {
   switcher: React.ReactNode;
+  handleLogin?: (payload: string) => void;
+}
+
+// tslint:disable-next-line:no-empty-interface
+interface RegisterProps extends LoginProps {}
+
+interface RegisterFormValues extends LoginFormValues {
+  email: string;
+  fullname: string;
+  password: string;
+  avatar: string;
 }

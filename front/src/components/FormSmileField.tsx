@@ -26,7 +26,6 @@ const FormSmileField = ({
           borderRadius: '5px',
           width: '100%',
           padding: 'var(--padding-small)',
-          textTransform: 'capitalize',
           border:
             touched[field.name] && errors[field.name]
               ? '1px solid var(--pink)'
