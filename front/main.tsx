@@ -1,27 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import AshaRouter from './src/AshaRouter';
-import Layout from './src/Layout';
+import Layout from './src/Layout/Layout';
+import Sidebar from './src/Layout/Sidebar';
+import Content from './src/Layout/Content';
+import Login from './src/Login';
+import Register from './src/Register';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
-import createSagaMiddleware from 'redux-saga';
-import { Provider } from 'react-redux';
 
-import reducer from './src/redux/reducer';
-
-import { createStore, applyMiddleware } from 'redux';
-// tslint:disable-next-line:no-implicit-dependencies
-import { composeWithDevTools } from 'redux-devtools-extension';
-
-const sagaMiddleware = createSagaMiddleware();
-const store = createStore(
-  reducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware))
-);
 const token = localStorage.getItem('token');
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -50,11 +40,18 @@ const client = new ApolloClient({
 });
 const AshaRoot: React.FC = () => (
   <ApolloProvider client={client}>
-    <Provider store={store}>
-      <Layout>
-        <AshaRouter />
-      </Layout>
-    </Provider>
+    <Layout>
+      {({ isLogin, active, switcher }: ChildrenLayoutProps) => (
+        <>
+          {isLogin && <Sidebar />}
+          <Content isLogin={isLogin} active={active}>
+            <Login switcher={switcher} />
+            <Register switcher={switcher} />
+            <div>Dashboard</div>
+          </Content>
+        </>
+      )}
+    </Layout>
   </ApolloProvider>
 );
 

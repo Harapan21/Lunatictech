@@ -23,6 +23,10 @@
 %fullWidth {
   width: 100%;
 }
+%fullAll {
+  height: 100%;
+  @extend %fullWidth;
+}
 
 %fontQuicksandBold {
   font-family: var(--font-default);
@@ -37,11 +41,14 @@
     --pink: #f67280;
     --white: #ffffff;
     --white-pink: #fffafb;
+    --font-size-default: 0.625rem;
+    --font-size-small: 0.425rem;
+    --padding-small: 8px;
     --shadow-2-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --font-default: 'Quicksand', sans-serif;
-    font-size: 24px;
+    font-size: 20pt;
   }
 
   body,
@@ -75,275 +82,14 @@ input {
   border-radius: 5px;
   box-shadow: var(--shadow-2-xl);
   @extend %flexColumn;
-
-  .content {
-    display: flex;
+  .section {
+    @extend %flex;
     flex: 1;
-
-    .children {
-      @extend %fullWidth;
-      .dashboard_title {
-        padding: 5px 15px;
-        display: flex;
-        align-items: center;
-      }
-      .dashboard_create_new {
-        all: unset;
-
-        margin: 5px 15px;
-        cursor: pointer;
-        box-shadow: var(--shadow-md);
-        padding: 5px;
-        font-size: 0.425rem;
-      }
-      .formPost {
-        width: 100%;
-        height: 100%;
-        .postField {
-          display: flex;
-          flex-direction: column;
-          width: 100% !important;
-          height: 100% !important;
-          min-height: 100%;
-          background: #ffffff;
-          overflow: hidden;
-          #error {
-            width: max-content !important;
-            margin: 0px !important;
-          }
-          .preview {
-            height: 100%;
-            position: relative;
-
-            padding: 0px;
-            margin: 0px;
-            > div {
-              position: absolute;
-              left: 0px;
-              right: 0px;
-              bottom: 0px;
-              top: 0px;
-              width: 100%;
-              overflow-y: scroll;
-              overflow-x: hidden;
-              h1,
-              h2,
-              h3,
-              h4 {
-                font-size: 1rem;
-              }
-              * {
-                font-size: 0.625rem;
-              }
-            }
-          }
-          .content {
-            border: none;
-            outline: none;
-            resize: none;
-            height: 100% !important;
-            padding: 10px;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 0.625rem;
-            @extend %fullWidth;
-            font-family: var(--font-default);
-            &:focus {
-              @extend %fullWidth;
-              border-radius: 5px;
-              box-sizing: border-box;
-            }
-          }
-          .title {
-            position: relative;
-            display: flex;
-            background: var(--grey);
-            justify-content: space-between;
-            .form {
-              padding: 10px;
-              border: none;
-              background: transparent;
-              font-size: 0.825rem;
-              @extend %fullWidth;
-              @extend %fontQuicksandBold;
-            }
-            .button {
-              cursor: pointer;
-              font-size: 0.625rem;
-              opacity: 0.8;
-              color: var(--black);
-              border: none;
-              background: transparent;
-              font-weight: 500;
-              padding: 5px 15px;
-            }
-          }
-        }
-      }
-      .setup {
-        @extend %flexMiddle;
-        text-align: center;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        @extend %flexColumn;
-        @extend %zeroPaddingMargin;
-
-        h1 {
-          font-size: 1rem;
-        }
-
-        h2 {
-          font-size: 0.825rem;
-        }
-
-        :global #setupForm {
-          > * {
-            margin: 20px 0px;
-          }
-        }
-
-        .formLarge {
-          width: 100%;
-          .avatar {
-            img {
-              max-width: 80px;
-              height: 80px;
-              border-radius: 50%;
-            }
-          }
-          &.upload {
-            position: relative;
-            svg {
-              width: 50px;
-              opacity: 0.5;
-              height: auto;
-              margin: auto;
-            }
-
-            input {
-              font-size: 0.825rem;
-              position: absolute;
-
-              cursor: pointer;
-              top: 0;
-              text-indent: -9999px;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              opacity: 0;
-
-              &::hover,
-              &::focus {
-                opacity: 0;
-              }
-            }
-          }
-
-          > * {
-            margin: 15px 0px;
-          }
-
-          @extend %flexColumn;
-
-          &.overflow {
-            input {
-              font-size: 1.2rem;
-              position: relative;
-              z-index: 0;
-            }
-          }
-
-          input {
-            text-align: center;
-            font-size: 3rem;
-            @extend %fontQuicksandBold;
-            opacity: 0.4;
-            border: none;
-            transition: all 0.18s;
-            background: transparent;
-            width: 100%;
-
-            &::placeholder {
-              text-transform: capitalize;
-            }
-
-            &:focus {
-              opacity: 1;
-              outline-style: none;
-              box-shadow: none;
-              border-color: transparent;
-            }
-          }
-        }
-      }
-    }
-
-    .sidebar {
-      background: var(--white);
-      .menu {
-        @extend %zeroPaddingMargin;
-        @extend %flexColumn;
-        justify-content: center;
-
-        li {
-          list-style: none;
-          padding: 15px 20px;
-          @extend %zeroPaddingMargin;
-
-          svg {
-            fill: transparent;
-
-            rect {
-              stroke: var(--black);
-            }
-
-            width: 23px;
-            height: auto;
-          }
-        }
-      }
+    @extend %fullAll;
+    > * {
+      @extend %fullAll;
     }
   }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-
-    span {
-      margin-left: 5px;
-      font-size: 0.825rem;
-    }
-
-    svg {
-      width: 20px;
-      height: auto;
-    }
-  }
-
-  .buttonDefault {
-    all: unset;
-    font-size: 0.825rem;
-    cursor: pointer;
-    user-select: none;
-    color: var(--pink) !important;
-    .password {
-      max-width: 20px !important;
-    }
-  }
-
-  .danger {
-    background: var(--white);
-    div {
-      color: var(--pink) !important;
-      font-weight: 500 !important;
-      font-size: 0.625rem;
-    }
-  }
-
   .card {
     @extend %flex;
     margin: auto !important;
@@ -351,56 +97,9 @@ input {
     padding: 10px;
     align-items: center;
     box-shadow: var(--shadow-md);
-    &.toolbar {
-      align-items: center !important;
-      font-size: 0.635rem;
-      display: flex;
-      box-shadow: none !important;
-      .item_toolbar {
-        all: unset;
-        @extend %flex;
-        align-items: center !important;
-        padding: 0px;
-        cursor: pointer;
-        margin: 0px 15px;
-        text-align: center;
-        svg {
-          padding: 0px;
-          margin: 0px !important;
-        }
-      }
-      * {
-        user-select: none;
-      }
-    }
-    &.postcard {
-      padding: 15px;
-      margin: 10px 8px !important;
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-      * {
-        @extend %fullWidth;
-      }
-    }
-    .title {
-      font-size: 0.825rem;
-    }
-    svg {
-      max-width: 20px;
-      height: auto;
-      margin-right: 10px !important;
-    }
   }
 }
 
-.avatar_section {
-  padding: 20px;
-  .name {
-    font-size: 0.625rem;
-    font-weight: 700;
-  }
-}
 .select,
 .select:focus,
 .select:hover,
@@ -410,4 +109,10 @@ input {
   border: none !important;
   user-select: none;
   font-size: 0.525rem;
+}
+
+.flexCenter {
+  @extend %flex;
+  justify-content: center;
+  align-items: center;
 }

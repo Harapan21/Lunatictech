@@ -10,76 +10,43 @@ declare module '*.jpeg' {
   const content: any;
   export default content;
 }
-
-interface LoginPage {
-  passwordUsr: string;
-  userName: string;
+declare module '*.json' {
+  const content: any;
+  export default content;
 }
 
-interface UserSetup extends LoginPage {
-  fullName: string;
-  emailAddress: string;
-  avatar: null | object;
+interface LayoutState {
+  isLogin: boolean;
+  active: number;
+}
+declare enum ContentChild {
+  Login,
+  Register,
+  Dashboard
 }
 
-interface ReduxUserState {
-  isLogin?: boolean;
-  data: { me: User };
-  loading: boolean;
+interface ChildrenLayoutProps extends LayoutState {
+  handleLayoutState?: (payload: LayoutState) => void;
+  switcher?: React.ReactNode;
+}
+interface LayoutProps {
+  children: (ChildrenLayoutProps) => React.ReactNode | null;
 }
 
-interface User {
-  user_id?: string;
-  username?: string;
-  email?: string;
-  joinAt?: string;
-  lastEditedAt?: string;
-  fullname?: string;
-  avatar?: string;
-  isAdmin?: boolean;
-  post?: Post[];
-  firstLetter?: string;
+interface ContentProps {
+  isLogin: boolean;
+  active: number;
 }
 
-interface PostField {
-  title: string;
-  content: string;
-  rating?: number;
-  thumbnail?: string;
-  video?: string;
-  status: any;
+interface LoginFormValues {
+  username: string;
+  password: string;
 }
 
-interface Post {
-  id?: number;
-  author?: User;
-  title?: string;
-  content?: string;
-  status?: string;
-  last_edited_at?: string;
-  last_edited_by?: string;
-  embed?: any;
-  rating?: any;
-  contributor?: any;
-  comments?: any;
+interface RegisterFormValues extends LoginFormValues {
+  email: string;
 }
 
-interface InputPageExtendsProps {
-  type: string;
-  label: string;
-  onClick?: any;
-  passwordShow?: boolean;
-  setPasswordShow?: any;
-}
-
-type InputPageProps<T> = InputPageExtendsProps & T;
-
-declare enum Menu {
-  Dahboard,
-  Post,
-  Upload
-}
-
-interface Toggle {
-  toggle: () => void;
+interface LoginProps {
+  switcher: React.ReactNode;
 }
