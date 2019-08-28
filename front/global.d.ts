@@ -75,10 +75,10 @@ interface RegisterFormValues extends LoginFormValues {
   avatar: string;
 }
 
-type DashboardState = 0 | 1 | 2 | 3;
+type DashboardState = number;
 
 interface SidebarProps {
-  menu: Array<{ icon: any; content: string }>;
+  menu: Array<{ Icon: any; content: string }>;
   active: DashboardState;
   setActive: (payload: DashboardState) => void;
 }

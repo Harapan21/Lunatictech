@@ -96,6 +96,17 @@ input {
           width: 100%;
           @extend %flexMiddle;
         }
+        .menu {
+          list-style: none;
+          padding: 0px;
+          margin: 0px;
+          li {
+            padding: 10px 0px;
+            margin: 10px 0px;
+            @extend %flexMiddle;
+            cursor: pointer;
+          }
+        }
       }
     }
   }
