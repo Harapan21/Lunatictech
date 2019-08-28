@@ -8,10 +8,15 @@ const Sidebar: React.SFC<SidebarProps> = ({ menu, active, setActive }) => {
         <Logo width={20} />
       </div>
       <ul className={style.menu}>
-        {menu.map(({ Icon, content }, idx) => {
+        {menu.map(({ Icon, content, isAvatar }, idx) => {
           return (
-            <li key={idx} onClick={() => setActive(idx)}>
-              <Icon width={20} stroke={active === idx ? "2" : 1} />
+            <li
+              key={idx}
+              onClick={() => setActive(idx)}
+              style={{ backgroundColor: active === idx ? 'var(--grey)' : ' ' }}
+            >
+              {!isAvatar ? <Icon /> : <Icon />}
+              <span>{content}</span>
             </li>
           );
         })}

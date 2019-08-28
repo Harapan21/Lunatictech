@@ -88,8 +88,8 @@ input {
       flex-direction: row;
       @extend %fullAll;
       .sidebar {
-        width: 60px;
         border-right: 1px solid var(--grey);
+
         .logo {
           text-align: center;
           padding: 15px 0px;
@@ -99,12 +99,41 @@ input {
         .menu {
           list-style: none;
           padding: 0px;
+          width: 50px;
           margin: 0px;
+          overflow: hidden;
+          transition: width 0.8s;
+          &:hover {
+            width: 200px;
+          }
           li {
             padding: 10px 0px;
             margin: 10px 0px;
-            @extend %flexMiddle;
+            @extend %flex;
+            align-items: center;
+            justify-content: flex-start;
             cursor: pointer;
+            transition: none;
+            .Avatar {
+              @extend %flexMiddle;
+              background: var(--blue);
+              padding: 2px;
+              border-radius: 50%;
+            }
+            :first-child {
+              width: 20px;
+              height: 20px;
+
+              margin-left: 15px;
+              min-width: 20px;
+            }
+            span {
+              margin-left: 30px;
+              font-size: var(--font-size-default);
+            }
+            &:hover {
+              background: var(--grey);
+            }
           }
         }
       }
