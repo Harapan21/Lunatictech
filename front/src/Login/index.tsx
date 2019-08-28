@@ -7,8 +7,11 @@ import * as Yup from 'yup';
 import Quotes from '../components/Quotes';
 import { useMutation } from '@apollo/react-hooks';
 import { LOGIN } from '../apollo/mutation';
-export default ({ switcher, handleLogin }: LoginProps) => {
-  const { quote, author } = Quotes();
+import Loading from '../components/Loading';
+
+const { quote, author } = Quotes();
+
+export default React.memo(({ switcher, handleLogin }: LoginProps) => {
   const [login] = useMutation(LOGIN, {
     onCompleted(data) {
       // tslint:disable-next-line: no-unused-expression
@@ -28,45 +31,47 @@ export default ({ switcher, handleLogin }: LoginProps) => {
       render={({ isValid, isSubmitting }) => (
         <div className={style.section}>
           <div className={style.flexCenter}>
-            <Form
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '280px'
-              }}
-            >
-              <span
+            {isSubmitting ? (
+              <Loading />
+            ) : (
+              <Form
                 style={{
-                  padding: '10px',
                   display: 'flex',
-                  alignItems: 'center',
-                  fontSize: 'var(--font-size-default)'
+                  flexDirection: 'column',
+                  width: '280px'
                 }}
               >
-                <Logo width={20} style={{ marginRight: '10px' }} />
-                Smile
-              </span>
-              <Field
-                type="text"
-                name="username"
-                style={{ margin: '10px 0px' }}
-                component={FormSmileField}
-                placeholder="Username"
-              />
-              <Field
-                type="password"
-                name="password"
-                style={{ margin: '10px 0px' }}
-                component={FormSmileField}
-                placeholder="Password"
-              />
-              {switcher}
-              {isValid &&
-                (isSubmitting ? (
-                  <div> Loading...</div>
-                ) : (
+                <span
+                  style={{
+                    padding: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    fontSize: 'var(--font-size-default)'
+                  }}
+                >
+                  <Logo width={20} style={{ marginRight: '10px' }} />
+                  Smile
+                </span>
+                <Field
+                  type="text"
+                  name="username"
+                  style={{ margin: '10px 0px' }}
+                  component={FormSmileField}
+                  placeholder="Username"
+                />
+                <Field
+                  type="password"
+                  name="password"
+                  autoComplete="off"
+                  style={{ margin: '10px 0px' }}
+                  component={FormSmileField}
+                  placeholder="Password"
+                />
+                {switcher}
+                {isValid && (
                   <button
                     type="submit"
+                    className={isValid ? style.fadeIn : ''}
                     style={{
                       all: 'unset',
                       fontSize: 'var(--font-size-default)',
@@ -76,8 +81,9 @@ export default ({ switcher, handleLogin }: LoginProps) => {
                   >
                     Login
                   </button>
-                ))}
-            </Form>
+                )}
+              </Form>
+            )}
           </div>
           <div
             className={style.flexCenter}
@@ -103,4 +109,4 @@ export default ({ switcher, handleLogin }: LoginProps) => {
       )}
     />
   );
-};
+});

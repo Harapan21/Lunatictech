@@ -82,7 +82,25 @@ input {
   border-radius: 5px;
   box-shadow: var(--shadow-2-xl);
   @extend %flexColumn;
+  &.logged {
+    .dashboard {
+      @extend %flex;
+      flex-direction: row;
+      @extend %fullAll;
+      .sidebar {
+        width: 60px;
+        border-right: 1px solid var(--grey);
+        .logo {
+          text-align: center;
+          padding: 15px 0px;
+          width: 100%;
+          @extend %flexMiddle;
+        }
+      }
+    }
+  }
   .section {
+    animation: fadeIn 0.2s;
     @extend %flex;
     flex: 1;
     @extend %fullAll;
@@ -115,4 +133,25 @@ input {
   @extend %flex;
   justify-content: center;
   align-items: center;
+}
+.animatedSvg {
+  stroke-dasharray: 100;
+  animation: dash 5s linear forwards infinite;
+}
+@keyframes dash {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
+.fadeIn {
+  animation: fadeIn 0.2s;
+  animation-delay: 2s;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

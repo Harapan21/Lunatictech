@@ -24,14 +24,14 @@ declare enum ContentChild {
   Register,
   Dashboard
 }
-
+interface QueryUser {
+  data: UserData | null;
+  loading: boolean;
+}
 interface ChildrenLayoutProps extends LayoutState {
   handleLayoutState: any;
   switcher?: React.ReactNode;
-  user: {
-    data: UserData | null;
-    loading: boolean;
-  };
+  user: QueryUser;
 }
 interface LayoutProps {
   children: (ChildrenLayoutProps) => React.ReactNode | null;
@@ -45,6 +45,9 @@ interface UserData {
     username: string;
     firstLetter: string;
   };
+}
+interface DashboardProps {
+  user: QueryUser;
 }
 
 interface ContentProps {
@@ -70,4 +73,12 @@ interface RegisterFormValues extends LoginFormValues {
   fullname: string;
   password: string;
   avatar: string;
+}
+
+type DashboardState = 0 | 1 | 2 | 3;
+
+interface SidebarProps {
+  menu: Array<{ icon: any; content: string }>;
+  active: DashboardState;
+  setActive: (payload: DashboardState) => void;
 }

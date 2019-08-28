@@ -5,11 +5,10 @@ import style from '../../public/style.scss';
 import Logo from '../../public/Smile.svg';
 import * as Yup from 'yup';
 import Quotes from '../components/Quotes';
-import { LOGIN } from '../apollo/mutation';
-import { useMutation } from '@apollo/react-hooks';
 
-export default ({ switcher }: RegisterProps) => {
-  const { quote, author } = Quotes();
+const { quote, author } = Quotes();
+
+export default React.memo(({ switcher }: RegisterProps) => {
   return (
     <Formik
       validationSchema={Yup.object().shape({
@@ -110,4 +109,4 @@ export default ({ switcher }: RegisterProps) => {
       }}
     />
   );
-};
+});

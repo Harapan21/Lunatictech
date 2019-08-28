@@ -1,16 +1,17 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Layout from './src/Layout/Layout';
-import Sidebar from './src/Layout/Sidebar';
 import Content from './src/Layout/Content';
 import Login from './src/Login';
 import Register from './src/Register';
+import Dashboard from './src/Dashboard';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
+
 const SmileApp: React.FC = () => {
   const [token, setTokenStoreage] = React.useState(
     localStorage.getItem('token')
@@ -60,14 +61,12 @@ const SmileApp: React.FC = () => {
               isLogin: login
             });
           };
-          console.log(user);
           return (
             <>
-              {isLogin && <Sidebar />}
               <Content isLogin={isLogin} active={active}>
                 <Login switcher={switcher} handleLogin={handleLogin} />
                 <Register switcher={switcher} handleLogin={handleLogin} />
-                <div>Dashboard</div>
+                {isLogin && <Dashboard user={user} />}
               </Content>
             </>
           );
