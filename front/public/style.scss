@@ -86,6 +86,15 @@ input {
       @extend %flex;
       flex-direction: row;
       @extend %fullAll;
+      user-select: none;
+      div {
+        .title {
+          font-weight: 700;
+          font-size: var(--font-size-default);
+
+          padding: 15px 10px;
+        }
+      }
       .sidebar {
         border-right: 1px solid var(--grey);
 

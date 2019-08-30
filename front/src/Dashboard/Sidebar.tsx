@@ -41,7 +41,6 @@ const Sidebar: React.SFC<SidebarProps> = React.memo(
           <Logo width={20} />
         </div>
         <ul className={style.menu}>
-          {console.log('render')}
           {MapMenu()}
         </ul>
       </div>

@@ -1,9 +1,14 @@
 import * as React from 'react';
 
-const Content: React.SFC<ContentProps> = ({ children, active, isLogin }) => {
+const Content: React.SFC<ContentProps> = ({
+  children,
+  active,
+  isLogin,
+  defaultActive
+}) => {
   const choosen = children ? (
-    isLogin ? (
-      children[2]
+    isLogin && defaultActive ? (
+      children[defaultActive]
     ) : (
       children[active]
     )

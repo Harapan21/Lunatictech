@@ -63,7 +63,7 @@ const SmileApp: React.FC = () => {
           };
           return (
             <>
-              <Content isLogin={isLogin} active={active}>
+              <Content isLogin={isLogin} active={active} defaultActive={2}>
                 <Login switcher={switcher} handleLogin={handleLogin} />
                 <Register switcher={switcher} handleLogin={handleLogin} />
                 {isLogin && <Dashboard user={user} />}

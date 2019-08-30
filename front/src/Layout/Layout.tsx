@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_USER } from '../apollo/query';
 import Loading from '../components/Loading';
 const Layout: React.SFC<LayoutProps> = ({ children }) => {
-  const { data, loading } = useQuery<UserData>(GET_USER);
+  const { data, loading } = useQuery<{ me: UserData }>(GET_USER);
   const [state, setState] = React.useState<LayoutState>({
     isLogin: false,
     active: 1

@@ -8,6 +8,7 @@ export const GET_USER = gql`
       joinAt
       username
       firstLetter
+      fullname
     }
   }
 `;

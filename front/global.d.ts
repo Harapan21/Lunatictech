@@ -25,7 +25,7 @@ declare enum ContentChild {
   Dashboard
 }
 interface QueryUser {
-  data: UserData | null;
+  data: { me: UserData };
   loading: boolean;
 }
 interface ChildrenLayoutProps extends LayoutState {
@@ -38,21 +38,21 @@ interface LayoutProps {
 }
 
 interface UserData {
-  me: {
-    user_id: string;
-    avatar: string;
-    joinAt: Date;
-    username: string;
-    firstLetter: string;
-  };
+  user_id: string;
+  avatar: string;
+  joinAt: Date;
+  username: string;
+  fullname: string;
+  firstLetter: string;
 }
 interface DashboardProps {
   user: QueryUser;
 }
 
 interface ContentProps {
-  isLogin: boolean;
+  isLogin?: boolean;
   active: number;
+  defaultActive?: number;
 }
 
 interface LoginFormValues {
@@ -75,7 +75,7 @@ interface RegisterFormValues extends LoginFormValues {
   avatar: string | null;
 }
 
-type DashboardState = number;
+type DashboardState = 0 | 1 | 2 | 3;
 
 interface SidebarProps {
   user: QueryUser;
@@ -90,4 +90,8 @@ interface AvatarProps {
 interface ReturnTokenLogin {
   login: boolean;
   token: string;
+}
+
+interface ProfileProps {
+  user: QueryUser;
 }
