@@ -117,6 +117,22 @@ input {
               background: var(--blue);
               padding: 2px;
               border-radius: 50%;
+              overflow: hidden;
+              position: relative;
+              &.valid {
+                padding: 2px;
+              }
+              img {
+                padding: 0;
+                margin: 0;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+              }
             }
             :first-child {
               width: 20px;

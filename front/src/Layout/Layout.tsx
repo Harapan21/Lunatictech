@@ -65,4 +65,4 @@ const Layout: React.SFC<LayoutProps> = ({ children }) => {
     </div>
   );
 };
-export default Layout;
+export default React.memo(Layout);

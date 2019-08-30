@@ -1,28 +1,52 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
 import Logo from '../../public/Smile.svg';
-const Sidebar: React.SFC<SidebarProps> = ({ menu, active, setActive }) => {
-  return (
-    <div className={style.sidebar}>
-      <div className={style.logo}>
-        <Logo width={20} />
-      </div>
-      <ul className={style.menu}>
-        {menu.map(({ Icon, content, isAvatar }, idx) => {
+import DashboardSVG from '../../public/dashboard.svg';
+import Plane from '../../public/paper-plane.svg';
+import Upload from '../../public/server.svg';
+import Avatar from '../components/Avatar';
+
+const Sidebar: React.SFC<SidebarProps> = React.memo(
+  ({ user, active, setActive }) => {
+    const [menu] = React.useState([
+      {
+        id: 0,
+        Icon: () => <Avatar user={user} />,
+        content: user.data ? user.data.me.username : 'Guest',
+        isAvatar: true
+      },
+      { id: 1, Icon: DashboardSVG, content: 'Dashboard' },
+      { id: 2, Icon: Plane, content: 'Post' },
+      { id: 3, Icon: Upload, content: 'Drive' }
+    ]);
+    const MapMenu = React.useCallback(
+      () =>
+        menu.map(({ Icon, content, id }) => {
           return (
             <li
-              key={idx}
-              onClick={() => setActive(idx)}
-              style={{ backgroundColor: active === idx ? 'var(--grey)' : ' ' }}
+              key={id}
+              onClick={() => setActive(id)}
+              style={{ backgroundColor: active === id ? 'var(--grey)' : ' ' }}
             >
-              {!isAvatar ? <Icon /> : <Icon />}
+              <Icon />
               <span>{content}</span>
             </li>
           );
-        })}
-      </ul>
-    </div>
-  );
-};
+        }),
+      [active]
+    );
+    return (
+      <div className={style.sidebar}>
+        <div className={style.logo}>
+          <Logo width={20} />
+        </div>
+        <ul className={style.menu}>
+          {console.log('render')}
+          {MapMenu()}
+        </ul>
+      </div>
+    );
+  }
+);
 
 export default Sidebar;
