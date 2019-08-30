@@ -7,7 +7,6 @@ import Upload from '../../public/server.svg';
 import Avatar from '../components/Avatar';
 export default ({ user }: DashboardProps) => {
   const [active, setActive] = React.useState<DashboardState>(1);
-
   const menu = [
     {
       Icon: () => <Avatar user={user} />,
@@ -18,6 +17,7 @@ export default ({ user }: DashboardProps) => {
     { Icon: Plane, content: 'Post' },
     { Icon: Upload, content: 'Drive' }
   ];
+
   return (
     <div className={`${style.dashboard} ${style.fadeIn}`}>
       <Sidebar

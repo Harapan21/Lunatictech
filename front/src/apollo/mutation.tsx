@@ -45,3 +45,19 @@ export const EDIT_USER = gql`
     EditUser(input: { password: $password })
   }
 `;
+
+export const validationUsername = gql`
+  mutation Validation($username: String) {
+    validation(username: $username) {
+      username
+    }
+  }
+`;
+
+export const validationEmail = gql`
+  mutation Validation($email: String) {
+    validation(email: $email) {
+      email
+    }
+  }
+`;

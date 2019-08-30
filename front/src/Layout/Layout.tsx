@@ -8,7 +8,7 @@ const Layout: React.SFC<LayoutProps> = ({ children }) => {
   const { data, loading } = useQuery<UserData>(GET_USER);
   const [state, setState] = React.useState<LayoutState>({
     isLogin: false,
-    active: 0
+    active: 1
   });
   React.useEffect(() => {
     if (!loading) {

@@ -13,7 +13,7 @@ const { quote, author } = Quotes();
 
 export default React.memo(({ switcher, handleLogin }: LoginProps) => {
   const [login] = useMutation(LOGIN, {
-    onCompleted(data) {
+    onCompleted(data: { login: ReturnTokenLogin }) {
       // tslint:disable-next-line: no-unused-expression
       data && handleLogin(data.login);
     }

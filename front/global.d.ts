@@ -62,7 +62,7 @@ interface LoginFormValues {
 
 interface LoginProps {
   switcher: React.ReactNode;
-  handleLogin?: (payload: string) => void;
+  handleLogin?: (payload: ReturnTokenLogin) => void;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -72,7 +72,7 @@ interface RegisterFormValues extends LoginFormValues {
   email: string;
   fullname: string;
   password: string;
-  avatar: string;
+  avatar: string | null;
 }
 
 type DashboardState = number;
@@ -85,4 +85,9 @@ interface SidebarProps {
 
 interface AvatarProps {
   user: QueryUser;
+}
+
+interface ReturnTokenLogin {
+  login: boolean;
+  token: string;
 }
