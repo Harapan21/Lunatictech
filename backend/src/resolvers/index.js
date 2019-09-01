@@ -70,7 +70,12 @@ module.exports = {
       return username[0];
     },
     avatar: (parent, _) => {
-      return `http://localhost:4000/static/${parent.username}/${parent.avatar}`;
+      const MyFile = `${parent.username}/${parent.avatar}`;
+      const isAvatarExist = fs.existsSync(`${UPLOAD_DIR}/${MyFile}`);
+      if (!isAvatarExist) {
+        return null;
+      }
+      return `http://localhost:4000/static/${MyFile}`;
     }
   },
   Post: {

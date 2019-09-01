@@ -20,7 +20,7 @@ export default function Profile({
           borderBottom: '1px solid var(--grey)'
         }}
       >
-        {!avatar ? (
+        {avatar ? (
           <img
             src={avatar}
             width={50}

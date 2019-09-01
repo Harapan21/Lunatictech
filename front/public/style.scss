@@ -123,13 +123,13 @@ input {
             cursor: pointer;
             .Avatar {
               @extend %flexMiddle;
-              background: var(--blue);
-              padding: 2px;
-              border-radius: 50%;
               overflow: hidden;
               position: relative;
+              text-transform: uppercase;
+              color: var(--black);
               &.valid {
                 padding: 2px;
+                border-radius: 50%;
               }
               img {
                 padding: 0;

@@ -95,3 +95,14 @@ interface ReturnTokenLogin {
 interface ProfileProps {
   user: QueryUser;
 }
+
+interface TextEditorProps {
+  title: string;
+  content: string;
+  status: 'publish' | 'draft' | 'hide';
+}
+
+interface FormSmileFieldProps {
+  style?: React.CSSProperties;
+  type: string;
+}

@@ -5,9 +5,10 @@ import UnView from '../../public/hide.svg';
 const FormSmileField = ({
   field,
   form: { touched, errors },
+  style,
   type,
   ...props
-}: FieldProps & any) => {
+}: FieldProps & FormSmileFieldProps) => {
   const [view, setView] = React.useState(false);
   const inputEl = React.useRef(null);
   const isPassword = type === 'password';
@@ -29,12 +30,14 @@ const FormSmileField = ({
             width: '100%',
             padding: 'var(--padding-small)',
             margin: 0,
+            boxSizing: 'border-box',
             border:
               touched[field.name] && errors[field.name]
                 ? '1px solid var(--pink)'
                 : '1px solid #ececec',
             fontSize: 'var(--font-size-default)',
-            boxShadow: 'var(--shadow-md)'
+            boxShadow: 'var(--shadow-md)',
+            ...style
           }}
         />
         {isPassword && (
