@@ -1,0 +1,13 @@
+
+[package]
+name = "rust-handle"
+version = "0.1.0"
+authors = [ "harapan <harapanpardamean@gmail.com>" ]
+edition = "2018"
+
+[lib]
+crate-type = [ "cdylib" ]
+
+
+[dependencies]
+regex = "1.2.1"

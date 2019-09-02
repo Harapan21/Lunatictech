@@ -9,6 +9,9 @@ export const GET_USER = gql`
       username
       firstLetter
       fullname
+      drive {
+        location
+      }
     }
   }
 `;

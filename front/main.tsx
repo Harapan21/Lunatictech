@@ -16,9 +16,11 @@ const SmileApp: React.FC = () => {
   const [token, setTokenStoreage] = React.useState(
     localStorage.getItem('token')
   );
+
   React.useEffect(() => {
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token as string);
   }, [token]);
+
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -44,7 +46,6 @@ const SmileApp: React.FC = () => {
     ]),
     cache: new InMemoryCache()
   });
-
   return (
     <ApolloProvider client={client}>
       <Layout>

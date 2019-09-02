@@ -60,8 +60,11 @@ const typeDefs = gql`
     isAdmin: Boolean
     post: [Post]
     firstLetter: String!
+    drive: [Drive]
   }
-
+  type Drive {
+    location: String!
+  }
   type Embed {
     id: Int!
     postId: Int!

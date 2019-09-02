@@ -23,6 +23,8 @@ const fs = require('fs');
 const UPLOAD_DIR = './uploads';
 mkdirp.sync(UPLOAD_DIR);
 const shortid = require('shortid');
+const staticUri = 'http://localhost:4000/static/';
+
 const storeFS = ({ stream, filename }, username) => {
   const UPLOAD_DIR_ID = `${UPLOAD_DIR}/${username}`;
   mkdirp.sync(UPLOAD_DIR_ID);
@@ -75,7 +77,16 @@ module.exports = {
       if (!isAvatarExist) {
         return null;
       }
-      return `http://localhost:4000/static/${MyFile}`;
+      return `${staticUri}${MyFile}`;
+    },
+    drive: (parent, _) => {
+      const files = [];
+      fs.readdirSync(`${UPLOAD_DIR}/${parent.username}`).map(file => {
+        if(file.includes(".jpg")) {
+          files.push({location: `${staticUri}${parent.username}/${file}`})
+        }
+      });
+      return files;
     }
   },
   Post: {

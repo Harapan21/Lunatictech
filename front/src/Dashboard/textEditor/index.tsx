@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { Formik, Form, FormikProps, Field, FieldProps } from 'formik';
-import FormSmileField from '../../components/FormSmileField';
-const TextEditor: React.SFC<any> = () => {
+import { Formik, Form, FormikProps } from 'formik';
+import Title from './Title';
+import Toolbar from './Toolbar';
+import Content from './Content';
+import Modal from './Modal';
+import * as Yup from 'yup';
+const TextEditor: React.SFC<TextEditorProps> = ({ user }) => {
+  const [isModal, setModalToggle] = React.useState(false);
+  const handleToggle = React.useCallback(() => {
+    setModalToggle((state: boolean) => !state);
+  }, []);
   return (
     <Formik
       initialValues={{
@@ -9,55 +17,28 @@ const TextEditor: React.SFC<any> = () => {
         content: '',
         status: 'draft'
       }}
-      onSubmit={(values: TextEditorProps) => console.log(values)}
-      render={(props: FormikProps<TextEditorProps>) => {
+      validationSchema={Yup.object().shape({
+        title: Yup.string().required(),
+        content: Yup.string().required(),
+        status: Yup.string().required()
+      })}
+      onSubmit={(values: TextEditorFormProps) => console.log(values)}
+      render={(props: FormikProps<TextEditorFormProps>) => {
         return (
-          <Form style={{ width: '100%' }}>
-            <div
-              style={{
-                width: '98%',
-                margin: 'auto',
-                position: 'relative'
-              }}
-            >
-              <Field
-                name="title"
-                component={FormSmileField}
-                placeholder="Title"
-                style={{ width: '100%' }}
-              />
-              <button
-                type="submit"
-                style={{
-                  all: 'unset',
-                  cursor: 'pointer',
-                  fontSize: 'var(--font-size-default)',
-                  color: 'var(--blue)',
-                  position: 'absolute',
-                  right: 15,
-                  top: 0,
-                  bottom: 0
-                }}
-              >
-                Post
-              </button>
-            </div>
-
-            <Field
-              name="title"
-              render={({
-                field,
-                form: { touched, errors },
-                type,
-                ...props
-              }: FieldProps & any) => (
-                <div>
-                  <textarea {...props} {...field} />
-                </div>
-              )}
-              placeholder="Title"
-              style={{ width: '100%' }}
-            />
+          <Form
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              position: 'relative',
+              flexDirection: 'column'
+            }}
+          >
+            <Title />
+            <Content>
+              <Toolbar setToggle={handleToggle} user={user} />
+            </Content>
+            {isModal && <Modal setToggle={handleToggle} user={user} />}
           </Form>
         );
       }}

@@ -15,6 +15,12 @@ declare module '*.json' {
   export default content;
 }
 
+declare module '*.rs' {
+  export function sub(a: number, b: number): number;
+  const content: any;
+  export default content;
+}
+
 interface LayoutState {
   isLogin: boolean;
   active: number;
@@ -44,6 +50,7 @@ interface UserData {
   username: string;
   fullname: string;
   firstLetter: string;
+  drive: Array<{ location: string }>;
 }
 interface DashboardProps {
   user: QueryUser;
@@ -96,13 +103,34 @@ interface ProfileProps {
   user: QueryUser;
 }
 
-interface TextEditorProps {
+interface TextEditorFormProps {
   title: string;
   content: string;
   status: 'publish' | 'draft' | 'hide';
 }
 
-interface FormSmileFieldProps {
+interface TextEditorProps {
+  user: QueryUser;
+}
+
+type FormSmileFieldProps<T> = FormSmileFieldPropsDefault & T;
+
+interface FormSmileFieldPropsDefault {
   style?: React.CSSProperties;
   type: string;
+}
+
+interface ToolbarProps {
+  setToggle: () => void;
+  user: QueryUser;
+}
+
+interface ModalProps {
+  setToggle: () => void;
+  user: QueryUser;
+}
+
+interface ImageProps {
+  uri: string;
+  width: number;
 }

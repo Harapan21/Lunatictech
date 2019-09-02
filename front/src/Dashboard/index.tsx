@@ -16,7 +16,7 @@ const Dashboard = ({ user }: DashboardProps) => {
       <Content active={active}>
         <Profile user={user} />
         <div>3</div>
-        <TextEditor />
+        <TextEditor user={user}/>
         <div>4</div>
       </Content>
     </div>

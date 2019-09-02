@@ -8,9 +8,8 @@ const FormSmileField = ({
   style,
   type,
   ...props
-}: FieldProps & FormSmileFieldProps) => {
+}: FormSmileFieldProps<FieldProps>) => {
   const [view, setView] = React.useState(false);
-  const inputEl = React.useRef(null);
   const isPassword = type === 'password';
   return (
     <>
@@ -21,7 +20,6 @@ const FormSmileField = ({
         }}
       >
         <input
-          ref={inputEl}
           type={isPassword ? (view ? 'text' : 'password') : 'text'}
           {...props}
           {...field}
@@ -47,9 +45,9 @@ const FormSmileField = ({
               all: 'unset',
               cursor: 'pointer',
               position: 'absolute',
-              bottom: '0px',
-              top: '0px',
-              right: '0px'
+              bottom: 0,
+              top: 0,
+              right: 10
             }}
             onClick={() => setView((state: boolean) => !state)}
           >
