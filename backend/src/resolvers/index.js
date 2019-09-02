@@ -82,8 +82,8 @@ module.exports = {
     drive: (parent, _) => {
       const files = [];
       fs.readdirSync(`${UPLOAD_DIR}/${parent.username}`).map(file => {
-        if(file.includes(".jpg")) {
-          files.push({location: `${staticUri}${parent.username}/${file}`})
+        if (/\.(gif|jpe?g|tiff|png)$/i.test(file)) {
+          files.push({ location: `${staticUri}${parent.username}/${file}` });
         }
       });
       return files;

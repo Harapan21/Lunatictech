@@ -55,7 +55,6 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
                 <Field
                   type="text"
                   name="username"
-                  style={{ margin: '10px 0px' }}
                   component={FormSmileField}
                   placeholder="Username"
                 />
@@ -63,7 +62,6 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
                   type="password"
                   name="password"
                   autoComplete="off"
-                  style={{ margin: '10px 0px' }}
                   component={FormSmileField}
                   placeholder="Password"
                 />

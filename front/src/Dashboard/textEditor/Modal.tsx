@@ -27,10 +27,10 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
             opacity: active === idx ? 1 : 0.5
           }}
         >
-          <ImageSmile key={location} uri={location} width={100} />
+          <ImageSmile key={location} uri={location} height={100} />
         </div>
       )),
-    []
+    [image, active]
   );
 
   return (
@@ -103,7 +103,7 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
           <div
             style={{ display: 'flex', flexWrap: 'wrap', padding: '0px 20px' }}
           >
-            {MapImage}
+            {MapImage()}
           </div>
         )}
       </div>

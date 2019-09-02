@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Loading from '../components/Loading';
 
-const ImageSmile = React.memo<ImageProps>(({ uri, width }) => {
+const ImageSmile = React.memo<ImageProps>(({ uri, height }) => {
   const [isLoad, setLoad] = React.useState(false);
   React.useEffect(() => {
     if (!isLoad) {
@@ -15,8 +15,8 @@ const ImageSmile = React.memo<ImageProps>(({ uri, width }) => {
   return (
     <div
       style={{
-        width,
-        height: width,
+        width: isLoad ? 'auto' : height,
+        height,
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
@@ -24,7 +24,7 @@ const ImageSmile = React.memo<ImageProps>(({ uri, width }) => {
         alignItems: 'center'
       }}
     >
-      {isLoad ? <img src={uri} width={width} /> : <Loading width={20} />}
+      {isLoad ? <img src={uri} height={height} /> : <Loading width={20} />}
     </div>
   );
 });

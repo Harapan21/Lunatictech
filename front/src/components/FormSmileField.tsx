@@ -16,7 +16,7 @@ const FormSmileField = ({
       <div
         style={{
           position: 'relative',
-          margin: '10px 0px'
+          margin: '5px 0px'
         }}
       >
         <input

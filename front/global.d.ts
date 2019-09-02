@@ -132,5 +132,5 @@ interface ModalProps {
 
 interface ImageProps {
   uri: string;
-  width: number;
+  height: number;
 }
