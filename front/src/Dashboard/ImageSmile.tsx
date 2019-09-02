@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Loading from '../components/Loading';
 
-const ImageSmile: React.SFC<ImageProps> = React.memo(({ uri, width }) => {
+const ImageSmile = React.memo<ImageProps>(({ uri, width }) => {
   const [isLoad, setLoad] = React.useState(false);
   React.useEffect(() => {
     if (!isLoad) {
@@ -12,7 +12,6 @@ const ImageSmile: React.SFC<ImageProps> = React.memo(({ uri, width }) => {
       };
     }
   }, [isLoad]);
-  console.log(isLoad);
   return (
     <div
       style={{

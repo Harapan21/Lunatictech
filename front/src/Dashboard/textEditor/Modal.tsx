@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ImageSmile from '../ImageSmile';
 
-const Modal: React.SFC<ModalProps> = ({ setToggle, user }) => {
+const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
   const [active, setActive] = React.useState<number | null>(null);
   const [image] = React.useState(user.data.me);
   const [menuModal, setActiveMenuModal] = React.useState({
@@ -14,6 +14,25 @@ const Modal: React.SFC<ModalProps> = ({ setToggle, user }) => {
   const handleMenuModal = React.useCallback((active: number) => {
     setActiveMenuModal((state: any) => ({ ...state, active }));
   }, []);
+
+  const MapImage = React.useCallback(
+    () =>
+      image.drive.map(({ location }, idx) => (
+        <div
+          key={location}
+          onClick={() => handleImageActive(idx)}
+          style={{
+            cursor: 'pointer',
+            boxSizing: 'border-box',
+            opacity: active === idx ? 1 : 0.5
+          }}
+        >
+          <ImageSmile key={location} uri={location} width={100} />
+        </div>
+      )),
+    []
+  );
+
   return (
     <div
       style={{
@@ -84,24 +103,12 @@ const Modal: React.SFC<ModalProps> = ({ setToggle, user }) => {
           <div
             style={{ display: 'flex', flexWrap: 'wrap', padding: '0px 20px' }}
           >
-            {image.drive.map(({ location }, idx) => (
-              <div
-                key={location}
-                onClick={() => handleImageActive(idx)}
-                style={{
-                  cursor: 'pointer',
-                  boxSizing: 'border-box',
-                  opacity: active === idx ? 1 : 0.5
-                }}
-              >
-                <ImageSmile key={location} uri={location} width={100} />
-              </div>
-            ))}
+            {MapImage}
           </div>
         )}
       </div>
     </div>
   );
-};
+});
 
 export default Modal;
