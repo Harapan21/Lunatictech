@@ -5,7 +5,7 @@ import Toolbar from './Toolbar';
 import Content from './Content';
 import Modal from './Modal';
 import * as Yup from 'yup';
-const TextEditor: React.SFC<TextEditorProps> = ({ user }) => {
+const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
   const [isModal, setModalToggle] = React.useState(false);
   const handleToggle = React.useCallback(() => {
     setModalToggle((state: boolean) => !state);
@@ -44,6 +44,6 @@ const TextEditor: React.SFC<TextEditorProps> = ({ user }) => {
       }}
     />
   );
-};
+});
 
 export default TextEditor;

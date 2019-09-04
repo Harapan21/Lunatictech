@@ -30,26 +30,53 @@ DELIMITER $$
 DELIMITER ;
 
 CREATE TABLE category (
-	id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     parentId INT,
-    PRIMARY KEY(id)
+    PRIMARY KEY (id)
+);	
+INSERT INTO category(id,name)
+VALUES
+(0,"Uncategory");
+
+
+CREATE TABLE category_node(
+	id INT NOT NULL auto_increment,
+	categoryId INT DEFAULT 0,
+    postId INT NOT NULL,
+	PRIMARY KEY (id),
+    FOREIGN KEY (categoryId)
+        REFERENCES category (id)
+        ON UPDATE CASCADE ON DELETE SET NULL,
+	FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+DELIMITER $$
+	CREATE TRIGGER set_default_if_category_null
+    AFTER DELETE ON category
+    FOR EACH ROW 
+	BEGIN
+		UPDATE category_node
+		SET
+		categoryId = 0
+		WHERE categoryId = NULL;
+    END	
+DELIMITER ;
 CREATE TABLE post (
     id INT NOT NULL AUTO_INCREMENT,
     author_id CHAR(36),
     title VARCHAR(255),
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
-    categoryId INT NOT NULL DEFAULT 0,
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
     PRIMARY KEY (id),
     FOREIGN KEY (author_id)
         REFERENCES usr_smile (user_id)
-        ON UPDATE CASCADE ON DELETE SET NULL,	
+        ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 
@@ -104,8 +131,7 @@ CREATE TABLE rating (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
  
-DELIMITER $$
-	CREATE TRIGGER delete_contributor
+
 
 
 # push rating after publish post

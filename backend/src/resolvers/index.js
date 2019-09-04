@@ -16,8 +16,10 @@ const {
   removeByID,
   getContributor,
   getAllPostByAuthorID,
+  getPostByCategoryId,
   getEmbed
 } = require('../db/index');
+
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const UPLOAD_DIR = './uploads';
@@ -102,12 +104,16 @@ module.exports = {
     contributor: ({ id }) => {
       return getContributor(id);
     },
-    embed: ({ id }) => getEmbed(id)
+    embed: ({ id }) => getEmbed(id),
+    category: ({ id }) => getCategoryByPostId(id)
   },
   ContributorUser: {
-    contributor: async (parent, _) => {
-      const profil = await getUserByID(parent.user_id);
-      return profil;
+    contributor: async (parent, _) => getUserByID(parent.user_id)
+  },
+  Category: {
+    post: (parent, _) => {
+      console.log(getPostByCategoryId(parent.id));
+      return [];
     }
   },
   Rating: {

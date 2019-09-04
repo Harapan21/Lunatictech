@@ -12,7 +12,7 @@ import ApolloClient from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 
-const SmileApp: React.FC = () => {
+const SmileApp: React.SFC = () => {
   const [token, setTokenStoreage] = React.useState(
     localStorage.getItem('token')
   );

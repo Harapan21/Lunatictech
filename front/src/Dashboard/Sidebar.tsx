@@ -1,23 +1,20 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
 import Logo from '../../public/Smile.svg';
-import DashboardSVG from '../../public/dashboard.svg';
 import Plane from '../../public/paper-plane.svg';
 import Upload from '../../public/server.svg';
 import Avatar from '../components/Avatar';
 
 const Sidebar: React.SFC<SidebarProps> = React.memo(
   ({ user, active, setActive }) => {
-    const [menu] = React.useState([
+    const [menu] = React.useState<SidebarState[]>([
       {
         id: 0,
         Icon: () => <Avatar user={user} />,
-        content: user.data ? user.data.me.username : 'Guest',
-        isAvatar: true
+        content: user.data ? user.data.me.username : 'Guest'
       },
-      { id: 1, Icon: DashboardSVG, content: 'Dashboard' },
-      { id: 2, Icon: Plane, content: 'Post' },
-      { id: 3, Icon: Upload, content: 'Drive' }
+      { id: 1, Icon: Plane, content: 'Post' },
+      { id: 2, Icon: Upload, content: 'Drive' }
     ]);
     const MapMenu = React.useCallback(
       () =>
@@ -40,9 +37,7 @@ const Sidebar: React.SFC<SidebarProps> = React.memo(
         <div className={style.logo}>
           <Logo width={20} />
         </div>
-        <ul className={style.menu}>
-          {MapMenu()}
-        </ul>
+        <ul className={style.menu}>{MapMenu()}</ul>
       </div>
     );
   }

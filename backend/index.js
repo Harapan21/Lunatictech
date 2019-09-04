@@ -6,6 +6,30 @@ const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 const http = require('http');
 const cors = require('cors');
+const fs = require('fs');
+const rimraf = require('rimraf');
+const { isValid, getPostByCategoryId } = require('./src/db');
+
+(async () => {
+  fs.readdirSync('uploads', {
+    withFileTypes: true
+  }).map(async dir => {
+    try {
+      if (!dir.isFile()) {
+        const { username } = await isValid(dir.name);
+        if (!username) {
+          console.log(`␡ ${dir.name}`);
+          rimraf(`./uploads/${dir.name}/`, e => {
+            console.log(e);
+          });
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+})();
+getPostByCategoryId(1);
 const server = new ApolloServer({
   typeDefs,
   resolvers,

@@ -28,10 +28,71 @@ const Embed = sequelize.import('./models/embed');
 const Post = sequelize.import('./models/post');
 const Rating = sequelize.import('./models/rating');
 const User = sequelize.import('./models/usr_smile');
-
+const Category = sequelize.import('./models/category');
+const Category_Node = sequelize.import('./models/category_node');
 // bcrypt
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
+async function getPostByCategoryId(categoryId) {
+  Category_Node.belongsTo(Post);
+  try {
+    const postsArr = [];
+    const posts = await Category_Node.findAll({
+      where: {
+        categoryId
+      },
+      include: [{ model: Post }],
+      attributes: []
+    });
+    posts.map(({ post }) => {
+      postsArr.push(post);
+    });
+    return postsArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getCategoryByPostId(postId) {
+  Category_Node.belongsTo(Category);
+  try {
+    const categoryArr = [];
+    const category_node = await Category_Node.findAll({
+      where: {
+        postId
+      },
+      include: [{ model: Category }],
+      attributes: []
+    });
+    category_node.map(({ category }) => {
+      categoryArr.push(category);
+    });
+    return categoryArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function getCategoryByPostId(postId) {
+  Category_Node.belongsTo(Category);
+  try {
+    const categoryArr = [];
+    const category_node = await Category_Node.findAll({
+      where: {
+        postId
+      },
+      include: [{ model: Category }],
+      attributes: []
+    });
+    category_node.map(({ category }) => {
+      categoryArr.push(category);
+    });
+    return categoryArr;
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 function HashPass(pass) {
   return bcrypt.hash(pass, saltRounds).then(pass => pass);
@@ -336,5 +397,7 @@ module.exports = {
   removeByID,
   getContributor,
   getAllPostByAuthorID,
-  getEmbed
+  getEmbed,
+  getCategoryByPostId,
+  getPostByCategoryId
 };

@@ -1,22 +1,27 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
-
 import { useQuery } from '@apollo/react-hooks';
 import { GET_USER } from '../apollo/query';
 import Loading from '../components/Loading';
-const Layout: React.SFC<LayoutProps> = ({ children }) => {
-  const { data, loading } = useQuery<{ me: UserData }>(GET_USER);
+
+const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
+  const getUser = useQuery<{ me: UserData }>(GET_USER);
+  const user = React.useCallback(() => getUser, [getUser]);
+  const { data, loading } = user();
   const [state, setState] = React.useState<LayoutState>({
     isLogin: false,
     active: 0
   });
+  const handleLogin = React.useCallback(() => {
+    setState((state: LayoutState) => ({
+      ...state,
+      isLogin: true
+    }));
+  }, []);
   React.useEffect(() => {
     if (!loading) {
       if (data && data.me) {
-        setState((state: LayoutState) => ({
-          ...state,
-          isLogin: true
-        }));
+        handleLogin();
       }
     }
   }, [data, loading]);
@@ -64,5 +69,5 @@ const Layout: React.SFC<LayoutProps> = ({ children }) => {
       )}
     </div>
   );
-};
+});
 export default React.memo(Layout);

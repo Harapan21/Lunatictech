@@ -95,7 +95,12 @@ const typeDefs = gql`
     content: String!
     reply: [Comment]
   }
-
+  type Category {
+    id: Int!
+    name: String!
+    parentId: Category
+    post: [Post]
+  }
   type Post {
     id: Int!
     author: User!
@@ -109,6 +114,7 @@ const typeDefs = gql`
     rating: Rating!
     contributor: [ContributorUser]
     comments: [Comment]
+    category: [Category]
   }
   input UserField {
     username: String

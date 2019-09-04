@@ -82,12 +82,18 @@ interface RegisterFormValues extends LoginFormValues {
   avatar: string | null;
 }
 
-type DashboardState = 0 | 1 | 2 | 3;
+type DashboardState = 0 | 1 | 2;
 
 interface SidebarProps {
   user: QueryUser;
   active: DashboardState;
   setActive: (payload: DashboardState) => void;
+}
+
+interface SidebarState {
+  id: DashboardState;
+  Icon: any;
+  content: string;
 }
 
 interface AvatarProps {
