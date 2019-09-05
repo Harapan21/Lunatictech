@@ -8,7 +8,7 @@ const http = require('http');
 const cors = require('cors');
 const fs = require('fs');
 const rimraf = require('rimraf');
-const { isValid, getPostByCategoryId } = require('./src/db');
+const { isValid } = require('./src/db');
 
 (async () => {
   fs.readdirSync('uploads', {
@@ -29,7 +29,6 @@ const { isValid, getPostByCategoryId } = require('./src/db');
     }
   });
 })();
-getPostByCategoryId(1);
 const server = new ApolloServer({
   typeDefs,
   resolvers,

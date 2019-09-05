@@ -54,25 +54,6 @@ async function getPostByCategoryId(categoryId) {
   }
 }
 
-async function getCategoryByPostId(postId) {
-  Category_Node.belongsTo(Category);
-  try {
-    const categoryArr = [];
-    const category_node = await Category_Node.findAll({
-      where: {
-        postId
-      },
-      include: [{ model: Category }],
-      attributes: []
-    });
-    category_node.map(({ category }) => {
-      categoryArr.push(category);
-    });
-    return categoryArr;
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 async function getCategoryByPostId(postId) {
   Category_Node.belongsTo(Category);
