@@ -67,7 +67,7 @@ const SmileApp: React.SFC = () => {
               <Content isLogin={isLogin} active={active} defaultActive={2}>
                 <Login switcher={switcher} handleLogin={handleLogin} />
                 <Register switcher={switcher} handleLogin={handleLogin} />
-                {isLogin && <Dashboard user={user} />}
+                {isLogin && <Dashboard user={user} handleLogin={handleLogin} />}
               </Content>
             </>
           );

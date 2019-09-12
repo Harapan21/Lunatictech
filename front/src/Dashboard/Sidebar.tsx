@@ -4,9 +4,9 @@ import Logo from '../../public/Smile.svg';
 import Plane from '../../public/paper-plane.svg';
 import Upload from '../../public/server.svg';
 import Avatar from '../components/Avatar';
-
+import Logout from '../../public/logout.svg';
 const Sidebar: React.SFC<SidebarProps> = React.memo(
-  ({ user, active, setActive }) => {
+  ({ user, active, setActive, handleLogin }) => {
     const [menu] = React.useState<SidebarState[]>([
       {
         id: 0,
@@ -37,7 +37,16 @@ const Sidebar: React.SFC<SidebarProps> = React.memo(
         <div className={style.logo}>
           <Logo width={20} />
         </div>
-        <ul className={style.menu}>{MapMenu()}</ul>
+        <ul className={style.menu}>
+          {MapMenu()}
+          <li
+            onClick={() => handleLogin({ token: null, login: false })}
+            style={{ color: 'var(--pink)' }}
+          >
+            <Logout />
+            <span>Logout</span>
+          </li>
+        </ul>
       </div>
     );
   }

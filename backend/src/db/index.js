@@ -54,6 +54,14 @@ async function getPostByCategoryId(categoryId) {
   }
 }
 
+async function pushCategory() {
+  return Category.create({ ...input }).then(() => true);
+}
+
+async function getCatergory() {
+  const getCat = await Category.findAll();
+  return getCat;
+}
 
 async function getCategoryByPostId(postId) {
   Category_Node.belongsTo(Category);
@@ -66,6 +74,7 @@ async function getCategoryByPostId(postId) {
       include: [{ model: Category }],
       attributes: []
     });
+
     category_node.map(({ category }) => {
       categoryArr.push(category);
     });
@@ -380,5 +389,7 @@ module.exports = {
   getAllPostByAuthorID,
   getEmbed,
   getCategoryByPostId,
-  getPostByCategoryId
+  getPostByCategoryId,
+  getCatergory,
+  pushCategory
 };

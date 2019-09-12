@@ -22,10 +22,10 @@
     "jsonwebtoken": "^8.5.1",
     "mkdirp": "^0.5.1",
     "mysql2": "^1.7.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.2",
     "rimraf": "^3.0.0",
-    "sequelize": "^5.18.0",
-    "shortid": "^2.2.14"
+    "sequelize": "^5.18.4",
+    "shortid": "^2.2.15"
   },
   "devDependencies": {}
 }

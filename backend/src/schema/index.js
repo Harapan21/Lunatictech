@@ -6,6 +6,7 @@ const typeDefs = gql`
     posts: [Post]
     trending: [Post]
     author: [User]
+    category: [Category]
   }
   type File {
     id: String!
@@ -25,7 +26,13 @@ const typeDefs = gql`
     RemoveByID(input: genericInput): Boolean!
     validation(username: String, email: String): Validation!
     singleUpload(file: Upload!, username: String!): File!
+    category(input: CategoryField): Boolean!
   }
+  input CategoryField {
+    name: String!
+    parentId: Int
+  }
+
   input genericInput {
     id: ID!
     for: genericEnum!
@@ -139,9 +146,10 @@ const typeDefs = gql`
     reply_for_id: Int
   }
   input PostField {
-    title: String
-    content: String
-    status: Status
+    title: String!
+    content: String!
+    status: Status!
+    category: [Int]!
   }
 `;
 module.exports = typeDefs;

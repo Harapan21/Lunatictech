@@ -12,12 +12,8 @@ import Loading from '../components/Loading';
 const { quote, author } = Quotes();
 
 export default React.memo(({ switcher, handleLogin }: LoginProps) => {
-  const [login] = useMutation(LOGIN, {
-    onCompleted(data: { login: ReturnTokenLogin }) {
-      // tslint:disable-next-line: no-unused-expression
-      data && handleLogin(data.login);
-    }
-  });
+  const [login, { data, loading }] = useMutation(LOGIN);
+
   return (
     <Formik
       validationSchema={Yup.object().shape({
@@ -25,8 +21,17 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
         password: Yup.string().required('Password is required!')
       })}
       initialValues={{ username: '', password: '' }}
-      onSubmit={(values: LoginFormValues) => {
+      onSubmit={(values: LoginFormValues, { setSubmitting }) => {
         login({ variables: { ...values } });
+        console.log(data, loading);
+        if (!loading) {
+          console.log('fire');
+          if (data && data.login) {
+            handleLogin(data.login);
+          } else {
+            setSubmitting(false);
+          }
+        }
       }}
       render={({ isValid, isSubmitting }) => (
         <div className={style.section}>

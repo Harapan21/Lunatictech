@@ -17,7 +17,7 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
       ...state,
       isLogin: true
     }));
-  }, []);
+  }, [state]);
   React.useEffect(() => {
     if (!loading) {
       if (data && data.me) {
@@ -47,7 +47,6 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
       {active === 0 ? 'Dont Have Account' : 'Have Account'}
     </button>
   );
-
   return (
     <div className={`${style.layout} ${state.isLogin ? style.logged : ''}`}>
       {loading ? (
@@ -60,7 +59,8 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
       ) : children ? (
         children({
           ...state,
-          handleLayoutState: (payload: any) => setState(payload),
+          handleLayoutState: (payload: any) =>
+            setState((state: LayoutState) => ({ ...state, ...payload })),
           switcher: Switcher,
           user: { data, loading }
         })

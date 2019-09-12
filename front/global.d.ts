@@ -52,7 +52,10 @@ interface UserData {
   firstLetter: string;
   drive: Array<{ location: string }>;
 }
-interface DashboardProps {
+interface HandleLoginProps {
+  handleLogin: (payload: ReturnTokenLogin) => void;
+}
+interface DashboardProps extends HandleLoginProps {
   user: QueryUser;
 }
 
@@ -67,9 +70,8 @@ interface LoginFormValues {
   password: string;
 }
 
-interface LoginProps {
+interface LoginProps extends HandleLoginProps {
   switcher: React.ReactNode;
-  handleLogin?: (payload: ReturnTokenLogin) => void;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -82,9 +84,9 @@ interface RegisterFormValues extends LoginFormValues {
   avatar: string | null;
 }
 
-type DashboardState = 0 | 1 | 2;
+type DashboardState = 0 | 1 | 2 | 3;
 
-interface SidebarProps {
+interface SidebarProps extends HandleLoginProps {
   user: QueryUser;
   active: DashboardState;
   setActive: (payload: DashboardState) => void;
@@ -102,7 +104,7 @@ interface AvatarProps {
 
 interface ReturnTokenLogin {
   login: boolean;
-  token: string;
+  token: string | null;
 }
 
 interface ProfileProps {

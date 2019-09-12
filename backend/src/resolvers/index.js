@@ -18,7 +18,9 @@ const {
   getAllPostByAuthorID,
   getPostByCategoryId,
   getCategoryByPostId,
-  getEmbed
+  getEmbed,
+  getCatergory,
+  pushCategory
 } = require('../db/index');
 
 const mkdirp = require('mkdirp');
@@ -63,7 +65,8 @@ module.exports = {
       return getMe(_context.id);
     },
     posts: () => getPost(),
-    trending: () => {}
+    trending: () => {},
+    category: () => getCatergory()
   },
   User: {
     post: (parent, _) => getAllPostByAuthorID(parent.user_id),
@@ -126,6 +129,7 @@ module.exports = {
     EditComment: (_, { commentId, content }, _context) =>
       setComment(commentId, content, _context.id),
     RemoveByID: (_, { input }, _context) => removeByID(input, _context.id),
-    singleUpload: (_, args) => proccessUpload(args.file, args.username)
+    singleUpload: (_, args) => proccessUpload(args.file, args.username),
+    category: (_, { input }) => pushCategory(input)
   }
 };
