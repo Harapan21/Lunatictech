@@ -23,9 +23,7 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
       initialValues={{ username: '', password: '' }}
       onSubmit={(values: LoginFormValues, { setSubmitting }) => {
         login({ variables: { ...values } });
-        console.log(data, loading);
         if (!loading) {
-          console.log('fire');
           if (data && data.login) {
             handleLogin(data.login);
           } else {
