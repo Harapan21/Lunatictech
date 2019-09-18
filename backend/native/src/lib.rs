@@ -19,7 +19,7 @@ export!{
     }
 
     fn remove_dir(path: String) -> String {
-        fs::remove_dir(path.to_owned()).unwrap();
+        fs::remove_dir_all(path.to_owned()).unwrap();
         format!("Removing garbage dir : {}",path.to_owned())
     }
     

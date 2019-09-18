@@ -65,7 +65,7 @@ export default React.memo(({ switcher, handleLogin }: RegisterProps) => {
       if (emailResult && emailResult.validation.email) {
         error = 'Email has been use';
       }
-      return  j;
+      return error;
     }
   };
   return (

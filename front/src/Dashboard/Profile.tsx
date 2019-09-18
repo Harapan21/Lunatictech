@@ -57,7 +57,7 @@ export default function Profile({
               fontWeight: 700
             }}
           >
-            @ {username}
+            @{username}
           </span>
         </div>
       </div>
