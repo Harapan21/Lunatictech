@@ -6,8 +6,6 @@ const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 const http = require('http');
 const cors = require('cors');
-const fs = require('fs');
-const rimraf = require('rimraf');
 const { isValid } = require('./src/db');
 const native = require('./native');
 const removeFile = async () => {

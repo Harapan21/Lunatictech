@@ -19,10 +19,10 @@ INSERT INTO `smile`.`post`
 `content`)
 VALUES
 ("675ade6a1d8d34adc4cffe9224f63df2",
-"test post",
+"test post2",
 "lorem ipsum");
 
-
+delete from post where id = 2;
 
 SELECT `post`.`id`,
     `post`.`author_id`,
@@ -43,3 +43,36 @@ SELECT `category_node`.`id`,
     `category_node`.`categoryId`,
     `category_node`.`postId`
 FROM `smile`.`category_node`;
+DELETE FROM `smile`.`category_node`
+WHERE id=5;
+
+INSERT INTO `smile`.`category_node`
+(`categoryId`,
+`postId`)
+VALUES
+(1,
+4);
+
+
+INSERT INTO `smile`.`category_node`
+(`postId`)
+VALUES
+(1,1);
+
+SELECT 
+    *
+FROM
+    smile.category_node
+        INNER JOIN
+    smile.category ON smile.category_node.categoryId = smile.category.id
+WHERE
+    postId = 3;
+    
+    SELECT 
+    *
+FROM
+    smile.category_node
+        INNER JOIN
+    post ON category_node.postId = post.id
+WHERE
+    categoryId = 1;

@@ -40,6 +40,21 @@ VALUES
 (0,"Uncategory");
 
 
+CREATE TABLE post (
+    id INT NOT NULL AUTO_INCREMENT,
+    author_id CHAR(36),
+    title VARCHAR(255),
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content LONGTEXT,
+    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
+    last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_edited_by CHAR(36),
+    PRIMARY KEY (id),
+    FOREIGN KEY (author_id)
+        REFERENCES usr_smile (user_id)
+        ON UPDATE CASCADE ON DELETE SET NULL
+);
+
 CREATE TABLE category_node(
 	id INT NOT NULL auto_increment,
 	categoryId INT DEFAULT 0,
@@ -64,20 +79,6 @@ DELIMITER $$
 		WHERE categoryId = NULL;
     END	
 DELIMITER ;
-CREATE TABLE post (
-    id INT NOT NULL AUTO_INCREMENT,
-    author_id CHAR(36),
-    title VARCHAR(255),
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    content LONGTEXT,
-    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
-    last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    last_edited_by CHAR(36),
-    PRIMARY KEY (id),
-    FOREIGN KEY (author_id)
-        REFERENCES usr_smile (user_id)
-        ON UPDATE CASCADE ON DELETE SET NULL
-);
 
 
 CREATE TABLE contrib_post_temp (

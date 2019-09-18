@@ -48,6 +48,7 @@ const storeFS = ({ stream, filename }, username) => {
       .on('finish', () => resolve({ id, path }))
   );
 };
+
 const proccessUpload = async (file, user_id) => {
   const { createReadStream, filename, mimetype, encoding } = await file;
 
