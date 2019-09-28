@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Field, FieldProps } from 'formik';
-const Title = () => (
+const Title: React.SFC = ({ children }) => (
   <Field
     type="text"
     name="title"
@@ -35,24 +35,23 @@ const Title = () => (
               height: '100%'
             }}
           />
-
-          {isValid && (
-            <button
-              type="submit"
-              style={{
-                all: 'unset',
-                cursor: 'pointer',
-                fontSize: 'var(--font-size-default)',
-                color: 'var(--black)',
-                position: 'absolute',
-                right: 20,
-                top: 0,
-                bottom: 0
-              }}
-            >
-              Post
-            </button>
-          )}
+          <div style={{ position: 'absolute', right: 20, top: 0, bottom: 0 }}>
+            {children}
+            {isValid && (
+              <button
+                type="submit"
+                style={{
+                  all: 'unset',
+                  cursor: 'pointer',
+                  fontSize: 'var(--font-size-medium)',
+                  color: 'var(--blue)',
+                  marginLeft: 8
+                }}
+              >
+                Post
+              </button>
+            )}
+          </div>
         </div>
       );
     }}

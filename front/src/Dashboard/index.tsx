@@ -4,7 +4,6 @@ import style from '../../public/style.scss';
 import Content from '../Layout/Content';
 import Profile from './Profile';
 import TextEditor from './textEditor';
-
 const Dashboard = ({ user, handleLogin }: DashboardProps) => {
   const [active, setActive] = React.useState<DashboardState>(0);
   const handleSetActive = React.useCallback((payload: DashboardState) => {

@@ -15,12 +15,6 @@ declare module '*.json' {
   export default content;
 }
 
-declare module '*.rs' {
-  export function sub(a: number, b: number): number;
-  const content: any;
-  export default content;
-}
-
 interface LayoutState {
   isLogin: boolean;
   active: number;
@@ -100,6 +94,8 @@ interface SidebarState {
 
 interface AvatarProps {
   user: QueryUser;
+  round?: boolean;
+  size?: number;
 }
 
 interface ReturnTokenLogin {

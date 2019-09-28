@@ -16,6 +16,8 @@ const SmileApp: React.SFC = () => {
   const [token, setTokenStoreage] = React.useState(
     localStorage.getItem('token')
   );
+  console.log(process.env.GRAPHQL_URL);
+  const [isDark, setTheme] = React.useState(false);
 
   React.useEffect(() => {
     localStorage.setItem('token', token as string);

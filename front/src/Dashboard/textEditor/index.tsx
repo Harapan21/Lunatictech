@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { Formik, Form, FormikProps } from 'formik';
+import { Formik, Form, FormikProps, Field } from 'formik';
 import Title from './Title';
 import Toolbar from './Toolbar';
 import Content from './Content';
 import Modal from './Modal';
 import * as Yup from 'yup';
+import { handle_edit } from 'smile-wasm';
 const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
   const [isModal, setModalToggle] = React.useState(false);
   const handleToggle = React.useCallback(() => {
     setModalToggle((state: boolean) => !state);
   }, []);
+  console.log(handle_edit('hai'));
   return (
     <Formik
       initialValues={{
@@ -34,7 +36,21 @@ const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
               flexDirection: 'column'
             }}
           >
-            <Title />
+            <Title>
+              <Field
+                component="select"
+                name="status"
+                style={{
+                  all: 'unset',
+                  fontSize: 'var(--font-size-medium)',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="draft">Draft</option>
+                <option value="hidden">Hidden</option>
+                <option value="publish">Publish</option>
+              </Field>
+            </Title>
             <Content>
               <Toolbar setToggle={handleToggle} user={user} />
             </Content>

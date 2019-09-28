@@ -6,14 +6,32 @@ import Logo from '../../public/Smile.svg';
 import * as Yup from 'yup';
 import Quotes from '../components/Quotes';
 import { useMutation } from '@apollo/react-hooks';
-import { LOGIN } from '../apollo/mutation';
+import { LOGIN, validationUsername } from '../apollo/mutation';
 import Loading from '../components/Loading';
 
 const { quote, author } = Quotes();
 
 export default React.memo(({ switcher, handleLogin }: LoginProps) => {
   const [login, { data, loading }] = useMutation(LOGIN);
+  const [
+    validateUsername,
+    { data: ISVALID, loading: LOAD_VALIDATION }
+  ] = useMutation(validationUsername);
+  const handleValidateUsername = (value: string) => {
+    validateUsername({
+      variables: { username: value }
+    });
 
+    if (!LOAD_VALIDATION) {
+      let error: string | null;
+      // tslint:disable-next-line:no-unused-expression
+
+      if (ISVALID && !ISVALID.validation.username) {
+        error = 'Username is not valid';
+      }
+      return error;
+    }
+  };
   return (
     <Formik
       validationSchema={Yup.object().shape({
@@ -60,6 +78,7 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
                   name="username"
                   component={FormSmileField}
                   placeholder="Username"
+                  validate={handleValidateUsername}
                 />
                 <Field
                   type="password"

@@ -1,66 +1,101 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
-
-export default function Profile({
-  user: {
-    data: { me }
-  }
-}: ProfileProps) {
-  const { fullname, avatar, username, firstLetter } = me;
+import Avatar from '../components/Avatar';
+import Alarm from '../../public/alarm.svg';
+import Setting from '../../public/settings.svg';
+const ProfileBar: React.SFC<ProfileProps> = ({ user, children }) => {
   return (
-    <>
-      <div className={style.title}>Profile</div>
-      <div
-        style={{
-          fontSize: 'var(--font-size-default)',
-          textTransform: 'capitalize',
-          padding: '5px 10px',
-          display: 'flex',
-          alignItems: 'center',
-          borderBottom: '1px solid var(--grey)'
-        }}
-      >
-        {avatar ? (
-          <img
-            src={avatar}
-            width={50}
-            style={{ marginRight: 10, borderRadius: '50%' }}
-          />
-        ) : (
-          <div
-            style={{
-              width: 50,
-              height: 50,
-              display: 'flex',
-              alignItems: 'center',
-              borderRadius: '50%',
-              margin: '0px 10px',
-              color: 'var(--white)',
-              justifyContent: 'center',
-              background: 'var(--blue)'
-            }}
-          >
-            {firstLetter}
-          </div>
-        )}
+    <div
+      style={{
+        borderRight: '1px solid var(--grey)',
+
+        color: 'var(--white)',
+        width: '300px'
+      }}
+    >
+      <div style={{ background: 'var(--pink)' }}>
+        <h1
+          style={{
+            fontWeight: 700,
+            fontSize: 'var(--font-size-default)',
+            padding: '20px'
+          }}
+        >
+          Profile
+        </h1>
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column'
+            justifyItems: 'center',
+            padding: '10px'
           }}
         >
-          <span>{fullname}</span>
+          <Avatar user={user} round={true} size={50} />
           <span
             style={{
-              fontSize: 'var(--font-size-small)',
-              opacity: 0.6,
-              fontWeight: 700
+              marginLeft: 5,
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column'
             }}
           >
-            @{username}
+            <h3
+              style={{
+                fontSize: 'var(--font-size-default)',
+                padding: 0,
+                margin: 0
+              }}
+            >
+              {user.data.me.fullname}
+            </h3>
+            <h4
+              style={{
+                fontSize: 'var(--font-size-medium)',
+                padding: 0,
+                margin: 0
+              }}
+            >
+              @{user.data.me.username}
+            </h4>
           </span>
         </div>
       </div>
-    </>
+      {children}
+    </div>
+  );
+};
+const ProfileMenuBar = () => {
+  return (
+    <ul
+      style={{
+        borderTop: '1px solid var(--grey)',
+        borderBottom: '1px solid var(--grey)',
+        margin: 0,
+        height: 50
+      }}
+    >
+      <li>
+        <Alarm width={30} height={30} />
+      </li>
+      <li>
+        <Setting width={30} height={30} />
+      </li>
+    </ul>
+  );
+};
+export default function Profile({ user }: ProfileProps) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        height: '100%',
+        width: '100%'
+      }}
+    >
+      <ProfileBar user={user}>
+        <ProfileMenuBar />
+      </ProfileBar>
+    </div>
   );
 }

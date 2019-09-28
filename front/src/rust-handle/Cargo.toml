@@ -1,6 +1,6 @@
 
 [package]
-name = "rust-handle"
+name = "smile-wasm"
 version = "0.1.0"
 authors = [ "harapan <harapanpardamean@gmail.com>" ]
 edition = "2018"
@@ -8,6 +8,8 @@ edition = "2018"
 [lib]
 crate-type = [ "cdylib" ]
 
+[build-dependencies]
+wasm-bindgen-test = "0.2"
 
 [dependencies]
-regex = "1.2.1"
+wasm-bindgen = "0.2.50"

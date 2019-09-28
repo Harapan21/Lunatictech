@@ -11,6 +11,7 @@ const FormSmileField = ({
 }: FormSmileFieldProps<FieldProps>) => {
   const [view, setView] = React.useState(false);
   const isPassword = type === 'password';
+  console.log(errors);
   return (
     <>
       <div
