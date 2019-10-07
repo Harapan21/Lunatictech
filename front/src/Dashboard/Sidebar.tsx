@@ -23,10 +23,7 @@ const Sidebar: React.SFC<SidebarProps> = React.memo(
             <li
               key={id}
               onClick={() => setActive(id)}
-              style={{
-                backgroundColor: active === id ? 'var(--grey)' : ' ',
-                transition: 'all 0.1s'
-              }}
+              className={active === id ? style.active : ''}
             >
               <Icon />
               <span>{content}</span>

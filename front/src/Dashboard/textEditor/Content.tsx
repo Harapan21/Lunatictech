@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Field, FieldProps } from 'formik';
-const Content: React.SFC<any> = ({ children }) => (
+
+const Content: React.SFC<any> = ({ children, CategoryList }) => (
   <Field
     name="content"
     render={({
@@ -19,24 +20,36 @@ const Content: React.SFC<any> = ({ children }) => (
             display: 'flex'
           }}
         >
-          <textarea
-            placeholder="Type Here..."
+          <div
             style={{
-              resize: 'none',
               width: '100%',
               height: '100%',
-              padding: 'var(--padding-small)',
-              margin: 0,
-              boxSizing: 'border-box',
-              opacity: isError ? 0.6 : 1,
-              background: isError ? 'var(--grey)' : 'var(--white)',
-              fontFamily: 'var(--font-defuault)',
-              border: 'none',
-              fontSize: 'var(--font-size-default)'
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative'
             }}
-            {...props}
-            {...field}
-          />
+          >
+            <textarea
+              placeholder="Type Here..."
+              style={{
+                resize: 'none',
+                width: '100%',
+                height: '100%',
+                padding: 'var(--padding-small)',
+                margin: 0,
+                boxSizing: 'border-box',
+                opacity: isError ? 0.6 : 1,
+                background: isError ? 'var(--grey)' : 'var(--white)',
+                fontFamily: 'var(--font-defuault)',
+                border: 'none',
+                fontSize: 'var(--font-size-default)'
+              }}
+              {...props}
+              {...field}
+            />
+
+            <CategoryList />
+          </div>
           {children}
         </div>
       );

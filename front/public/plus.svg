@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20">
     <defs>
         <style>
-            .a{fill:#fff;}
+            .a{fill:currentColor;}
         </style>
     </defs>
     <rect width="2.768" height="20" class="a" transform="translate(8.616)"/>

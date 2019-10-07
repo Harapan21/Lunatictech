@@ -15,3 +15,12 @@ export const GET_USER = gql`
     }
   }
 `;
+
+export const GET_CATEGORY = gql`
+  query Category {
+    category {
+      name
+      id
+    }
+  }
+`;
