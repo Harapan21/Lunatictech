@@ -138,3 +138,10 @@ interface ImageProps {
   uri: string;
   height: number;
 }
+type ID = string | number;
+interface CategoryListState {
+  name: string;
+  id: ID;
+  post?: any;
+  parent?: CategoryListState;
+}

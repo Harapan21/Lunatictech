@@ -57,9 +57,13 @@ async function pushCategory(input) {
   return Category.create({...input}).then(() => true);
 }
 
-async function getCatergory() {
-  const getCat = await Category.findAll();
+async function getCategoryById(id) {
+  const getCat = await Category.findOne({where: {id}});
   return getCat;
+}
+async function getCatergory() {
+  const getAllCat = await Category.findAll();
+  return getAllCat;
 }
 
 async function getCategoryByPostId(postId) {
@@ -390,5 +394,6 @@ module.exports = {
   getCategoryByPostId,
   getPostByCategoryId,
   getCatergory,
+  getCategoryById,
   pushCategory,
 };

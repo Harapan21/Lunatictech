@@ -105,7 +105,7 @@ const typeDefs = gql`
   type Category {
     id: Int!
     name: String!
-    parentId: Category
+    parent: Category
     post: [Post]
   }
   type Post {

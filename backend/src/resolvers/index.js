@@ -20,6 +20,7 @@ const {
   getCategoryByPostId,
   getEmbed,
   getCatergory,
+  getCategoryById,
   pushCategory,
 } = require('../db/index');
 
@@ -70,9 +71,9 @@ module.exports = {
     category: () => getCatergory(),
   },
   User: {
-    post: (parent, _) => getAllPostByAuthorID(parent.user_id),
+    post: parent => getAllPostByAuthorID(parent.user_id),
     firstLetter: ({username}) => username[0],
-    avatar: (parent, _) => {
+    avatar: parent => {
       const MyFile = `${parent.username}/${parent.avatar}`;
       const isAvatarExist = fs.existsSync(`${UPLOAD_DIR}/${MyFile}`);
       if (!isAvatarExist) {
@@ -80,7 +81,7 @@ module.exports = {
       }
       return `${staticUri}${MyFile}`;
     },
-    drive: (parent, _) => {
+    drive: parent => {
       const files = [];
       fs.readdirSync(`${UPLOAD_DIR}/${parent.username}`).map(file => {
         if (/\.(gif|jpe?g|tiff|png)$/i.test(file)) {
@@ -102,6 +103,7 @@ module.exports = {
     contributor: parent => getUserByID(parent.user_id),
   },
   Category: {
+    parent: ({parentId}) => getCategoryById(parentId),
     post: parent => getPostByCategoryId(parent.id),
   },
   Rating: {

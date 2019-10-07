@@ -21,6 +21,10 @@ export const GET_CATEGORY = gql`
     category {
       name
       id
+      parent {
+        id
+        name
+      }
     }
   }
 `;

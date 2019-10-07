@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Field, FieldProps } from 'formik';
 
-const Content: React.SFC<any> = ({ children, CategoryList }) => (
+import CategoryList from './CategoryList';
+const Content: React.SFC<any> = ({ children }) => (
   <Field
     name="content"
     render={({
@@ -37,6 +38,9 @@ const Content: React.SFC<any> = ({ children, CategoryList }) => (
                 height: '100%',
                 padding: 'var(--padding-small)',
                 margin: 0,
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'var(--pink) transparent',
+                scrollBehavior: 'smooth',
                 boxSizing: 'border-box',
                 opacity: isError ? 0.6 : 1,
                 background: isError ? 'var(--grey)' : 'var(--white)',
