@@ -1,70 +1,63 @@
 import * as React from 'react';
-
+import CategoryListIcon from '../../../public/list.svg';
 // import Plus from '../../../public/plus.svg';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_CATEGORY } from '../../apollo/query';
 import Loading from '../../components/Loading';
 
-const CategoryList: React.SFC = React.memo(() => {
-  console.log('render');
+interface CategoryListItemProps {
+  Selected: number[];
+  typed: { word: string; isType: boolean };
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>;
+}
+
+const CategoryListItem: React.SFC<CategoryListItemProps> = ({
+  Selected,
+  typed,
+  setSelected
+}) => {
   const getCatgory = React.useCallback(() => useQuery(GET_CATEGORY), []);
   const { data, loading } = getCatgory();
+
   const [CategoryList, setCategoryList] = React.useState<CategoryListState[]>(
     []
-  );
-  const [isActive, setActive] = React.useState(false);
-  const [typed, setTyped] = React.useState({ word: '', isType: false });
-  const handleChange = React.useCallback(
-    (e: any) => {
-      setTyped({ word: e.target.value, isType: e.target.value.length > 0 });
-    },
-    [typed, setTyped]
-  );
-  const handleClick = React.useCallback(
-    () => setActive((state: boolean) => !state),
-    [isActive, setActive]
   );
   React.useEffect(() => {
     if (!loading && data && data.category) {
       setCategoryList(data.category);
     }
   }, [loading]);
-  const handleSearch = React.useCallback(
-    () =>
-      typed.isType
-        ? CategoryList.filter((e: CategoryListState) =>
-            e.name.toLowerCase().includes(typed.word)
-          )
-        : CategoryList,
-    [typed, CategoryList]
-  );
+  const handleSearch = typed.isType
+    ? CategoryList.filter((e: CategoryListState) =>
+        e.name.toLowerCase().includes(typed.word.toLowerCase())
+      )
+    : CategoryList;
 
-  const listCategory = React.useCallback(
-    () => (
-      <ul
-        style={{
-          display: isActive ? 'block' : 'none',
-          listStyle: 'none',
-          margin: 0,
-          background: 'var(--white)',
-          padding: 0,
-          width: 500,
-          borderRadius: 10,
-          boxShadow: 'var(--shadow-md)'
-        }}
-      >
-        {loading ? (
-          <li style={{ padding: 40, textAlign: 'center' }}>
-            <Loading width={20} />
-          </li>
-        ) : (
-          handleSearch().map(({ name, id, parent }) => (
+  return (
+    <>
+      {loading ? (
+        <li style={{ padding: 40, textAlign: 'center' }}>
+          <Loading width={20} />
+        </li>
+      ) : (
+        handleSearch.map(({ name, id, parent }) => {
+          const idasnumber = id as number;
+          const isCotains = Selected.includes(idasnumber);
+          return (
             <li
-              key={id}
+              onClick={() =>
+                isCotains
+                  ? setSelected((state: number[]) =>
+                      state.filter((e: number) => e !== idasnumber)
+                    )
+                  : setSelected((state: number[]) => [...state, idasnumber])
+              }
+              key={idasnumber}
               style={{
                 fontSize: 'var(--font-size-medium)',
                 cursor: 'pointer',
                 padding: 10,
+                borderRight: isCotains ? '2px solid  var(--pink)' : 'none',
                 position: 'relative',
                 borderBottom: '1px solid var(--grey)'
               }}
@@ -77,11 +70,59 @@ const CategoryList: React.SFC = React.memo(() => {
                   margin: 'auto'
                 }}
               >
-                {parent ? 'Children' : 'Parent'}
+                {parent ? parent.name : 'Parent'}
               </span>
             </li>
-          ))
-        )}
+          );
+        })
+      )}
+    </>
+  );
+};
+
+const CategoryList: React.SFC = React.memo(() => {
+  const [Selected, setSelected] = React.useState<number[]>([]);
+  const [isActive, setActive] = React.useState(false);
+  const [typed, setTyped] = React.useState({ word: '', isType: false });
+  const handleChange = (e: any) => {
+    setTyped({ word: e.target.value, isType: e.target.value.length > 0 });
+  };
+  const handleClick = React.useCallback(
+    () => setActive((state: boolean) => !state),
+    [isActive, setActive]
+  );
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        left: 0,
+        zIndex: 9999
+      }}
+    >
+      <ul
+        style={{
+          display: isActive ? 'block' : 'none',
+          listStyle: 'none',
+          margin: 0,
+          background: 'var(--white)',
+          padding: 0,
+          width: 500,
+          borderRadius: 10,
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-md)'
+        }}
+      >
+        <CategoryListItem
+          Selected={Selected}
+          typed={typed}
+          setSelected={setSelected}
+        />
         <li
           style={{
             fontSize: 'var(--font-size-medium)',
@@ -102,24 +143,6 @@ const CategoryList: React.SFC = React.memo(() => {
           />
         </li>
       </ul>
-    ),
-    [isActive, handleChange, handleSearch]
-  );
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        padding: 10,
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        left: 0,
-        zIndex: 9999
-      }}
-    >
-      {listCategory()}
       <button
         style={{
           margin: '5px 0px',
@@ -127,8 +150,7 @@ const CategoryList: React.SFC = React.memo(() => {
           width: 'max-content',
           border: 0,
           background: 'var(--white)',
-          height: 30,
-          borderRadius: 5,
+          borderRadius: 10,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -137,7 +159,7 @@ const CategoryList: React.SFC = React.memo(() => {
         }}
         onClick={() => handleClick()}
       >
-        Category
+        <CategoryListIcon width={15} height={15} />
       </button>
     </div>
   );

@@ -312,3 +312,26 @@ input {
     }
   }
 }
+
+.textarea {
+  outline: none;
+  border: none;
+  resize: none;
+  width: 100%;
+  height: 100%;
+  padding: var(--padding-small);
+  margin: 0px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+  box-sizing: border-box;
+  font-family: var(--font-default);
+  border: 'none';
+  font-size: var(--font-size-default);
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--pink);
+  }
+}

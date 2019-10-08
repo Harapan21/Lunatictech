@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Field, FieldProps } from 'formik';
-
 import CategoryList from './CategoryList';
+import style from '../../../public/style.scss';
 const Content: React.SFC<any> = ({ children }) => (
   <Field
     name="content"
@@ -32,21 +32,10 @@ const Content: React.SFC<any> = ({ children }) => (
           >
             <textarea
               placeholder="Type Here..."
+              className={style.textarea}
               style={{
-                resize: 'none',
-                width: '100%',
-                height: '100%',
-                padding: 'var(--padding-small)',
-                margin: 0,
-                scrollbarWidth: 'thin',
-                scrollbarColor: 'var(--pink) transparent',
-                scrollBehavior: 'smooth',
-                boxSizing: 'border-box',
                 opacity: isError ? 0.6 : 1,
-                background: isError ? 'var(--grey)' : 'var(--white)',
-                fontFamily: 'var(--font-defuault)',
-                border: 'none',
-                fontSize: 'var(--font-size-default)'
+                background: isError ? 'var(--grey)' : 'var(--white)'
               }}
               {...props}
               {...field}
