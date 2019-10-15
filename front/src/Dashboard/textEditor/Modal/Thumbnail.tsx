@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Galery from './Galery';
-
 import ImageSmile from '../../ImageSmile';
+
 interface ThumbnailProps {
   image: any;
 }
@@ -15,18 +15,17 @@ const Thumbnail: React.SFC<ThumbnailProps> = React.memo(({ image }) => {
     [active, setActive]
   );
   const isLocation =
-    active && image.drive[active] && image.drive[active].location;
-
+    active !== undefined && image.drive[active] && image.drive[active].location;
   const location = isLocation ? (
-    <ImageSmile uri={isLocation} width="max-content" height="100%" />
+    <ImageSmile uri={isLocation} width="max-cotent" height="100%" />
   ) : (
     ' Select Image'
   );
-  console.log(isLocation);
   return (
     <div
       style={{
         height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between'
@@ -43,6 +42,7 @@ const Thumbnail: React.SFC<ThumbnailProps> = React.memo(({ image }) => {
       >
         <span
           style={{
+            width: '100%',
             position: 'absolute',
             display: !active ? 'flex' : 'block',
             justifyContent: !active ? 'center' : ' ',

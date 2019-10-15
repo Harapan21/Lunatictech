@@ -33,7 +33,7 @@ const Content: React.SFC<any> = ({ children }) => (
           >
             <textarea
               placeholder="Type Here..."
-              className={style.textarea}
+              className={`${style.textarea} ${style.styleScroolbar}`}
               style={{
                 opacity: isError ? 0.6 : 1,
                 background: isError ? 'var(--grey)' : 'var(--white)'

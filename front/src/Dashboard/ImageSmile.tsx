@@ -19,7 +19,7 @@ const ImageSmile = React.memo<ImageProps>(({ uri, height, width }) => {
   return (
     <div
       style={{
-        width: isLoad ? 'auto' : height,
+        width: !isLoad ? 'auto' : width || height,
         height,
         position: 'relative',
         overflow: 'hidden',

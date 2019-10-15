@@ -313,6 +313,18 @@ input {
   }
 }
 
+.styleScroolbar {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--pink);
+  }
+}
+
 .textarea {
   outline: none;
   border: none;
@@ -321,17 +333,31 @@ input {
   height: 100%;
   padding: var(--padding-small);
   margin: 0px;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--pink) transparent;
   box-sizing: border-box;
   font-family: var(--font-default);
   border: 'none';
   font-size: var(--font-size-default);
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--pink);
+}
+.modalmenu {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  display: inline-flex;
+  li {
+    margin: 0px;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: var(--font-default);
+    transition: background 0.3s;
+    font-weight: 500;
+    background: white;
+    &.active {
+      font-weight: 700;
+      background: var(--grey);
+    }
+    &:hover {
+      background: var(--grey);
+    }
   }
 }

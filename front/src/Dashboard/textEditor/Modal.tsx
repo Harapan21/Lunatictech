@@ -1,11 +1,17 @@
 import * as React from 'react';
 import Thumbnail from './Modal/Thumbnail';
-const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
-  const [menuModal, setMenuModal] = React.useState({
-    menu: [{ title: 'Thumbnail' }],
-    active: 0
-  });
+import style from '../../../public/style.scss';
 
+const Modal: React.SFC<ModalProps> = React.memo(({ setToggle, user }) => {
+  const [menu] = React.useState([
+    { item: 'Thumbnail', Content: <Thumbnail image={user.data.me} /> },
+    { item: 'Category', Content: <div /> }
+  ]);
+  const [menuModal, setMenuModal] = React.useState(0);
+  const Content = React.useCallback(
+    () => menu[menuModal] && menu[menuModal].Content,
+    [menuModal]
+  );
   return (
     <div
       style={{
@@ -38,7 +44,7 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
           justifyContent: 'space-between'
         }}
       >
-        <Thumbnail image={user.data.me} />
+        {Content()}
         <div
           style={{
             fontSize: 'var(--font-size-default)',
@@ -49,7 +55,17 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
             alignItems: 'center'
           }}
         >
-          <span>Thumbnail</span>
+          <ul className={style.modalmenu}>
+            {menu.map(({ item }, idx) => (
+              <li
+                key={idx}
+                onClick={() => setMenuModal(idx)}
+                className={`${idx === menuModal ? style.active : ''}`}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
           <button
             type="button"
             style={{
