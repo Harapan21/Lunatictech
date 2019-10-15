@@ -102,7 +102,7 @@ const CategoryList: React.SFC = React.memo(() => {
         bottom: 0,
         right: 0,
         left: 0,
-        zIndex: 9999
+        zIndex: 2
       }}
     >
       <ul

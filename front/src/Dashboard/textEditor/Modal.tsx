@@ -1,37 +1,10 @@
 import * as React from 'react';
-import ImageSmile from '../ImageSmile';
-
+import Thumbnail from './Modal/Thumbnail';
 const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
-  const [active, setActive] = React.useState<number | null>(null);
-  const [image] = React.useState(user.data.me);
-  const [menuModal, setActiveMenuModal] = React.useState({
-    menu: [{ menu: 'Galery' }, { menu: 'Link' }],
+  const [menuModal, setMenuModal] = React.useState({
+    menu: [{ title: 'Thumbnail' }],
     active: 0
   });
-  const handleImageActive = React.useCallback((active: number) => {
-    setActive(active);
-  }, []);
-  const handleMenuModal = React.useCallback((active: number) => {
-    setActiveMenuModal((state: any) => ({ ...state, active }));
-  }, []);
-
-  const MapImage = React.useCallback(
-    () =>
-      image.drive.map(({ location }, idx) => (
-        <div
-          key={location}
-          onClick={() => handleImageActive(idx)}
-          style={{
-            cursor: 'pointer',
-            boxSizing: 'border-box',
-            opacity: active === idx ? 1 : 0.5
-          }}
-        >
-          <ImageSmile key={location} uri={location} height={100} />
-        </div>
-      )),
-    [image, active]
-  );
 
   return (
     <div
@@ -46,20 +19,26 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'rgba(255, 255, 255, 0.6)'
+        background: 'rgba(255, 255, 255, 0.6)',
+        zIndex: 4
       }}
     >
       <div
         style={{
           background: 'var(--white)',
-          width: '90%',
-          height: '70%',
+          width: '95%',
+          height: '90%',
           boxShadow: 'var(--shadow-2-xl)',
           border: '1px solid (--grey)',
           borderRadius: 10,
-          position: 'relative'
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
         }}
       >
+        <Thumbnail image={user.data.me} />
         <div
           style={{
             fontSize: 'var(--font-size-default)',
@@ -80,32 +59,9 @@ const Modal = React.memo<ModalProps>(({ setToggle, user }) => {
             }}
             onClick={setToggle}
           >
-            x
+            Save
           </button>
         </div>
-        <div style={{ display: 'flex', padding: '0px 20px', marginBottom: 10 }}>
-          {menuModal.menu.map(({ menu }, idx) => (
-            <span
-              key={menu}
-              style={{
-                fontWeight: menuModal.active === idx ? 700 : 500,
-                fontSize: 'var(--font-size-default)',
-                marginRight: '15px',
-                cursor: 'pointer'
-              }}
-              onClick={() => handleMenuModal(idx)}
-            >
-              {menu}
-            </span>
-          ))}
-        </div>
-        {menuModal.active === 0 && (
-          <div
-            style={{ display: 'flex', flexWrap: 'wrap', padding: '0px 20px' }}
-          >
-            {MapImage()}
-          </div>
-        )}
       </div>
     </div>
   );

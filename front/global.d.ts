@@ -136,7 +136,8 @@ interface ModalProps {
 
 interface ImageProps {
   uri: string;
-  height: number;
+  height?: number | string;
+  width?: number | string;
 }
 type ID = string | number;
 interface CategoryListState {
