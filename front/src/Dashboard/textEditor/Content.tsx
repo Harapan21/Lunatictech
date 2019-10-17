@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Field, FieldProps } from 'formik';
-import CategoryList from './CategoryList';
 import style from '../../../public/style.scss';
 
 const Content: React.SFC<any> = ({ children }) => (
@@ -41,7 +40,6 @@ const Content: React.SFC<any> = ({ children }) => (
               {...props}
               {...field}
             />
-            <CategoryList />
           </div>
           {children}
         </div>

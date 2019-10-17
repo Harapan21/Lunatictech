@@ -9,7 +9,7 @@ interface Galery {
 
 const Galery: React.SFC<Galery> = React.memo(({ image, active, setActive }) => (
   <div
-    className={style.styleScroolbar}
+    className={`${style.styleScroolbar} ${style.height}`}
     style={{
       display: 'flex',
       padding: '10px 15px',

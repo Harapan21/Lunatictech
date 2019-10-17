@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Thumbnail from './Modal/Thumbnail';
+import Category from './Modal/Category';
 import style from '../../../public/style.scss';
 
 const Modal: React.SFC<ModalProps> = React.memo(({ setToggle, user }) => {
   const [menu] = React.useState([
     { item: 'Thumbnail', Content: <Thumbnail image={user.data.me} /> },
-    { item: 'Category', Content: <div /> }
+    { item: 'Category', Content: <Category /> }
   ]);
   const [menuModal, setMenuModal] = React.useState(0);
   const Content = React.useCallback(
@@ -71,7 +72,7 @@ const Modal: React.SFC<ModalProps> = React.memo(({ setToggle, user }) => {
             style={{
               all: 'unset',
               cursor: 'pointer',
-              fontSize: 'var(--font-size-default)'
+              fontSize: 'var(--font-size-medium)'
             }}
             onClick={setToggle}
           >

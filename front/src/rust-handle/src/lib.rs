@@ -1,12 +1,15 @@
+#![feature(proc_macro)]
+
+extern crate wasm_bindgen;
+
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn sub(a: i32, b: i32) -> i32 {
-    a + b
+extern "C" {
+    fn alert(s: &str);
 }
 
 #[wasm_bindgen]
-pub fn handle_edit(content: String) -> String {
-    content
+pub fn big_computation() {
+    alert("Big computation in Rust");
 }
-

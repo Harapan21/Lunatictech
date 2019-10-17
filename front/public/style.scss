@@ -323,6 +323,11 @@ input {
   &::-webkit-scrollbar-thumb {
     background: var(--pink);
   }
+  &.height {
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+  }
 }
 
 .textarea {
@@ -344,11 +349,11 @@ input {
   margin: 0px;
   display: inline-flex;
   li {
-    margin: 0px;
+    margin: 0px 10px;
     border-radius: 5px;
-    padding: 5px;
+    padding: 5px 8px;
     cursor: pointer;
-    font-size: var(--font-default);
+    font-size: var(--font-size-medium);
     transition: background 0.3s;
     font-weight: 500;
     background: white;

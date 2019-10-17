@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server-express');
+const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   scalar Date
   type Query {
@@ -102,11 +102,22 @@ const typeDefs = gql`
     content: String!
     reply: [Comment]
   }
-  type Category {
+  interface Category {
     id: Int!
     name: String!
-    parent: Category
     post: [Post]
+  }
+  type CategoryList implements Category {
+    id: Int!
+    name: String!
+    post: [Post]
+    parent: CategoryList
+  }
+  type CategoryTree implements Category {
+    id: Int!
+    name: String!
+    post: [Post]
+    child: CategoryTree
   }
   type Post {
     id: Int!
