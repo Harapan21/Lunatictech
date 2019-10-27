@@ -1,21 +1,21 @@
 import * as React from 'react';
 import style from '../../public/style.scss';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_USER } from '../apollo/query';
+import {useQuery} from '@apollo/react-hooks';
+import {GET_USER} from '../apollo/query';
 import Loading from '../components/Loading';
 
-const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
-  const getUser = useQuery<{ me: UserData }>(GET_USER);
+const Layout: React.SFC<LayoutProps> = React.memo(({children}) => {
+  const getUser = useQuery<{me: UserData}>(GET_USER);
   const user = React.useCallback(() => getUser, [getUser]);
-  const { data, loading } = user();
+  const {data, loading} = user();
   const [state, setState] = React.useState<LayoutState>({
     isLogin: false,
-    active: 0
+    active: 0,
   });
   const handleLogin = React.useCallback(() => {
     setState((state: LayoutState) => ({
       ...state,
-      isLogin: true
+      isLogin: true,
     }));
   }, [state]);
   React.useEffect(() => {
@@ -25,14 +25,14 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
       }
     }
   }, [data, loading]);
-  const { active } = state;
+  const {active} = state;
   const Switcher = (active === 0 || 1) && (
     <button
       type="button"
       onClick={() =>
         setState((state: LayoutState) => ({
           ...state,
-          active: state.active === 0 ? 1 : 0
+          active: state.active === 0 ? 1 : 0,
         }))
       }
       style={{
@@ -41,7 +41,7 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
         fontWeight: 700,
         cursor: 'pointer',
         padding: 'var(--padding-small)',
-        width: 'max-content'
+        width: 'max-content',
       }}
     >
       {active === 0 ? 'Dont Have Account' : 'Have Account'}
@@ -52,7 +52,7 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
       {loading ? (
         <div
           className={style.flexCenter}
-          style={{ height: '100%', width: '100%' }}
+          style={{height: '100%', width: '100%'}}
         >
           <Loading />
         </div>
@@ -60,9 +60,9 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
         children({
           ...state,
           handleLayoutState: (payload: any) =>
-            setState((state: LayoutState) => ({ ...state, ...payload })),
+            setState((state: LayoutState) => ({...state, ...payload})),
           switcher: Switcher,
-          user: { data, loading }
+          user: {data, loading},
         })
       ) : (
         <div>Error</div>

@@ -5,16 +5,16 @@ import Content from './src/Layout/Content';
 import Login from './src/Login';
 import Register from './src/Register';
 import Dashboard from './src/Dashboard';
-import { ApolloProvider } from '@apollo/react-hooks';
-import { createUploadLink } from 'apollo-upload-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {ApolloProvider} from '@apollo/react-hooks';
+import {createUploadLink} from 'apollo-upload-client';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 import ApolloClient from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
-import { onError } from 'apollo-link-error';
+import {ApolloLink} from 'apollo-link';
+import {onError} from 'apollo-link-error';
 
 const SmileApp: React.SFC = () => {
   const [token, setTokenStoreage] = React.useState(
-    localStorage.getItem('token')
+    localStorage.getItem('token'),
   );
   // const [isDark, setTheme] = React.useState(false);
 
@@ -24,13 +24,13 @@ const SmileApp: React.SFC = () => {
 
   const client = new ApolloClient({
     link: ApolloLink.from([
-      onError(({ graphQLErrors, networkError }) => {
+      onError(({graphQLErrors, networkError}) => {
         if (graphQLErrors) {
-          graphQLErrors.map(({ message, locations, path }) =>
+          graphQLErrors.map(({message, locations, path}) =>
             // tslint:disable-next-line:no-console
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            )
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+            ),
           );
         }
         if (networkError) {
@@ -41,11 +41,11 @@ const SmileApp: React.SFC = () => {
       createUploadLink({
         uri: 'http://localhost:4000/graphql',
         headers: {
-          token: token ? token : ''
-        }
-      })
+          token: token ? token : '',
+        },
+      }),
     ]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
   });
   return (
     <ApolloProvider client={client}>
@@ -55,13 +55,11 @@ const SmileApp: React.SFC = () => {
           active,
           switcher,
           handleLayoutState,
-          user
+          user,
         }: ChildrenLayoutProps) => {
-          const handleLogin = ({ token, login }: any) => {
+          const handleLogin = ({token, login}: any) => {
             setTokenStoreage(token);
-            handleLayoutState({
-              isLogin: login
-            });
+            handleLayoutState({isLogin: login});
           };
           return (
             <>
@@ -77,5 +75,4 @@ const SmileApp: React.SFC = () => {
     </ApolloProvider>
   );
 };
-
 ReactDOM.render(<SmileApp />, document.getElementById('smile'));

@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.9.6",
+    "apollo-server-express": "^2.9.7",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -23,10 +23,10 @@
     "mkdirp": "^0.5.1",
     "mysql2": "^1.7.0",
     "nodemon": "^1.19.4",
-    "sequelize": "^5.19.8",
+    "sequelize": "^5.21.1",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "eslint": "^6.5.1"
+    "eslint": "^6.6.0"
   }
 }
