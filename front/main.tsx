@@ -47,6 +47,7 @@ const SmileApp: React.SFC = () => {
     ]),
     cache: new InMemoryCache(),
   });
+
   return (
     <ApolloProvider client={client}>
       <Layout>
@@ -62,13 +63,11 @@ const SmileApp: React.SFC = () => {
             handleLayoutState({isLogin: login});
           };
           return (
-            <>
               <Content isLogin={isLogin} active={active} defaultActive={2}>
                 <Login switcher={switcher} handleLogin={handleLogin} />
                 <Register switcher={switcher} handleLogin={handleLogin} />
                 {isLogin && <Dashboard user={user} handleLogin={handleLogin} />}
               </Content>
-            </>
           );
         }}
       </Layout>

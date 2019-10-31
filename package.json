@@ -1,0 +1,19 @@
+{
+  "name": "smile",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "(cd backend && npm start) & (cd front && npm start)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Harapan21/Smile.git"
+  },
+  "author": "harapan pardamean",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Harapan21/Smile/issues"
+  },
+  "homepage": "https://github.com/Harapan21/Smile#readme"
+}

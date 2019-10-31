@@ -46,27 +46,20 @@ export default React.memo(({ switcher, handleLogin }: RegisterProps) => {
     validateUsername({
       variables: { username: value }
     });
-    if (!loading) {
-      let error: string | null;
-      // tslint:disable-next-line:no-unused-expression
-      if (data && data.validation.username) {
-        error = 'Username has been use';
-      }
-      return error;
+    if (!loading && data && data.validation.username) {
+     return 'Username has been use';
     }
+
+    return ;
   };
   const handleValidateEmail = (value: string) => {
     validateEmail({
       variables: { email: value }
     });
-    if (!loading1) {
-      let error: string | null;
-      // tslint:disable-next-line:no-unused-expression
-      if (emailResult && emailResult.validation.email) {
-        error = 'Email has been use';
-      }
-      return error;
+    if (!loading1 && emailResult && emailResult.validation.email) {
+      return 'Email has been use';
     }
+    return;
   };
   return (
     <Formik

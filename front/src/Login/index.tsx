@@ -22,15 +22,10 @@ export default React.memo(({ switcher, handleLogin }: LoginProps) => {
       variables: { username: value }
     });
 
-    if (!LOAD_VALIDATION) {
-      let error: string | null;
-      // tslint:disable-next-line:no-unused-expression
-
-      if (ISVALID && !ISVALID.validation.username) {
-        error = 'Username is not valid';
-      }
-      return error;
+    if (!LOAD_VALIDATION && ISVALID && !ISVALID.validation.username) {
+      return 'Username is not valid';
     }
+    return;
   };
   return (
     <Formik

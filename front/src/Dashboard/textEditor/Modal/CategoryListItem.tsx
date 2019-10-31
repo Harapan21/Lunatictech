@@ -16,7 +16,6 @@ const CategoryListItem: React.SFC<CategoryListItemProps> = ({
 }) => {
   const getCatgory = React.useCallback(() => useQuery(GET_CATEGORY), []);
   const { data, loading } = getCatgory();
-
   const [CategoryList, setCategoryList] = React.useState<CategoryListState[]>(
     []
   );
