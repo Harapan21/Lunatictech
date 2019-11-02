@@ -14,7 +14,7 @@ const CategoryListItem: React.SFC<CategoryListItemProps> = ({
   typed,
   setSelected
 }) => {
-  const getCatgory = React.useCallback(() => useQuery(GET_CATEGORY), []);
+  const getCatgory = React.useCallback(() => useQuery(GET_CATEGORY, { fetchPolicy: 'network-only' }), []);
   const { data, loading } = getCatgory();
   const [CategoryList, setCategoryList] = React.useState<CategoryListState[]>(
     []
@@ -24,61 +24,64 @@ const CategoryListItem: React.SFC<CategoryListItemProps> = ({
       setCategoryList(data.category);
     }
   }, [loading]);
-  const handleSearch = typed.isType
-    ? CategoryList.filter((e: CategoryListState) => {
-        const idasnumber = e.id as number;
-        return (
-          !Selected.includes(idasnumber) &&
-          e.name.toLowerCase().includes(typed.word.toLowerCase())
-        );
-      })
-    : CategoryList.filter(({ id }: CategoryListState) => {
-        const idasnumber = id as number;
-        return !Selected.includes(idasnumber);
-      });
+
+  const handleSearch = React.useCallback((menu) => {
+    return typed.isType
+      ? menu.filter((e: CategoryListState) => e.name.toLowerCase().includes(typed.word.toLowerCase()))
+      : menu;
+  }, [typed]);
+  const CategoryListFitered = handleSearch(CategoryList);
+  const IsNotFound = CategoryListFitered.length === 0;
+  const inlineLiStyle: React.CSSProperties = { padding: 40, textAlign: 'center' };
+  const isCotains = React.useCallback((idFiltered: number) => Selected.includes(idFiltered), [Selected]);
   return (
     <>
-      {loading ? (
-        <li style={{ padding: 40, textAlign: 'center' }}>
-          <Loading width={20} />
-        </li>
-      ) : (
-        handleSearch.map(({ name, id, parent }) => {
-          const idasnumber = id as number;
-          const isCotains = Selected.includes(idasnumber);
-          return (
-            <li
-              onClick={() =>
-                isCotains
-                  ? setSelected((state: number[]) =>
-                      state.filter((e: number) => e !== idasnumber)
-                    )
-                  : setSelected((state: number[]) => [...state, idasnumber])
-              }
-              key={idasnumber}
-              style={{
-                fontSize: 'var(--font-size-medium)',
-                cursor: 'pointer',
-                padding: 10,
-                borderRight: isCotains ? '2px solid  var(--pink)' : 'none',
-                position: 'relative',
-                borderBottom: '1px solid var(--grey)'
-              }}
-            >
-              {name}
-              <span
-                style={{
-                  position: 'absolute',
-                  right: 10,
-                  margin: 'auto'
-                }}
-              >
-                {parent ? parent.name : 'Parent'}
-              </span>
-            </li>
-          );
-        })
-      )}
+      {loading ?
+        (
+          <li style={inlineLiStyle}>
+            <Loading width={20} />
+          </li>
+        )
+        :
+        (
+          IsNotFound ?
+            <li style={{ opacity: 0.3, fontWeight: 700, fontSize: '1rem', ...inlineLiStyle }}>Enter to create new category</li>
+            :
+            CategoryListFitered.map(({ name, id }) => {
+              const idasnumber = +id;
+              return (
+                <li
+                  onClick={() =>
+                    isCotains(idasnumber)
+                      ? setSelected((state: number[]) =>
+                        state.filter((e: number) => e !== idasnumber)
+                      )
+                      : setSelected((state: number[]) => [...state, idasnumber])
+                  }
+                  key={idasnumber}
+                  style={{
+                    borderRight: isCotains(idasnumber) ? '2px solid  var(--pink)' : 'none',
+                    fontSize: 'var(--font-size-medium)',
+                    cursor: 'pointer',
+                    padding: 10,
+                    position: 'relative',
+                    borderBottom: '1px solid var(--grey)'
+                  }}
+                >
+                  {name}
+                  <span
+                    style={{
+                      position: 'absolute',
+                      right: 10,
+                      margin: 'auto'
+                    }}
+                  >
+                    {parent ? parent.name : 'Parent'}
+                  </span>
+                </li>
+              );
+            })
+        )}
     </>
   );
 };

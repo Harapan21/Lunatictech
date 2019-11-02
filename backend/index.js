@@ -6,21 +6,9 @@ const typeDefs = require('./src/schema');
 const resolvers = require('./src/resolvers');
 const http = require('http');
 const cors = require('cors');
-const {isValid} = require('./src/db');
-const native = require('./native');
+const {removeFile} = require('./src/db');
 
-const removeFile = async () => {
-  native.check_garbage_upload().map(async dir => {
-    try {
-      const {username} = await isValid(dir);
-      if (!username) {
-        console.log(native.remove_dir(`./uploads/${dir}`));
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  });
-};
+// remove garbage uploads file
 removeFile();
 
 const server = new ApolloServer({

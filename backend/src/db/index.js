@@ -1,8 +1,8 @@
+const process = require('process');
 const fs = require('fs');
 // handle database
 // doc : https://sequelize.org/master/
 const Sequelize = require('sequelize');
-
 // jwt
 // import json web token
 // doc : https://www.npmjs.com/package/jsonwebtoken
@@ -33,6 +33,8 @@ const Category_Node = sequelize.import('./models/category_node');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const rootDir = process.cwd();
+const native = require(rootDir + '/native');
 async function getPostByCategoryId(categoryId) {
   Category_Node.belongsTo(Post);
   try {
@@ -57,12 +59,16 @@ async function pushCategory(input) {
   return Category.create({...input}).then(() => true);
 }
 
+function getCategoryByParentId(id) {
+  return Category.findAll({where: {parentId: id}});
+}
+
 async function getCategoryById(id) {
   const getCat = await Category.findOne({where: {id}});
   return getCat;
 }
-async function getCatergory() {
-  const getAllCat = await Category.findAll();
+async function getCategory() {
+  const getAllCat = await Category.findAll({where: {parentId: null}});
   return getAllCat;
 }
 
@@ -319,9 +325,23 @@ async function setComment(commentId, content, id) {
   ).then(() => true);
 }
 
+async function removeFile() {
+  native.check_garbage_upload().map(async dir => {
+    try {
+      const {username} = await isValid(dir);
+      if (!username) {
+        console.log(native.remove_dir(`${rootDir}/uploads/${dir}`));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  });
+}
+
 async function removeByID(input, authId) {
   switch (input.for) {
     case 'user':
+      let {userId} = await getCommentByID(input.id);
       if (input.id === authId) {
         return User.destroy({
           where: {
@@ -331,7 +351,6 @@ async function removeByID(input, authId) {
       }
       return false;
     case 'comment':
-      const {userId} = await getCommentByID(input.id);
       if (userId === authId) {
         return Comment.destroy({
           where: {
@@ -341,7 +360,7 @@ async function removeByID(input, authId) {
       }
       return false;
     case 'post':
-      const {author_id} = await getPostByID(input.id);
+      let {author_id} = await getPostByID(input.id);
       if (author_id === authId) {
         return Post.destroy({
           where: {
@@ -350,6 +369,8 @@ async function removeByID(input, authId) {
         }).then(() => true);
       }
       return false;
+    case 'category':
+      return Category.destroy({where: {id: input.id}}).then(() => true);
     default:
       return false;
   }
@@ -387,13 +408,15 @@ module.exports = {
   setUser,
   setPost,
   setComment,
+  removeFile,
   removeByID,
   getContributor,
   getAllPostByAuthorID,
   getEmbed,
   getCategoryByPostId,
   getPostByCategoryId,
-  getCatergory,
+  getCategoryByParentId,
+  getCategory,
   getCategoryById,
   pushCategory,
 };

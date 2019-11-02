@@ -140,9 +140,9 @@ interface ImageProps {
   width?: number | string;
 }
 type ID = string | number;
+
 interface CategoryListState {
   name: string;
   id: ID;
-  post?: any;
-  parent?: CategoryListState;
+  child?: [CategoryListState];
 }

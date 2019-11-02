@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "(cd backend && npm start) & (cd front && npm start)"
+    "start": "npm run docker && (cd backend && npm start) & (cd front && npm start)",
+    "purge": "(cd backend && rm -rf node_modules) & (cd front && rm -rf node_modules) && npm run clean",
+    "clean": "(cd front && rm -rf dist .cache)",
+    "install": "(cd front && npm i) & (cd backend && npm i )",
+    "docker": "(cd docker && docker-compose up -d)",
+    "stop": "(cd docker && docker-compose stop)"
   },
   "repository": {
     "type": "git",

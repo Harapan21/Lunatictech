@@ -14,12 +14,14 @@ const {
   setPost,
   setComment,
   removeByID,
+  removeFile,
   getContributor,
   getAllPostByAuthorID,
   getPostByCategoryId,
   getCategoryByPostId,
+  getCategoryByParentId,
   getEmbed,
-  getCatergory,
+  getCategory,
   getCategoryById,
   pushCategory,
 } = require('../db/index');
@@ -68,9 +70,9 @@ module.exports = {
     },
     posts: () => getPost(),
     trending: () => {},
-    category: (_, __, _args, info) => {
-      console.log(info);
-      return getCatergory();
+    category: (_, __, context, info) => {
+      console.log(context, info);
+      return getCategory();
     },
   },
   User: {
@@ -106,22 +108,19 @@ module.exports = {
     contributor: parent => getUserByID(parent.user_id),
   },
   Category: {
-    __resolveType(category, context, info) {
-      if (category.child) {
-        return 'CategoryTree';
-      }
-
-      return 'CategoryList';
+    __resolveType(category) {
+      return !category.parentId ? 'CategoryTree' : 'CategoryList';
     },
     post: parent => getPostByCategoryId(parent.id),
   },
+  CategoryTree: {
+    child: (parent, args, context, info) => {
+      console.log(args, info);
+      return getCategoryByParentId(parent.id);
+    },
+  },
   CategoryList: {
     parent: ({parentId}) => getCategoryById(parentId),
-  },
-  CategoryTree: {
-    child: () => {
-      return null;
-    },
   },
   Rating: {
     post: parent => getPostByID(parent.postId),
@@ -147,7 +146,14 @@ module.exports = {
       setPost(postId, input, _context.id),
     EditComment: (_, {commentId, content}, _context) =>
       setComment(commentId, content, _context.id),
-    RemoveByID: (_, {input}, _context) => removeByID(input, _context.id),
+    RemoveByID: async (_, {input}, _context) => {
+      const isRemoved = await removeByID(input, _context.id);
+      if (isRemoved && input.for === 'user') {
+        removeFile();
+      }
+      return isRemoved;
+    },
+
     singleUpload: (_, args) => proccessUpload(args.file, args.username),
     category: (_, {input}) => pushCategory(input),
   },
