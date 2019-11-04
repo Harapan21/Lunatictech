@@ -69,7 +69,7 @@ interface LoginProps extends HandleLoginProps {
 }
 
 // tslint:disable-next-line:no-empty-interface
-interface RegisterProps extends LoginProps {}
+interface RegisterProps extends LoginProps { }
 
 interface RegisterFormValues extends LoginFormValues {
   email: string;
@@ -145,4 +145,9 @@ interface CategoryListState {
   name: string;
   id: ID;
   child?: [CategoryListState];
+}
+
+interface SelectedCategoryListState {
+  name: string;
+  id: number;
 }

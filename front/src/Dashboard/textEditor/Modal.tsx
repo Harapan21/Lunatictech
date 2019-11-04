@@ -2,7 +2,7 @@ import * as React from 'react';
 import Thumbnail from './Modal/Thumbnail';
 import Category from './Modal/Category';
 import style from '../../../public/style.scss';
-
+import Close from '../../../public/close.svg';
 const Modal: React.SFC<ModalProps> = React.memo(({ setToggle, user }) => {
   const [menu] = React.useState([
     { item: 'Thumbnail', Content: <Thumbnail image={user.data.me} /> },
@@ -76,7 +76,7 @@ const Modal: React.SFC<ModalProps> = React.memo(({ setToggle, user }) => {
             }}
             onClick={setToggle}
           >
-            Save
+            <Close height={15} />
           </button>
         </div>
       </div>

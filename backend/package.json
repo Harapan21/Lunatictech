@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "neon": "neon build --release",
+    "clean": "neon clean",
     "start": "npm run neon && nodemon index.js"
   },
   "keywords": [],

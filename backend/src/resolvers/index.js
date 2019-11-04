@@ -26,11 +26,11 @@ const {
   pushCategory,
 } = require('../db/index');
 
+const shortid = require('shortid');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const UPLOAD_DIR = './uploads';
 mkdirp.sync(UPLOAD_DIR);
-const shortid = require('shortid');
 const staticUri = 'http://localhost:4000/static/';
 
 const storeFS = ({stream, filename}, username) => {
@@ -54,7 +54,6 @@ const storeFS = ({stream, filename}, username) => {
 
 const proccessUpload = async (file, user_id) => {
   const {createReadStream, filename, mimetype, encoding} = await file;
-
   const stream = createReadStream();
   const {id, path} = await storeFS({stream, filename}, user_id);
   return {id, path, filename, mimetype, encoding};
@@ -62,18 +61,10 @@ const proccessUpload = async (file, user_id) => {
 
 module.exports = {
   Query: {
-    me: (_, __, _context) => {
-      if (!_context.id) {
-        return null;
-      }
-      return getMe(_context.id);
-    },
+    me: (_, __, _context) => (!_context.id ? null : getMe(_context.id)),
     posts: () => getPost(),
     trending: () => {},
-    category: (_, __, context, info) => {
-      console.log(context, info);
-      return getCategory();
-    },
+    category: () => getCategory(),
   },
   User: {
     post: parent => getAllPostByAuthorID(parent.user_id),
@@ -114,10 +105,7 @@ module.exports = {
     post: parent => getPostByCategoryId(parent.id),
   },
   CategoryTree: {
-    child: (parent, args, context, info) => {
-      console.log(args, info);
-      return getCategoryByParentId(parent.id);
-    },
+    child: parent => getCategoryByParentId(parent.id),
   },
   CategoryList: {
     parent: ({parentId}) => getCategoryById(parentId),

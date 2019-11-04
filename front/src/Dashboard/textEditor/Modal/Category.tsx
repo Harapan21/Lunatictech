@@ -1,7 +1,9 @@
 import * as React from 'react';
 import CategoryListItem from './CategoryListItem';
 const Category: React.SFC<any> = React.memo(() => {
-  const [Selected, setSelected] = React.useState<number[]>([]);
+  const [Selected, setSelected] = React.useState<SelectedCategoryListState[]>(
+    []
+  );
   const [typed, setTyped] = React.useState({ word: '', isType: false });
   const handleChange = React.useCallback(
     (e: any) => {
@@ -17,14 +19,16 @@ const Category: React.SFC<any> = React.memo(() => {
           margin: 0,
           background: 'var(--white)',
           padding: 0,
-          borderRadius: 10,
           overflow: 'hidden',
           width: '100%'
         }}
       >
         <li
           style={{
-            width: '100%'
+            width: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center'
           }}
         >
           <input
@@ -40,6 +44,33 @@ const Category: React.SFC<any> = React.memo(() => {
               boxSizing: 'border-box'
             }}
           />
+
+          <ul
+            style={{
+              position: 'absolute',
+              right: 0,
+              display: 'inline-flex',
+              listStyle: 'none',
+              padding: 5
+            }}
+          >
+            {Selected.map(({ id, name }) => (
+              <li
+                key={id}
+                style={{
+                  fontSize: '0.5rem',
+                  marginRight: 5,
+                  marginLeft: 5,
+                  textAlign: 'center',
+                  padding: 2,
+                  background: 'var(--white-pink)',
+                  borderRadius: 5
+                }}
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
         </li>
         <CategoryListItem
           Selected={Selected}
