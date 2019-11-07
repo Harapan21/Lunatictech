@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npm run docker & (cd backend && npm start) & (cd front && npm start)",
     "purge": "(cd backend && npm run clean && rm -rf node_modules) && (cd front && npm rm -rf node_modules) && npm run garbage",
+    "update": "(cd backend && npm update) && (cd front && npm update)",
     "garbage": "(cd front && npm run clean)",
     "install": "(cd front && npm i) && (cd backend && npm i && npm run neon)",
     "docker": "(cd docker && docker-compose up -d)",

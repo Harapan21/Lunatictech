@@ -3,7 +3,7 @@ import style from '../../../../public/style.scss';
 import ImageSmile from '../../ImageSmile';
 interface Galery {
   image: any;
-  active: number | undefined;
+  active?: number;
   setActive: (idx: number) => void;
 }
 
@@ -30,7 +30,7 @@ const Galery: React.SFC<Galery> = React.memo(({ image, active, setActive }) => (
           margin: '0px 5px',
           borderRadius: '15px',
           overflow: 'hidden',
-          minWidth: 'min-content',
+          minWidth: 'min-content'
         }}
       >
         <ImageSmile

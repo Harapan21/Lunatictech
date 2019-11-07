@@ -28,7 +28,7 @@ const Thumbnail: React.SFC<ThumbnailProps> = React.memo(({ image }) => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
       }}
     >
       <div

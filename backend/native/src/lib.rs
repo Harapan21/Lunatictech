@@ -1,14 +1,13 @@
-#[macro_use]
 extern crate neon;
-#[macro_use] extern crate neon_serde;
+#[macro_use]
+extern crate neon_serde;
 extern crate serde_derive;
 use std::fs;
 
-export!{
-    fn hello() -> String {
-        String::from("hello")
-    }
+use neon::prelude::*;
+use neon::register_module;
 
+export! {
     fn check_garbage_upload() -> Vec<String> {
         let upload_file = fs::read_dir("./uploads").unwrap();
         upload_file
@@ -22,5 +21,5 @@ export!{
         fs::remove_dir_all(path.to_owned()).unwrap();
         format!("Removing garbage dir : {}",path.to_owned())
     }
-    
+
 }

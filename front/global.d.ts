@@ -1,16 +1,16 @@
-declare module '*.svg' {
+declare module "*.svg" {
   const content: any;
   export default content;
 }
-declare module '*.scss' {
+declare module "*.scss" {
   const content: any;
   export default content;
 }
-declare module '*.jpeg' {
+declare module "*.jpeg" {
   const content: any;
   export default content;
 }
-declare module '*.json' {
+declare module "*.json" {
   const content: any;
   export default content;
 }
@@ -34,7 +34,7 @@ interface ChildrenLayoutProps extends LayoutState {
   user: QueryUser;
 }
 interface LayoutProps {
-  children: (ChildrenLayoutProps) => React.ReactNode | null;
+  children: (arg0: ChildrenLayoutProps) => React.ReactNode | null;
 }
 
 interface UserData {
@@ -69,7 +69,7 @@ interface LoginProps extends HandleLoginProps {
 }
 
 // tslint:disable-next-line:no-empty-interface
-interface RegisterProps extends LoginProps { }
+interface RegisterProps extends LoginProps {}
 
 interface RegisterFormValues extends LoginFormValues {
   email: string;
@@ -110,7 +110,7 @@ interface ProfileProps {
 interface TextEditorFormProps {
   title: string;
   content: string;
-  status: 'publish' | 'draft' | 'hide';
+  status: "publish" | "draft" | "hide";
 }
 
 interface TextEditorProps {
@@ -150,4 +150,16 @@ interface CategoryListState {
 interface SelectedCategoryListState {
   name: string;
   id: number;
+}
+
+interface CategoryListItemProps {
+  Selected: SelectedCategoryListState[];
+  typed: { word: string; isType: boolean };
+  setSelected: React.Dispatch<
+    React.SetStateAction<SelectedCategoryListState[]>
+  >;
+}
+
+interface ProfileMenu {
+  svg: React.ReactNode;
 }

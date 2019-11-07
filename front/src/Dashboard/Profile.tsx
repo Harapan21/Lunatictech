@@ -1,5 +1,4 @@
 import * as React from 'react';
-import style from '../../public/style.scss';
 import Avatar from '../components/Avatar';
 import Alarm from '../../public/alarm.svg';
 import Setting from '../../public/settings.svg';
@@ -80,9 +79,9 @@ const ProfileMenuBar = ({ menu }: { menu: ProfileMenu[] }) => {
         listStyle: 'none'
       }}
     >
-      {menu.map(({ svg: SVG }, index) => (
+      {menu.map(({ svg: Svg }, index) => (
         <li key={index} style={{ padding: '5px 20px' }}>
-          <SVG width={20} height={20} />
+          <Svg width={20} height={20} />
         </li>
       ))}
     </ul>
@@ -92,9 +91,7 @@ const ProfileMenuBar = ({ menu }: { menu: ProfileMenu[] }) => {
 const ProfileContent = () => {
   return <div style={{ width: '100%', height: '100%' }}>hai</div>;
 };
-interface ProfileMenu {
-  svg: React.ReactNode;
-}
+
 export default function Profile({ user }: ProfileProps) {
   const [menu] = React.useState<ProfileMenu[]>([
     {

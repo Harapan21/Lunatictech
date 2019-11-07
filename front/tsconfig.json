@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "noImplicitAny": false,
-    "module": "commonjs",
-    "target": "esnext",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "module": "esnext",
+    "target": "es3",
     "jsx": "react",
-    "lib": ["es2017", "dom"],
+    "lib": ["esnext", "dom"],
     "strict": true,
     "moduleResolution": "node",
     "declaration": true,
@@ -15,7 +16,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "strictBindCallApply": true
   },
   "files": ["./global.d.ts"],
   "exclude": ["node_modules", "public", "dist"],
