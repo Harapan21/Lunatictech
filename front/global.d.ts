@@ -149,17 +149,20 @@ interface CategoryListState {
 
 interface SelectedCategoryListState {
   name: string;
-  id: number;
+  id: ID;
 }
 
 interface CategoryListItemProps {
   Selected: SelectedCategoryListState[];
   typed: { word: string; isType: boolean };
-  setSelected: React.Dispatch<
-    React.SetStateAction<SelectedCategoryListState[]>
-  >;
+  isCotains: (id: ID) => boolean;
+  handleCategory: (props: SelectedCategoryListState) => void;
 }
 
 interface ProfileMenu {
   svg: React.ReactNode;
+}
+
+interface ThumbnailProps {
+  image: any;
 }

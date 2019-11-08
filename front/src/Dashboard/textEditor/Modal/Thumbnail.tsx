@@ -1,10 +1,6 @@
-import * as React from 'react';
-import Galery from './Galery';
-import ImageSmile from '../../ImageSmile';
-
-interface ThumbnailProps {
-  image: any;
-}
+import * as React from "react";
+import Galery from "./Galery";
+import ImageSmile from "../../ImageSmile";
 
 const Thumbnail: React.SFC<ThumbnailProps> = React.memo(({ image }) => {
   const [active, setActive] = React.useState<number>();
@@ -19,39 +15,39 @@ const Thumbnail: React.SFC<ThumbnailProps> = React.memo(({ image }) => {
   const location = isLocation ? (
     <ImageSmile uri={isLocation} width="max-cotent" height="100%" />
   ) : (
-    ' Select Image'
+    "Select Image"
   );
   return (
     <div
       style={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between"
       }}
     >
       <div
         style={{
-          width: '100%',
-          maxHeight: '100%',
-          overflow: 'hidden',
+          width: "100%",
+          maxHeight: "100%",
+          overflow: "hidden",
           flex: 1,
-          position: 'relative'
+          position: "relative"
         }}
       >
         <span
           style={{
-            width: '100%',
-            position: 'absolute',
-            display: !active ? 'flex' : 'block',
-            justifyContent: !active ? 'center' : ' ',
-            alignItems: !active ? 'center' : '',
+            width: "100%",
+            position: "absolute",
+            display: !active ? "flex" : "block",
+            justifyContent: !active ? "center" : " ",
+            alignItems: !active ? "center" : "",
             left: 0,
             right: 0,
             top: 0,
             bottom: 0,
-            margin: 'auto'
+            margin: "auto"
           }}
         >
           {location}

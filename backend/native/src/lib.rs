@@ -1,11 +1,29 @@
+#![allow(non_snake_case)]
 extern crate neon;
+#[macro_use]
+extern crate diesel;
+extern crate dotenv;
 #[macro_use]
 extern crate neon_serde;
 extern crate serde_derive;
 use std::fs;
 
+use diesel::prelude::*;
+use dotenv::dotenv;
 use neon::prelude::*;
 use neon::register_module;
+use std::env;
+
+mod models;
+mod schema;
+
+pub fn establish_connection() -> MysqlConnection {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    MysqlConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+}
 
 export! {
     fn check_garbage_upload() -> Vec<String> {
