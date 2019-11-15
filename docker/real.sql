@@ -54,8 +54,8 @@ CREATE TABLE post (
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
-    PRIMARY KEY (id),
-    FOREIGN KEY (author_id)
+    PRIMARY KEY (id),jkljkj
+    FOREIGN KEY (auhthor_id)
         REFERENCES usr_smile (user_id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );

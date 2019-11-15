@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 const typeDefs = gql`
   scalar Date
   type Query {
@@ -64,7 +64,7 @@ const typeDefs = gql`
     joinAt: Date!
     lastEditedAt: Date!
     fullname: String!
-    avatar: String
+    avatar: Stringj
     isAdmin: Boolean
     post: [Post]
     firstLetter: String!
@@ -144,7 +144,7 @@ const typeDefs = gql`
   }
 
   input LoginUser {
-    username: String!
+    username: jkj!
     password: String!
   }
 

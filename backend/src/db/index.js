@@ -1,52 +1,52 @@
-const process = require('process');
-const fs = require('fs');
+const process = require("process");
+const fs = require("fs");
 // handle database
 // doc : https://sequelize.org/master/
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 // jwt
 // import json web token
 // doc : https://www.npmjs.com/package/jsonwebtoken
-const jwt = require('jsonwebtoken');
-const privateKEY = fs.readFileSync(__dirname + '/key/private.key', 'utf8');
-const publicKEY = fs.readFileSync(__dirname + '/key/public.key', 'utf8');
+const jwt = require("jsonwebtoken");
+const privateKEY = fs.readFileSync(__dirname + "/key/private.key", "utf8");
+const publicKEY = fs.readFileSync(__dirname + "/key/public.key", "utf8");
 const signOption = {
-  expiresIn: '1d',
-  algorithm: 'RS256',
+  expiresIn: "1d",
+  algorithm: "RS256"
 };
 
 //db
-const sequelize = new Sequelize('smile', 'root', 'Smile:)00', {
-  host: 'localhost',
-  dialect: 'mysql',
+const sequelize = new Sequelize("smile", "root", "Smile:)00", {
+  host: "localhost",
+  dialect: "mysql"
 });
 
 // models
-const Comment = sequelize.import('./models/comment');
-const ContributorUser = sequelize.import('./models/contributor_user');
-const Embed = sequelize.import('./models/embed');
-const Post = sequelize.import('./models/post');
-const Rating = sequelize.import('./models/rating');
-const User = sequelize.import('./models/usr_smile');
-const Category = sequelize.import('./models/category');
-const Category_Node = sequelize.import('./models/category_node');
+const Comment = sequelize.import("./models/comment");
+const ContributorUser = sequelize.import("./models/contributor_user");
+const Embed = sequelize.import("./models/embed");
+const Post = sequelize.import("./models/post");
+const Rating = sequelize.import("./models/rating");
+const User = sequelize.import("./models/usr_smile");
+const Category = sequelize.import("./models/category");
+const Category_Node = sequelize.import("./models/category_node");
 // bcrypt
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const rootDir = process.cwd();
-const native = require(rootDir + '/native');
+const native = require(rootDir + "/native");
 async function getPostByCategoryId(categoryId) {
   Category_Node.belongsTo(Post);
   try {
     const postsArr = [];
     const posts = await Category_Node.findAll({
       where: {
-        categoryId,
+        categoryId
       },
-      include: [{model: Post}],
-      attributes: [],
+      include: [{ model: Post }],
+      attributes: []
     });
-    posts.map(({post}) => {
+    posts.map(({ post }) => {
       postsArr.push(post);
     });
     return postsArr;
@@ -56,19 +56,19 @@ async function getPostByCategoryId(categoryId) {
 }
 
 async function pushCategory(input) {
-  return Category.create({...input}).then(() => true);
+  return Category.create({ ...input }).then(() => true);
 }
 
 function getCategoryByParentId(id) {
-  return Category.findAll({where: {parentId: id}});
+  return Category.findAll({ where: { parentId: id } });
 }
 
 async function getCategoryById(id) {
-  const getCat = await Category.findOne({where: {id}});
+  const getCat = await Category.findOne({ where: { id } });
   return getCat;
 }
 async function getCategory() {
-  const getAllCat = await Category.findAll({where: {parentId: null}});
+  const getAllCat = await Category.findAll({ where: { parentId: null } });
   return getAllCat;
 }
 
@@ -78,13 +78,13 @@ async function getCategoryByPostId(postId) {
     const categoryArr = [];
     const category_node = await Category_Node.findAll({
       where: {
-        postId,
+        postId
       },
-      include: [{model: Category}],
-      attributes: [],
+      include: [{ model: Category }],
+      attributes: []
     });
 
-    category_node.map(({category}) => {
+    category_node.map(({ category }) => {
       categoryArr.push(category);
     });
     return categoryArr;
@@ -94,28 +94,28 @@ async function getCategoryByPostId(postId) {
 }
 
 function HashPass(pass) {
-  return bcrypt.hash(pass, saltRounds).then(pass => pass);
+  return bcrypt.hash(pass, saltRounds).then((pass) => pass);
 }
 function isVerify(field_password, password) {
-  return bcrypt.compare(field_password, password).then(result => result);
+  return bcrypt.compare(field_password, password).then((result) => result);
 }
-async function RegisterUser({username, password, ...rest}) {
+async function RegisterUser({ username, password, ...rest }) {
   const bcryptPass = await HashPass(password);
   const user = await User.create(
     {
       username,
       password: bcryptPass,
-      ...rest,
+      ...rest
     },
     {
       validation: true,
-      fields: ['username', 'email', 'fullname', 'password', 'avatar'],
-    },
+      fields: ["username", "email", "fullname", "password", "avatar"]
+    }
   );
   if (!user) {
     return {
       login: false,
-      token: null,
+      token: null
     };
   }
   return Login(username, password);
@@ -124,20 +124,20 @@ async function RegisterUser({username, password, ...rest}) {
 async function isValid(usernameField, emailField) {
   const isUsername =
     usernameField != undefined
-      ? await User.findAndCountAll({where: {username: usernameField}}).then(
-          ({count}) => count > 0,
+      ? await User.findAndCountAll({ where: { username: usernameField } }).then(
+          ({ count }) => count > 0
         )
       : false;
   const isEmail =
     emailField != undefined
-      ? await User.findAndCountAll({where: {email: emailField}}).then(
-          ({count}) => count > 0,
+      ? await User.findAndCountAll({ where: { email: emailField } }).then(
+          ({ count }) => count > 0
         )
       : false;
 
   return {
     username: isUsername,
-    email: isEmail,
+    email: isEmail
   };
 }
 
@@ -145,30 +145,30 @@ async function getMe(id) {
   const user = await getUserByID(id);
   const post = await Post.findAll({
     where: {
-      author_id: id,
-    },
+      author_id: id
+    }
   });
-  const {password, ...userData} = user.dataValues;
+  const { password, ...userData } = user.dataValues;
   const me = {
     ...userData,
-    post: [...post],
+    post: [...post]
   };
   return me;
 }
 
 async function getPostByID(id) {
-  const {dataValues} = await Post.findOne({
+  const { dataValues } = await Post.findOne({
     where: {
-      id,
-    },
+      id
+    }
   });
   return dataValues;
 }
 async function getAllPostByAuthorID(author_id) {
   const posts = await Post.findAll({
     where: {
-      author_id,
-    },
+      author_id
+    }
   });
   return posts;
 }
@@ -179,17 +179,17 @@ async function getPost() {
 async function getUserByID(id) {
   const user = await User.findOne({
     where: {
-      user_id: id,
-    },
+      user_id: id
+    }
   });
   return user;
 }
 
 async function getRatingByParentID(postId) {
-  const {dataValues} = await Rating.findOne({
+  const { dataValues } = await Rating.findOne({
     where: {
-      postId,
-    },
+      postId
+    }
   });
   return dataValues;
 }
@@ -197,23 +197,23 @@ async function getRatingByParentID(postId) {
 async function getCommentByParentID(id) {
   const comments = await Comment.findAll({
     where: {
-      postId: id,
-    },
+      postId: id
+    }
   });
   return comments;
 }
 
 async function Login(username, field_password) {
-  const {user_id, password} = await User.findOne({
+  const { user_id, password } = await User.findOne({
     where: {
-      username,
-    },
+      username
+    }
   });
   const verify = await isVerify(field_password, password);
   if (!user_id || user_id === undefined || !verify) {
     return {
       login: false,
-      token: null,
+      token: null
     };
   }
   const auth = Auth(user_id);
@@ -221,11 +221,11 @@ async function Login(username, field_password) {
 }
 
 function Auth(id) {
-  const token = jwt.sign({id}, privateKEY, signOption);
+  const token = jwt.sign({ id }, privateKEY, signOption);
 
   const auth = {
     login: true,
-    token,
+    token
   };
   return auth;
 }
@@ -243,7 +243,7 @@ function VerifyAuth(token) {
 function inputPost(post, id) {
   return Post.create({
     author_id: id,
-    ...post,
+    ...post
   }).then(() => {
     return true;
   });
@@ -252,7 +252,7 @@ function inputPost(post, id) {
 function inputComment(comment, userId) {
   return Comment.create({
     ...comment,
-    userId,
+    userId
   }).then(() => {
     return true;
   });
@@ -265,37 +265,37 @@ async function setUser(input, id) {
   }
   return User.update(
     {
-      ...input,
+      ...input
     },
     {
       where: {
-        user_id: id,
-      },
-    },
+        user_id: id
+      }
+    }
   ).then(() => true);
 }
 
 async function setPost(postId, input, authId) {
-  const {author_id} = await getPostByID(postId);
+  const { author_id } = await getPostByID(postId);
   if (authId != author_id) {
     return {
       access: false,
-      success: true,
+      success: true
     };
   } else {
     return Post.update(
       {
         ...input,
-        last_edited_by: authId,
+        last_edited_by: authId
       },
       {
         where: {
-          id: postId,
-        },
-      },
+          id: postId
+        }
+      }
     ).then(() => ({
       access: true,
-      success: true,
+      success: true
     }));
   }
 }
@@ -303,32 +303,32 @@ async function setPost(postId, input, authId) {
 async function getCommentByID(id) {
   const comments = await Comment.findOne({
     where: {
-      id,
-    },
+      id
+    }
   });
   return comments;
 }
 async function setComment(commentId, content, id) {
-  const {userId} = await getCommentByID(commentId);
+  const { userId } = await getCommentByID(commentId);
   if (userId !== id) {
     return false;
   }
   return Comment.update(
     {
-      content,
+      content
     },
     {
       where: {
-        id: commentId,
-      },
-    },
+        id: commentId
+      }
+    }
   ).then(() => true);
 }
 
 async function removeFile() {
-  native.check_garbage_upload().map(async dir => {
+  native.check_garbage_upload().map(async (dir) => {
     try {
-      const {username} = await isValid(dir);
+      const { username } = await isValid(dir);
       if (!username) {
         console.log(native.remove_dir(`${rootDir}/uploads/${dir}`));
       }
@@ -340,37 +340,37 @@ async function removeFile() {
 
 async function removeByID(input, authId) {
   switch (input.for) {
-    case 'user':
-      let {userId} = await getCommentByID(input.id);
+    case "user":
+      let { userId } = await getCommentByID(input.id);
       if (input.id === authId) {
         return User.destroy({
           where: {
-            user_id: input.id,
-          },
+            user_id: input.id
+          }
         }).then(() => true);
       }
       return false;
-    case 'comment':
+    case "comment":
       if (userId === authId) {
         return Comment.destroy({
           where: {
-            id: input.id,
-          },
+            id: input.id
+          }
         }).then(() => true);
       }
       return false;
-    case 'post':
-      let {author_id} = await getPostByID(input.id);
+    case "post":
+      let { author_id } = await getPostByID(input.id);
       if (author_id === authId) {
         return Post.destroy({
           where: {
-            id: input.id,
-          },
+            id: input.id
+          }
         }).then(() => true);
       }
       return false;
-    case 'category':
-      return Category.destroy({where: {id: input.id}}).then(() => true);
+    case "category":
+      return Category.destroy({ where: { id: input.id } }).then(() => true);
     default:
       return false;
   }
@@ -379,17 +379,17 @@ async function removeByID(input, authId) {
 async function getContributor(postId) {
   return await ContributorUser.findAll({
     where: {
-      postId,
-    },
+      postId
+    }
   });
 }
 
 function getEmbed(postId) {
   return Embed.findOne({
     where: {
-      postId,
-    },
-  }).then(embed => embed);
+      postId
+    }
+  }).then((embed) => embed);
 }
 
 module.exports = {
@@ -418,5 +418,5 @@ module.exports = {
   getCategoryByParentId,
   getCategory,
   getCategoryById,
-  pushCategory,
+  pushCategory
 };

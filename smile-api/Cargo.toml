@@ -1,0 +1,29 @@
+[package]
+name = "smile-api"
+version = "0.1.0"
+authors = ["Harapan21 <harapanpardamean@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "smile_api_lib"
+path = "src/lib.rs"
+
+[dependencies]
+actix-web = "1.0.8"
+actix = "0.8.3"
+actix-cors = "0.1.0"
+diesel-derive-enum = { version = "0.4", features = ["mysql"] }
+actix-identity = "0.1.0"
+serde_json = "1.0.41"
+serde_derive = "1.0.102"
+serde = "1.0.102"
+jsonwebtoken = "6.0.1"
+dotenv = "0.15.0"
+chrono = { version = "0.4.9", features = ["serde"] }
+uuid = { version = "0.8", features = ["serde", "v4"] }
+lazy_static = "1.4.0"
+futures = "0.3.1"
+bcrypt = "0.6.1"
+juniper = "0.14.1"
+diesel = { version= "1.4.3", features = ["chrono", "mysql", "r2d2"] }
