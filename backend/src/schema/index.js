@@ -144,7 +144,7 @@ const typeDefs = gql`
   }
 
   input LoginUser {
-    username: jkj!
+    username: String!
     password: String!
   }
 
