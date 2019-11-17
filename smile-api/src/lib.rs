@@ -24,7 +24,6 @@ extern crate diesel;
 extern crate bcrypt;
 #[macro_use]
 extern crate diesel_derive_enum;
-
 pub use actix_cors::Cors;
 pub use actix_identity::{CookieIdentityPolicy, IdentityService};
 pub use actix_web::{http::header, web, App, HttpServer};

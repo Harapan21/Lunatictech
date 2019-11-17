@@ -17,7 +17,7 @@ struct Claims {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Auth {
     pub token: Option<String>,
-    pub login: bool,
+    pub login: Option<bool>,
 }
 
 impl Claims {
@@ -49,13 +49,16 @@ impl Auth {
         match claim.create_token() {
             Ok(token) => Auth {
                 token: Some(token),
-                login: true,
+                login: Some(true),
             },
             Err(_) => Auth {
                 token: None,
-                login: false,
+                login: Some(false),
             },
         }
+    }
+    pub fn from(token: Option<String>) -> Self {
+        Auth { token, login: None }
     }
     pub fn get_id_authorize(&self) -> Result<String, SmileError> {
         let token = self.token.as_ref().unwrap();

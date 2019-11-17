@@ -1,7 +1,22 @@
 use smile_api_lib::*;
+
+const NICKNAME: &'static str = r#"
+  _____           _ _      
+ / ____|         (_) |     
+| (___  _ __ ___  _| | ___ 
+ \___ \| '_ ` _ \| | |/ _ \
+ ____) | | | | | | | |  __/
+|_____/|_| |_| |_|_|_|\___|
+
+| by Harapan Pardamean <harapanpardamean@gmail.com>
+"#;
+const HOSTNAME: &'static str = "127.0.0.1:8088";
+
 fn main() {
+    println!("{}", NICKNAME);
     let sys = actix::System::new("users");
     HttpServer::new(|| {
+        let schema = std::sync::Arc::new(models::schema::create_schema());
         App::new()
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
@@ -11,6 +26,7 @@ fn main() {
                     .max_age(chrono::Duration::days(1).num_seconds())
                     .secure(false),
             ))
+            .data(schema.clone())
             .wrap(
                 Cors::new()
                     .send_wildcard()
@@ -35,8 +51,9 @@ fn main() {
             .service(web::resource("/logout").route(web::post().to(handlers::user::logout)))
             .service(web::resource("/auth").route(web::post().to(handlers::user::create)))
     })
-    .bind("127.0.0.1:8088")
+    .bind(HOSTNAME)
     .unwrap()
     .start();
+    println!("Listen  {}", HOSTNAME);
     let _ = sys.run();
 }

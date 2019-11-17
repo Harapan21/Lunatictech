@@ -1,30 +1,33 @@
 use crate::db::MysqlPool;
+use crate::models::schema::{create_context, Schema};
+use crate::utils::Auth;
+use actix_identity::Identity;
 use actix_web::{web, Error, HttpResponse};
+use futures::future::Future;
 use juniper::http::GraphQLRequest;
 use std::sync::Arc;
-use actix_identity::Identity;
 
-
-pub async fn graphql(
+pub fn graphql(
     st: web::Data<Arc<Schema>>,
     data: web::Json<GraphQLRequest>,
     id: Identity,
     pool: web::Data<MysqlPool>,
-) -> Result<HttpResponse, Error> {
-let block = async move {
-        let pg_pool = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
-        let auth = id.identity().unwrap_or_else(|| "".to_owned());
-        // let ctx = create_context(auth, pg_pool);
-        let res = data.execute(&st, &());
+) -> impl Future<Item = HttpResponse, Error = Error> {
+    let id = Auth::from(id.identity())
+        .get_id_authorize()
+        .ok()
+        .unwrap_or_else(|| "".to_owned());
+    println!("{}", &id);
+    web::block(move || {
+        let mysql_poll = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
+        let context = create_context(id, mysql_poll);
+        let res = data.execute(&st, &context);
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
-};
-
-
-block.await.map(|user|
-        HttpResponse::Ok()
+    })
+    .map_err(Error::from)
+    .and_then(|user| {
+        Ok(HttpResponse::Ok()
             .content_type("application/json")
-            .body(user)).map_err(Error::from)
-
-
-
+            .body(user))
+    })
 }

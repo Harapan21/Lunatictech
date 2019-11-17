@@ -1,11 +1,11 @@
-use crate::db::{MysqlPool, MysqlPoollConnection};
+use crate::db::{MysqlPool, MysqlPoolConnection};
 use crate::models::user::{Login, Register, UserList};
 use actix_identity::Identity;
 use actix_web::{web, HttpRequest, HttpResponse};
 
 type ResponseResult = Result<HttpResponse, HttpResponse>;
 
-fn mysql_pool_header(pool: web::Data<MysqlPool>) -> Result<MysqlPoollConnection, HttpResponse> {
+fn mysql_pool_header(pool: web::Data<MysqlPool>) -> Result<MysqlPoolConnection, HttpResponse> {
     pool.get()
         .map_err(|e| HttpResponse::InternalServerError().json(e.to_string()))
 }

@@ -8,7 +8,8 @@ use crate::utils::Auth;
 use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::prelude::*;
 use uuid::Uuid;
-#[derive(Queryable, Serialize, Deserialize, PartialEq)]
+
+#[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
 pub struct User {
     pub user_id: String,
     pub username: String,
@@ -17,6 +18,7 @@ pub struct User {
     pub lastEditedAt: Option<NaiveDateTime>,
     pub fullname: Option<String>,
     #[serde(skip)]
+    #[graphql(skip)]
     pub password: String,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,

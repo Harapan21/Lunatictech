@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use std::env;
 
 pub type MysqlPool = Pool<ConnectionManager<MysqlConnection>>;
-pub type MysqlPoollConnection = PooledConnection<ConnectionManager<MysqlConnection>>;
+pub type MysqlPoolConnection = PooledConnection<ConnectionManager<MysqlConnection>>;
 
 fn init_pool(database_url: &str) -> Result<MysqlPool, PoolError> {
     let manager = ConnectionManager::<MysqlConnection>::new(database_url);
