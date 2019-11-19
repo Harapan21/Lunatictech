@@ -13,11 +13,10 @@ pub fn graphql(
     id: Identity,
     pool: web::Data<MysqlPool>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
-    let id = Auth::from(id.identity())
-        .get_id_authorize()
-        .ok()
-        .unwrap_or_else(|| "".to_owned());
-    println!("{}", &id);
+    let id: Option<String> = match id.identity() {
+        Some(token) => Some(Auth::from(token).get_id_authorize().ok().unwrap()),
+        None => None,
+    };
     web::block(move || {
         let mysql_poll = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
         let context = create_context(id, mysql_poll);

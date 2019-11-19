@@ -7,7 +7,27 @@ pub enum SmileError {
     DBError(result::Error),
     PasswordNotMatch(String),
     JwtError(jsonwebtoken::errors::Error),
+    Unauthorized,
     WrongPassword(String),
+}
+
+impl juniper::IntoFieldError for SmileError {
+    fn into_field_error(self) -> juniper::FieldError {
+        match self {
+            SmileError::Unauthorized => juniper::FieldError::new(
+                "You mush login first",
+                graphql_value!({
+                    "type": "Unauthorized"
+                }),
+            ),
+            _ => juniper::FieldError::new(
+                "Internal server Error",
+                graphql_value!({
+                    "type": "InternalServerError"
+                }),
+            ),
+        }
+    }
 }
 
 impl From<BcryptError> for SmileError {
@@ -37,6 +57,7 @@ impl fmt::Display for SmileError {
             SmileError::PasswordNotMatch(error) => write!(f, "{}", error),
             SmileError::WrongPassword(error) => write!(f, "{}", error),
             SmileError::JwtError(error) => write!(f, "{}", error),
+            SmileError::Unauthorized => write!(f, "access graphql without token"),
         }
     }
 }

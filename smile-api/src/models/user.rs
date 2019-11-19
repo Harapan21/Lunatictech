@@ -2,6 +2,9 @@ extern crate uuid;
 use crate::errors::SmileError;
 // use crate::models::drive::Drive;
 use super::*;
+// use crate::models::schema::Context;
+// use crate::schema::post;
+// use crate::schema::post::dsl::*;
 use crate::schema::usr_smile;
 use crate::schema::usr_smile::dsl::*;
 use crate::utils::Auth;
@@ -10,6 +13,22 @@ use diesel::prelude::*;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
+pub struct UserResolve {
+    bio: User,
+    posts: Vec<post::Posts>,
+}
+
+impl UserResolve {
+    pub fn new(user: User, posts: Vec<post::Posts>) -> Self {
+        UserResolve { bio: user, posts }
+    }
+}
+
+#[derive(
+    Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject,
+)]
+#[primary_key(user_id)]
+#[table_name = "usr_smile"]
 pub struct User {
     pub user_id: String,
     pub username: String,
@@ -22,6 +41,16 @@ pub struct User {
     pub password: String,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
+}
+
+impl User {
+    pub fn find(id: &String, connection: &MysqlConnection) -> Self {
+        let user = usr_smile
+            .find(id)
+            .first::<User>(connection)
+            .expect("failed to find user");
+        user
+    }
 }
 
 #[derive(Insertable, Deserialize, PartialEq, Clone)]

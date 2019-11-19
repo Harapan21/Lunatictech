@@ -1,3 +1,4 @@
+pub mod category;
 pub mod drive;
 pub mod post;
 pub mod schema;

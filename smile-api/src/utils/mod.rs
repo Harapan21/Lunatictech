@@ -57,8 +57,11 @@ impl Auth {
             },
         }
     }
-    pub fn from(token: Option<String>) -> Self {
-        Auth { token, login: None }
+    pub fn from(token: String) -> Self {
+        Auth {
+            token: Some(token),
+            login: None,
+        }
     }
     pub fn get_id_authorize(&self) -> Result<String, SmileError> {
         let token = self.token.as_ref().unwrap();
