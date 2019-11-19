@@ -1,3 +1,4 @@
+use super::post::Post;
 use crate::schema::category::dsl::*;
 #[allow(unused_imports)]
 use crate::schema::category_node::dsl::*;
@@ -13,7 +14,7 @@ pub struct Category {
 }
 
 impl Category {
-    pub fn get_by_idcontext(&self, connection: &MysqlConnection, input_id: i32) -> Self {
+    pub fn get_by_id(&self, connection: &MysqlConnection, input_id: i32) -> Self {
         let cat = category
             .find(&input_id)
             .first::<Category>(connection)
@@ -22,7 +23,9 @@ impl Category {
     }
 }
 
-#[derive(Queryable, Identifiable, Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Queryable, Associations, Identifiable, Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[belongs_to(Category, foreign_key = "categoryId")]
+#[belongs_to(Post, foreign_key = "postId")]
 #[table_name = "category_node"]
 pub struct CategoryNode {
     id: i32,

@@ -1,4 +1,4 @@
-use super::post::{PostList, Posts};
+use super::post::{Post, PostList};
 use super::user::{User, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
@@ -24,13 +24,13 @@ impl Query {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
             let user = User::find(&context_id, &conn);
-            let posts = PostList::by_author_id(&user, conn).as_vec();
+            let posts = PostList::by_author_id(&user, conn)?.as_vec();
             return Ok(UserResolve::new(user, posts));
         }
         Err(SmileError::Unauthorized)
     }
 
-    fn post(context: &Context) -> FieldResult<Vec<Posts>> {
+    fn post(context: &Context) -> FieldResult<Vec<Post>> {
         Ok(PostList::list(&context.conn).as_vec())
     }
 }
@@ -40,7 +40,11 @@ pub struct Mutation;
 #[juniper::object(
     Context = Context,
 )]
-impl Mutation {}
+impl Mutation {
+    // fn post(context: &Context, input: PostField) -> Result<bool, SmileError> {
+    //     unimplemented!()
+    // }
+}
 
 pub type Schema = RootNode<'static, Query, Mutation>;
 

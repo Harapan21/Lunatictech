@@ -1,10 +1,6 @@
 extern crate uuid;
-use crate::errors::SmileError;
-// use crate::models::drive::Drive;
 use super::*;
-// use crate::models::schema::Context;
-// use crate::schema::post;
-// use crate::schema::post::dsl::*;
+use crate::errors::SmileError;
 use crate::schema::usr_smile;
 use crate::schema::usr_smile::dsl::*;
 use crate::utils::Auth;
@@ -15,11 +11,11 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
 pub struct UserResolve {
     bio: User,
-    posts: Vec<post::Posts>,
+    posts: Vec<post::Post>,
 }
 
 impl UserResolve {
-    pub fn new(user: User, posts: Vec<post::Posts>) -> Self {
+    pub fn new(user: User, posts: Vec<post::Post>) -> Self {
         UserResolve { bio: user, posts }
     }
 }
