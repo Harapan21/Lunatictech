@@ -1,9 +1,19 @@
-use super::post::Post;
+use super::post::{Post, PostList};
+use crate::errors::SmileError;
 use crate::schema::category::dsl::*;
 #[allow(unused_imports)]
 use crate::schema::category_node::dsl::*;
 use crate::schema::{category, category_node};
 use diesel::prelude::*;
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
+pub struct CategoryResolve {
+    pub id: i32,
+    pub name: String,
+    posts: Vec<Post>,
+}
+
+impl CategoryResolve {}
 
 #[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "category"]
@@ -14,6 +24,11 @@ pub struct Category {
 }
 
 impl Category {
+    pub fn list(connection: &MysqlConnection) -> Result<Vec<Self>, SmileError> {
+        category
+            .load::<Category>(connection)
+            .map_err(SmileError::from)
+    }
     pub fn get_by_id(&self, connection: &MysqlConnection, input_id: i32) -> Self {
         let cat = category
             .find(&input_id)
@@ -32,5 +47,3 @@ pub struct CategoryNode {
     categoryId: Option<i32>,
     postId: i32,
 }
-
-impl CategoryNode {}

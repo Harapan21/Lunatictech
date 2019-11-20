@@ -1,4 +1,5 @@
-use super::post::{Post, PostList};
+use super::category::Category;
+use super::post::{Post, PostField, PostList};
 use super::user::{User, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
@@ -41,9 +42,9 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
-    // fn post(context: &Context, input: PostField) -> Result<bool, SmileError> {
-    //     unimplemented!()
-    // }
+    fn post(context: &Context, id: Option<i32>, input: PostField) -> Result<bool, SmileError> {
+        input.execute(context, &id)
+    }
 }
 
 pub type Schema = RootNode<'static, Query, Mutation>;

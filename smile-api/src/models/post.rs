@@ -1,3 +1,4 @@
+use super::schema::Context;
 use super::user::User;
 use super::*;
 use crate::errors::SmileError;
@@ -40,23 +41,52 @@ pub struct Post {
     last_edited_by: Option<String>,
 }
 
-#[derive(AsChangeset, Serialize, Deserialize, PartialEq, Debug, Clone)]
+#[derive(
+    juniper::GraphQLInputObject,
+    Insertable,
+    AsChangeset,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Debug,
+    Clone,
+)]
 #[table_name = "post"]
 pub struct PostField {
-    id: Option<String>,
     title: Option<String>,
     content: Option<String>,
+    author_id: Option<String>,
     status: Option<StatusPost>,
     last_edited_at: Option<NaiveDateTime>,
     last_edited_by: Option<String>,
 }
 
-// impl PostField {
-// pub fn execute(context: &Context,connection: &MysqlConnection, input: &PostField) ->  Result<Self, SmileError>{
-
-// }
-
-#[derive(Serialize, Deserialize)]
+impl PostField {
+    pub fn execute(&self, context: &Context, input_id: &Option<i32>) -> Result<bool, SmileError> {
+        use diesel::{insert_into, update};
+        let conn: &MysqlConnection = &context.conn;
+        return match input_id {
+            Some(is_id) => update(post)
+                .filter(id.eq(is_id))
+                .set(PostField {
+                    last_edited_by: context.user_id.clone().into(),
+                    ..self.clone().into()
+                })
+                .execute(conn)
+                .map(|_e| true)
+                .map_err(SmileError::from),
+            None => insert_into(post)
+                .values(PostField {
+                    author_id: context.user_id.clone().into(),
+                    ..self.clone().into()
+                })
+                .execute(conn)
+                .map(|_e| true)
+                .map_err(SmileError::from),
+        };
+    }
+}
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct PostList(pub Vec<Post>);
 
 impl PostList {
