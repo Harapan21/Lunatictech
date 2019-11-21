@@ -43,7 +43,10 @@ pub struct Mutation;
 )]
 impl Mutation {
     fn post(context: &Context, id: Option<i32>, input: PostField) -> Result<bool, SmileError> {
-        input.execute(context, &id)
+        if let Some(context_id) = &context.user_id {
+            return input.execute(context, &id);
+        }
+        Err(SmileError::Unauthorized)
     }
 }
 
