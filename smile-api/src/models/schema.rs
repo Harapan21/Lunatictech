@@ -26,7 +26,7 @@ impl Query {
         if let Some(context_id) = &context.user_id {
             let user = User::find(&context_id, &conn);
             let posts = PostList::by_author_id(&user, conn)?.as_vec();
-            return Ok(UserResolve::new(user, posts));
+            return Ok(UserResolve::new(user, &posts));
         }
         Err(SmileError::Unauthorized)
     }

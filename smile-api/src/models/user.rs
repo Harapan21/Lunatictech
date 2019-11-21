@@ -11,12 +11,17 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
 pub struct UserResolve {
     bio: User,
+    firstlatter: String,
     posts: Vec<post::Post>,
 }
 
 impl UserResolve {
-    pub fn new(user: User, posts: Vec<post::Post>) -> Self {
-        UserResolve { bio: user, posts }
+    pub fn new(user: User, posts: &Vec<post::Post>) -> Self {
+        UserResolve {
+            firstlatter: user.username[..1].to_string(),
+            bio: user.clone(),
+            posts: posts.to_owned(),
+        }
     }
 }
 
