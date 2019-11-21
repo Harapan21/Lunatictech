@@ -1,9 +1,10 @@
-use super::category::Category;
+// use super::category::Category;
 use super::post::{Post, PostField, PostList};
-use super::user::{User, UserResolve};
+use super::user::{User, UserGraph, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use diesel::prelude::*;
+
 use juniper::{FieldResult, RootNode};
 use std::sync::Arc;
 
@@ -26,7 +27,7 @@ impl Query {
         if let Some(context_id) = &context.user_id {
             let user = User::find(&context_id, &conn);
             let posts = PostList::by_author_id(&user, conn)?.as_vec();
-            return Ok(UserResolve::new(user, &posts));
+            return Ok(UserResolve::flat(&user, posts));
         }
         Err(SmileError::Unauthorized)
     }

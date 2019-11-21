@@ -1,4 +1,5 @@
 extern crate uuid;
+use super::post::Post;
 use super::*;
 use crate::errors::SmileError;
 use crate::schema::usr_smile;
@@ -8,26 +9,75 @@ use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::prelude::*;
 use uuid::Uuid;
 
-#[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
+#[derive(Debug, Clone, Queryable, Serialize, Deserialize, PartialEq)]
 pub struct UserResolve {
-    bio: User,
-    firstlatter: String,
-    posts: Vec<post::Post>,
+    pub user_id: String,
+    pub username: String,
+    pub email: Option<String>,
+    pub joinAt: NaiveDateTime,
+    pub lastEditedAt: Option<NaiveDateTime>,
+    pub fullname: Option<String>,
+    pub avatar: Option<String>,
+    pub isAdmin: Option<bool>,
+    pub firstlatter: String,
+    pub posts: Vec<post::Post>,
 }
 
-impl UserResolve {
-    pub fn new(user: User, posts: &Vec<post::Post>) -> Self {
+pub trait UserGraph {
+    fn flat(user: &User, posts: Vec<post::Post>) -> Self;
+}
+impl UserGraph for UserResolve {
+    fn flat(user: &User, posts: Vec<post::Post>) -> Self {
         UserResolve {
+            user_id: user.user_id.clone(),
+            username: user.username.clone(),
+            email: user.email.clone(),
+            joinAt: user.joinAt.clone(),
+            lastEditedAt: user.lastEditedAt.clone(),
+            fullname: user.fullname.clone(),
+            avatar: user.avatar.clone(),
+            isAdmin: user.isAdmin.clone(),
             firstlatter: user.username[..1].to_string(),
-            bio: user.clone(),
-            posts: posts.to_owned(),
+            posts,
         }
     }
 }
 
-#[derive(
-    Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq, juniper::GraphQLObject,
-)]
+#[juniper::object(name = "User")]
+impl UserResolve {
+    fn user_id(&self) -> String {
+        self.user_id.clone()
+    }
+    fn username(&self) -> String {
+        self.username.clone()
+    }
+    fn email(&self) -> Option<String> {
+        self.email.clone()
+    }
+    fn joinAt(&self) -> NaiveDateTime {
+        self.joinAt.clone()
+    }
+    fn lastEditedAt(&self) -> Option<NaiveDateTime> {
+        self.lastEditedAt.clone()
+    }
+    fn fullname(&self) -> Option<String> {
+        self.fullname.clone()
+    }
+    fn avatar(&self) -> Option<String> {
+        self.avatar.clone()
+    }
+    fn isAdmin(&self) -> Option<bool> {
+        self.isAdmin.clone()
+    }
+    fn firstlatter(&self) -> String {
+        self.firstlatter.clone()
+    }
+    fn posts(&self) -> Vec<Post> {
+        self.posts.clone()
+    }
+}
+
+#[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
 #[primary_key(user_id)]
 #[table_name = "usr_smile"]
 pub struct User {
@@ -38,7 +88,6 @@ pub struct User {
     pub lastEditedAt: Option<NaiveDateTime>,
     pub fullname: Option<String>,
     #[serde(skip)]
-    #[graphql(skip)]
     pub password: String,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
@@ -73,7 +122,7 @@ impl Register {
             .values(Register {
                 user_id: Uuid::new_v4().to_string(),
                 password: Self::hash_password(self.password.clone())?,
-                ..self.clone().into()
+                ..self.clone()
             })
             .execute(connection)
             .expect("Failed to Register");
