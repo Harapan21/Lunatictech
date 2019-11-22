@@ -9,8 +9,8 @@ CREATE TABLE `smile`.`post` (
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
     PRIMARY KEY (id),
-    FOREIGN KEY (author_id)
-        REFERENCES usr_smile (user_id)
+    CONSTRAINT CN_TO_USER FOREIGN KEY (author_id)
+	REFERENCES usr_smile (user_id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE `smile.`embed` (
     thumbnail VARCHAR(255) NULL,
     video LONGTEXT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (postId)
+    CONSTRAINT CN_TO_POST FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -33,7 +33,7 @@ CREATE TABLE `smile`.`rating` (
     comment INT NOT NULL DEFAULT 0,
     video_rate INT,
     PRIMARY KEY (id),
-    FOREIGN KEY (postId)
+    CONSTRAINT CN_TO_POST_AS_EMBED FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );

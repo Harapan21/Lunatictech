@@ -10,10 +10,10 @@ CREATE TABLE `smile`.`category_node` (
     categoryId INT DEFAULT 0,
     postId INT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (categoryId)
+    CONSTRAINT CN_TO_CATEGORY_AS_CATNODE FOREIGN KEY (categoryId)
         REFERENCES category (id)
         ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (postId)
+    CONSTRAINT CN_TO_POST_AS_CATNODE FOREIGN KEY (postId)
         REFERENCES post (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
