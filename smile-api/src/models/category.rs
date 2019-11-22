@@ -1,4 +1,4 @@
-use super::post::{Post, PostList};
+use super::post::Post;
 use crate::errors::SmileError;
 use crate::schema::category::dsl::*;
 #[allow(unused_imports)]

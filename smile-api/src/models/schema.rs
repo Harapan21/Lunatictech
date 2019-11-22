@@ -1,10 +1,8 @@
-// use super::category::Category;
 use super::post::{Post, PostField, PostList};
 use super::user::{User, UserGraph, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use diesel::prelude::*;
-
 use juniper::{FieldResult, RootNode};
 use std::sync::Arc;
 

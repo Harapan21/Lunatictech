@@ -17,19 +17,7 @@ CREATE TABLE usr_smile (
     isAdmin BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (user_id)
 );
-# create trigger for generete id for user
-# triggered before insert user data
-DELIMITER $$ 
-	CREATE TRIGGER auto_generate_id 
-	BEFORE
-		INSERT
-		  on usr_smile 
-	FOR EACH ROW 
-	BEGIN
-		SET
-		  NEW.user_id = MD5(UUID());
-	END 
-$$ DELIMITER ;
+
 
 
 CREATE TABLE category (
@@ -54,8 +42,8 @@ CREATE TABLE post (
     status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
-    PRIMARY KEY (id),jkljkj
-    FOREIGN KEY (auhthor_id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (author_id)
         REFERENCES usr_smile (user_id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
@@ -75,20 +63,12 @@ CREATE TABLE category_node (
 );
 
 
-DELIMITER $$ 
-	CREATE TRIGGER set_default_if_category_null
-	AFTER
-		DELETE ON category 
+CREATE TRIGGER  `smile` . set_default_if_category_null
+	AFTER DELETE ON `smile`.`category` 
     FOR EACH ROW 
-	BEGIN
-			UPDATE
-			  category_node
-			SET
-			  categoryId = 0
-			WHERE
-			  categoryId = NULL;
-	END $$
-DELIMITER ;
+		UPDATE `smile`.`category_node` 
+			SET categoryId = 0 
+            WHERE categoryId = NULL;
 
 
 
@@ -126,14 +106,15 @@ CREATE TABLE embed (
 DELIMITER $$ 
 	CREATE TRIGGER push_embed_if_status_publish
 	AFTER
-	INSERT
-	  ON post FOR EACH ROW 
+		INSERT
+		  ON post
+	FOR EACH ROW 
 	BEGIN
 		INSERT INTO
 		  embed(postId)
 		VALUES(new.id);
-	END 
-$$ DELIMITER;
+	END $$ 
+DELIMITER ;
 
 
 
@@ -153,16 +134,17 @@ CREATE TABLE rating (
 
 # push rating after publish post
 DELIMITER $$ 
-CREATE TRIGGER push_rating_if_status_publish
+	CREATE TRIGGER push_rating_if_status_publish
 	AFTER
-	INSERT
-	  ON post FOR EACH ROW 
+		INSERT
+		  ON post
+	FOR EACH ROW 
 	BEGIN
 	INSERT INTO
 	  rating(postId)
 	VALUES(new.id);
-	END 
-$$ DELIMITER;
+	END $$ 
+DELIMITER ;
 
 
 
@@ -197,8 +179,8 @@ DELIMITER $$
 			WHERE
 			  new.id;
 		END IF;
-	END 
-$$ DELIMITER;
+	END $$ 
+DELIMITER ;
 
 
 
@@ -227,8 +209,9 @@ CREATE TABLE comment (
 DELIMITER $$ 
 	CREATE TRIGGER increment_rating_comment
 	AFTER
-	INSERT
-	  ON comment FOR EACH ROW 
+		INSERT
+		  ON comment
+	FOR EACH ROW 
 	BEGIN 
 	  DECLARE old_rating INT;
 		SET
@@ -246,8 +229,8 @@ DELIMITER $$
 		  comment = old_rating
 		WHERE
 		  postId = new.postId;
-	END 
-$$ DELIMITER;
+	END $$
+DELIMITER ;
     
 DELIMITER $$ 
 	CREATE TRIGGER decrement_rating_comment 

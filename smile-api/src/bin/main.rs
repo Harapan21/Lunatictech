@@ -42,6 +42,7 @@ fn main() {
             .service(
                 web::resource("/graphql").route(web::post().to_async(handlers::graphql::graphql)),
             )
+            .service(web::resource("/graphiql").route(web::get().to(handlers::graphql::graphiql)))
             .service(
                 web::resource("/users")
                     .route(web::get().to_async(handlers::user::index))

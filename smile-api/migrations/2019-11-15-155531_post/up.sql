@@ -13,3 +13,41 @@ CREATE TABLE `smile`.`post` (
         REFERENCES usr_smile (user_id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
+
+CREATE TABLE `smile.`embed` (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    thumbnail VARCHAR(255) NULL,
+    video LONGTEXT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE `smile`.`rating` (
+    id INT NOT NULL AUTO_INCREMENT,
+    postId INT NOT NULL,
+    view INT NOT NULL DEFAULT 0,
+    share INT NOT NULL DEFAULT 0,
+    comment INT NOT NULL DEFAULT 0,
+    video_rate INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (postId)
+        REFERENCES post (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TRIGGER  `smile` . push_embed_if_status_publish
+	AFTER INSERT ON post 
+	FOR EACH ROW 
+    		INSERT INTO 
+			`smile`.`embed` (`postId`) 
+    		VALUES (new.id);
+
+CREATE TRIGGER `smile`.push_rating_if_status_publish
+	AFTER INSERT ON `smile`.`post`
+	FOR EACH ROW 
+		INSERT INTO
+	  		`smile`.`rating`(postId)
+		VALUES(new.id);

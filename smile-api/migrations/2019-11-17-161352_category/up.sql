@@ -1,4 +1,3 @@
--- Your SQL goes here
 CREATE TABLE `smile`.`category` (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
@@ -15,13 +14,17 @@ CREATE TABLE `smile`.`category_node` (
         REFERENCES category (id)
         ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (postId)
-        REFERENCES post (id)
-        ON UPDATE CASCADE ON DELETE CASCADE
+        REFERENCES post (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TRIGGER  `smile` . set_default_if_category_null
+CREATE TRIGGER [IF NOt EXISTS]  `smile` . set_default_if_category_null
 	AFTER DELETE ON `smile`.`category` 
     	FOR EACH ROW 
 		UPDATE `smile`.`category_node` 
 			SET categoryId = 0 
             		WHERE categoryId = NULL;
+
+INSERT INTO
+  `smile`.`category`(`id`, `name`)
+VALUES
+  (0, "Uncategory");
