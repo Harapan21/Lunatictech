@@ -14,13 +14,13 @@ CREATE TABLE `smile`.`post` (
         ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-CREATE TABLE `smile.`embed` (
+CREATE TABLE `smile`.`embed` (
     id INT NOT NULL AUTO_INCREMENT,
     postId INT NOT NULL,
     thumbnail VARCHAR(255) NULL,
     video LONGTEXT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT CN_TO_POST FOREIGN KEY (postId)
+    CONSTRAINT CN_TO_POST_AS_EMBED FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -33,7 +33,7 @@ CREATE TABLE `smile`.`rating` (
     comment INT NOT NULL DEFAULT 0,
     video_rate INT,
     PRIMARY KEY (id),
-    CONSTRAINT CN_TO_POST_AS_EMBED FOREIGN KEY (postId)
+    CONSTRAINT CN_TO_POST_AS_RATING FOREIGN KEY (postId)
         REFERENCES post (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );

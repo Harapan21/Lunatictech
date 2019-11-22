@@ -17,7 +17,7 @@ CREATE TABLE `smile`.`category_node` (
         REFERENCES post (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TRIGGER [IF NOt EXISTS]  `smile` . set_default_if_category_null
+CREATE TRIGGER `smile`.set_default_if_category_null
 	AFTER DELETE ON `smile`.`category` 
     	FOR EACH ROW 
 		UPDATE `smile`.`category_node` 

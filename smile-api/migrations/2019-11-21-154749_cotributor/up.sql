@@ -16,7 +16,7 @@ CREATE TABLE `smile`.`contrib_post_temp`(
 );
 
 
-CREATE TRIGGER `smile`.`push_contrib`
+CREATE TRIGGER `smile`.push_contrib
 	AFTER
 	UPDATE
 	  ON `smile`.`contrib_post_temp` FOR EACH ROW 
