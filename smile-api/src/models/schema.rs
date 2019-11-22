@@ -23,7 +23,7 @@ impl Query {
     fn me(context: &Context) -> Result<UserResolve, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
-            let user = User::find(&context_id, &conn);
+            let user = User::find(&context_id, &conn)?;
             let posts = PostList::by_author_id(&user, conn)?.as_vec();
             return Ok(UserResolve::flat(&user, posts));
         }

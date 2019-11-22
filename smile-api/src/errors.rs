@@ -20,6 +20,12 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "Unauthorized"
                 }),
             ),
+            SmileError::DBError(result::Error::NotFound) => juniper::FieldError::new(
+                "User Not found",
+                graphql_value!({
+                    "type": "NOT_FOUND"
+                }),
+            ),
             _ => juniper::FieldError::new(
                 "Internal server Error",
                 graphql_value!({

@@ -94,12 +94,11 @@ pub struct User {
 }
 
 impl User {
-    pub fn find(id: &String, connection: &MysqlConnection) -> Self {
-        let user = usr_smile
+    pub fn find(id: &String, connection: &MysqlConnection) -> Result<Self, SmileError> {
+        usr_smile
             .find(id)
             .first::<User>(connection)
-            .expect("failed to find user");
-        user
+            .map_err(SmileError::from)
     }
 }
 

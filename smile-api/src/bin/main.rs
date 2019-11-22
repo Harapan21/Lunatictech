@@ -50,7 +50,7 @@ fn main() {
             )
             .service(web::resource("/login").route(web::post().to(handlers::user::login)))
             .service(web::resource("/logout").route(web::post().to(handlers::user::logout)))
-            .service(web::resource("/auth").route(web::post().to(handlers::user::create)))
+            .service(web::resource("/create").route(web::post().to(handlers::user::create)))
     })
     .bind(HOSTNAME)
     .unwrap()
