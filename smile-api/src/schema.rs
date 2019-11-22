@@ -15,12 +15,14 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::post::Status;
     contrib_post_temp (id) {
         id -> Integer,
         postId -> Integer,
         title -> Varchar,
         content -> Nullable<Longtext>,
-        status -> Enum,
+        status -> Nullable<Status>,
         accepted -> Nullable<Bool>,
         createdAt -> Timestamp,
         updateAt -> Timestamp,
@@ -38,13 +40,15 @@ table! {
 }
 
 table! {
+    use diesel::sql_types::*;
+    use crate::models::post::Status;
     post (id) {
         id -> Integer,
         author_id -> Nullable<Char>,
         title -> Nullable<Varchar>,
         createdAt -> Timestamp,
         content -> Nullable<Longtext>,
-        status -> Enum,
+        status -> Nullable<Status>,
         last_edited_at -> Nullable<Timestamp>,
         last_edited_by -> Nullable<Char>,
     }
