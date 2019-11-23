@@ -22,7 +22,7 @@ table! {
         postId -> Integer,
         title -> Varchar,
         content -> Nullable<Longtext>,
-        status -> Nullable<Status>,
+        status -> Status,
         accepted -> Nullable<Bool>,
         createdAt -> Timestamp,
         updateAt -> Timestamp,

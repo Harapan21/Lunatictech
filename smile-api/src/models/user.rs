@@ -1,5 +1,5 @@
 extern crate uuid;
-use super::post::Post;
+use super::post::PostResolve;
 use super::*;
 use crate::errors::SmileError;
 use crate::schema::usr_smile;
@@ -20,14 +20,14 @@ pub struct UserResolve {
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
     pub firstlatter: String,
-    pub posts: Vec<post::Post>,
+    pub posts: Vec<post::PostResolve>,
 }
 
 pub trait UserGraph {
-    fn flat(user: &User, posts: Vec<post::Post>) -> Self;
+    fn flat(user: &User, posts: Vec<post::PostResolve>) -> Self;
 }
 impl UserGraph for UserResolve {
-    fn flat(user: &User, posts: Vec<post::Post>) -> Self {
+    fn flat(user: &User, posts: Vec<post::PostResolve>) -> Self {
         UserResolve {
             user_id: user.user_id.clone(),
             username: user.username.clone(),
@@ -72,7 +72,7 @@ impl UserResolve {
     fn firstlatter(&self) -> String {
         self.firstlatter.clone()
     }
-    fn posts(&self) -> Vec<Post> {
+    fn posts(&self) -> Vec<PostResolve> {
         self.posts.clone()
     }
 }

@@ -9,6 +9,7 @@ pub enum SmileError {
     JwtError(jsonwebtoken::errors::Error),
     Unauthorized,
     WrongPassword(String),
+    Unreachable(&'static str),
 }
 
 impl juniper::IntoFieldError for SmileError {
@@ -63,6 +64,7 @@ impl fmt::Display for SmileError {
             SmileError::PasswordNotMatch(error) => write!(f, "{}", error),
             SmileError::WrongPassword(error) => write!(f, "{}", error),
             SmileError::JwtError(error) => write!(f, "{}", error),
+            SmileError::Unreachable(location) => write!(f, "unreachable in {}", location),
             SmileError::Unauthorized => write!(f, "access graphql without token"),
         }
     }

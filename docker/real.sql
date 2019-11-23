@@ -64,7 +64,8 @@ CREATE TABLE category_node (
 
 
 CREATE TRIGGER  `smile` . set_default_if_category_null
-	AFTER DELETE ON `smile`.`category` 
+	
+    AFTER DELETE ON `smile`.`category` 
     FOR EACH ROW 
 		UPDATE `smile`.`category_node` 
 			SET categoryId = 0 
@@ -163,21 +164,21 @@ CREATE TABLE contributor_user (
 
 # push contributor if id not equal to author_id
 DELIMITER $$ 
-	CREATE TRIGGER push_contrib
+	CREATE TRIGGER `smile`.`push_contrib`
 	AFTER
 	UPDATE
-	  ON contrib_post_temp FOR EACH ROW 
+	  ON `smile`.`contrib_post_temp` FOR EACH ROW 
 	BEGIN 
-		IF (new.accepted = TRUE) THEN
+		IF (new.`accepted` = TRUE) THEN
 			INSERT INTO
-			  smile.contributor_user (postId, user_id)
+			  `smile`.`contributor_user` (`postId`, `user_id`)
 			VALUES
-			  (new.postId),
-			  (new.author_id);
+			  (new.`postId`),
+			  (new.`author_id`);
 			DELETE FROM
-			  contrib_post_temp
+			  `smile`.`contrib_post_temp`
 			WHERE
-			  new.id;
+			  new.`id`;
 		END IF;
 	END $$ 
 DELIMITER ;

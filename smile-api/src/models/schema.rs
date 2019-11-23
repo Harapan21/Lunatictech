@@ -1,4 +1,4 @@
-use super::post::{Post, PostField, PostList};
+use super::post::{PostInput, PostList, PostResolve};
 use super::user::{User, UserGraph, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
@@ -30,7 +30,7 @@ impl Query {
         Err(SmileError::Unauthorized)
     }
 
-    fn post(context: &Context) -> FieldResult<Vec<Post>> {
+    fn post(context: &Context) -> FieldResult<Vec<PostResolve>> {
         Ok(PostList::list(&context.conn).as_vec())
     }
 }
@@ -41,7 +41,7 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
-    fn post(context: &Context, id: Option<i32>, input: PostField) -> Result<bool, SmileError> {
+    fn post(context: &Context, id: Option<i32>, input: PostInput) -> Result<bool, SmileError> {
         if let Some(context_id) = &context.user_id {
             return input.execute(context, &id);
         }

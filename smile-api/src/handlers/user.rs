@@ -19,11 +19,18 @@ pub fn index(_req: HttpRequest, pool: web::Data<MysqlPool>, id: Identity) -> Res
     Ok(HttpResponse::Ok().json(UserList::list(&mysql_pool)))
 }
 
-pub fn create(new_user: web::Json<Register>, pool: web::Data<MysqlPool>) -> ResponseResult {
+pub fn create(
+    id: Identity,
+    new_user: web::Json<Register>,
+    pool: web::Data<MysqlPool>,
+) -> ResponseResult {
     let mysql_pool = mysql_pool_header(pool)?;
     new_user
         .execute(&mysql_pool)
-        .map(|user| HttpResponse::Ok().json(user))
+        .map(|user| {
+            id.remember(user.token.to_owned().unwrap());
+            return HttpResponse::Ok().json(user);
+        })
         .map_err(|e| HttpResponse::InternalServerError().json(e.to_string()))
 }
 
