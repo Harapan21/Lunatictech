@@ -5,7 +5,6 @@ table! {
         parentId -> Nullable<Integer>,
     }
 }
-
 table! {
     category_node (id) {
         id -> Integer,
@@ -15,14 +14,14 @@ table! {
 }
 
 table! {
+use crate::models::post::Status;
     use diesel::sql_types::*;
-    use crate::models::post::Status;
     contrib_post_temp (id) {
         id -> Integer,
         postId -> Integer,
         title -> Varchar,
         content -> Nullable<Longtext>,
-        status -> Status,
+        status -> Nullable<Status>,
         accepted -> Nullable<Bool>,
         createdAt -> Timestamp,
         updateAt -> Timestamp,
@@ -40,8 +39,8 @@ table! {
 }
 
 table! {
-    use diesel::sql_types::*;
     use crate::models::post::Status;
+    use diesel::sql_types::*;
     post (id) {
         id -> Integer,
         author_id -> Nullable<Char>,

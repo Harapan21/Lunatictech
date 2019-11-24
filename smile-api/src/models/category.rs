@@ -86,7 +86,7 @@ impl CategoryNode {
             .into_iter()
             .map(|cat_id| CategoryNodeField {
                 categoryId: cat_id,
-                postId: post_id.clone(),
+                postId: post_id,
             })
             .collect::<Vec<CategoryNodeField>>();
         diesel::insert_into(category_node)

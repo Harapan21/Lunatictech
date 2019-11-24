@@ -119,7 +119,6 @@ impl PostList {
         vec_post: Box<Vec<Post>>,
         connection: &MysqlConnection,
     ) -> Vec<PostResolve> {
-        println!("{}", std::mem::size_of_val(&vec_post));
         vec_post
             .into_iter()
             .map(|e| {
@@ -143,7 +142,6 @@ impl PostList {
             .limit(20)
             .load::<Post>(connection)
             .expect("Error loading products");
-        println!("{}", std::mem::size_of_val(&vec_post));
         let result = Self::convert_to_resolve(Box::new(vec_post), connection);
         PostList(result)
     }
