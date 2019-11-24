@@ -6,6 +6,7 @@ use crate::errors::SmileError;
 use crate::schema::post;
 use crate::schema::post::dsl::*;
 use diesel::prelude::*;
+
 #[derive(Debug, Serialize, Deserialize, DbEnum, PartialEq, Clone)]
 #[DieselType = "Status"]
 #[derive(juniper::GraphQLEnum)]
@@ -67,15 +68,15 @@ pub struct PostInput {
     categories: Categories,
 }
 impl PostInput {
-    fn destructor(&self) -> (Categories, PostField) {
-        let to_posting = PostField {
+    fn destructor(&self) -> (Categories, Box<PostField>) {
+        let to_posting = Box::new(PostField {
             title: self.title.to_owned(),
             content: self.content.to_owned(),
             author_id: self.author_id.to_owned(),
             status: self.status.to_owned(),
             last_edited_at: self.last_edited_at.to_owned(),
             last_edited_by: self.last_edited_by.to_owned(),
-        };
+        });
         (self.categories.to_owned(), to_posting)
     }
 
@@ -88,7 +89,7 @@ impl PostInput {
                 .filter(id.eq(is_id))
                 .set(PostField {
                     last_edited_by: context.user_id.clone().into(),
-                    ..to_posting.clone().into()
+                    ..*to_posting
                 })
                 .execute(conn)
                 .map(|_e| true)
@@ -97,7 +98,7 @@ impl PostInput {
                 let posting = insert_into(post)
                     .values(PostField {
                         author_id: context.user_id.clone().into(),
-                        ..to_posting.clone().into()
+                        ..*to_posting
                     })
                     .execute(conn);
                 if posting.is_ok() {
@@ -115,22 +116,23 @@ pub struct PostList(pub Vec<PostResolve>);
 
 impl PostList {
     pub(self) fn convert_to_resolve(
-        vec_post: Vec<Post>,
+        vec_post: Box<Vec<Post>>,
         connection: &MysqlConnection,
     ) -> Vec<PostResolve> {
+        println!("{}", std::mem::size_of_val(&vec_post));
         vec_post
             .into_iter()
             .map(|e| {
                 CategoryNode::get_by_postId(&e, connection);
                 PostResolve {
-                    id: e.id.into(),
-                    author_id: e.author_id.into(),
-                    title: e.title.into(),
-                    createdAt: e.createdAt.into(),
-                    content: e.content.into(),
-                    status: e.status.into(),
-                    last_edited_at: e.last_edited_at.into(),
-                    last_edited_by: e.last_edited_by.into(),
+                    id: e.id,
+                    author_id: e.author_id,
+                    title: e.title,
+                    createdAt: e.createdAt,
+                    content: e.content,
+                    status: e.status,
+                    last_edited_at: e.last_edited_at,
+                    last_edited_by: e.last_edited_by,
                     category: Vec::new(),
                 }
             })
@@ -141,13 +143,14 @@ impl PostList {
             .limit(20)
             .load::<Post>(connection)
             .expect("Error loading products");
-        let result = Self::convert_to_resolve(vec_post, connection);
+        println!("{}", std::mem::size_of_val(&vec_post));
+        let result = Self::convert_to_resolve(Box::new(vec_post), connection);
         PostList(result)
     }
     pub fn by_author_id(user: &User, connection: &MysqlConnection) -> Result<PostList, SmileError> {
         Post::belonging_to(user)
             .load::<Post>(connection)
-            .map(|vec_post| PostList(Self::convert_to_resolve(vec_post, &connection)))
+            .map(|vec_post| PostList(Self::convert_to_resolve(Box::new(vec_post), &connection)))
             .map_err(SmileError::from)
     }
     pub fn as_vec(&self) -> Vec<PostResolve> {
