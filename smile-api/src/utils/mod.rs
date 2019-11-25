@@ -32,7 +32,7 @@ impl Claims {
         header.alg = Algorithm::HS256;
         Ok(encode(&header, self, PRIVATE_KEY.as_ref())?)
     }
-    pub fn translate_token(token: &str) -> Result<Claims, SmileError> {
+    pub fn translate_token(token: String) -> Result<Claims, SmileError> {
         decode::<Claims>(
             &token,
             PRIVATE_KEY.as_ref(),
@@ -40,6 +40,15 @@ impl Claims {
         )
         .map(|data| data.claims.into())
         .map_err(|e| SmileError::JwtError(e))
+    }
+}
+
+impl From<String> for Auth {
+    fn from(token: String) -> Self {
+        Auth {
+            token: Some(token),
+            login: None,
+        }
     }
 }
 
@@ -57,15 +66,9 @@ impl Auth {
             },
         }
     }
-    pub fn from(token: String) -> Self {
-        Auth {
-            token: Some(token),
-            login: None,
-        }
-    }
-    pub fn get_id_authorize(&self) -> Result<String, SmileError> {
-        let token = self.token.as_ref().unwrap();
-        Claims::translate_token(&token).map(|e| e.id.into())
+    pub fn get_id_authorize(self) -> Result<String, SmileError> {
+        let token = self.token.unwrap();
+        Claims::translate_token(token).map(|e| e.id.into())
     }
 }
 #[cfg(test)]
