@@ -1,0 +1,156 @@
+extern crate uuid;
+use super::category::{Category, CategoryInput};
+use super::post::{Post, PostInput};
+use super::user::{User, UserInput};
+use crate::errors::SmileError;
+use crate::utils::Auth;
+use bcrypt::{hash, verify, DEFAULT_COST};
+use diesel::{insert_into, prelude::*, update};
+
+pub trait Handler {
+    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
+    fn find_by_id<T>(&self, id: &T, connection: &MysqlConnection) -> Result<Box<Self>, SmileError>;
+    fn input<T>(&self, input: T, connection: &MysqlConnection) -> Result<bool, SmileError>;
+}
+
+impl Handler for Post {
+    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+        use crate::schema::post::dsl::*;
+        let vec_post = post
+            .load::<Post>(connection)
+            .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<Post>>>())
+            .map_err(SmileError::from)?;
+        Ok(vec_post)
+    }
+
+    fn find_by_id<i32>(
+        &self,
+        id: &i32,
+        connection: &MysqlConnection,
+    ) -> Result<Box<Post>, SmileError> {
+        use crate::schema::post::dsl::*;
+        post.find(id)
+            .first::<Post>(connection)
+            .map(Box::new)
+            .map_err(SmileError::from)
+    }
+    fn input<PostInput>(
+        &self,
+        input: PostInput,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        unimplemented!()
+        // use crate::schema::post::dsl::*;
+        //                 let posting = insert_into(post)
+        //             .values(PostField {
+        //                 author_id: context.user_id.clone().into(),
+        //                 ..*to_posting
+        //             })
+        //             .execute(conn);
+        //         if posting.is_ok() {
+        //             let id_post_to_push = post.select(id).order(id.desc()).first(conn)?;
+        //             return CategoryNode::push_node(conn, categories, id_post_to_push);
+        //         }
+        //         Err(SmileError::Unreachable("post"))
+        //     }
+        // };
+    }
+}
+
+impl Handler for Category {
+    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+        use crate::schema::category::dsl::*;
+        let vec_cat = category
+            .load::<Category>(connection)
+            .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<Category>>>())
+            .map_err(SmileError::from)?;
+        Ok(vec_cat)
+    }
+    fn find_by_id<i32>(
+        &self,
+        id: &i32,
+        connection: &MysqlConnection,
+    ) -> Result<Box<Category>, SmileError> {
+        use crate::schema::category::dsl::*;
+        category
+            .find(id)
+            .first::<Category>(connection)
+            .map(Box::new)
+            .map_err(SmileError::from)
+    }
+    fn input<CategoryInput>(
+        &self,
+        input: CategoryInput,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        use crate::schema::category::dsl::*;
+        insert_into(category)
+            .values(&input)
+            .execute(connection)
+            .map_err(SmileError::from)
+            .map(|_e| true)
+    }
+}
+
+impl Handler for User {
+    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        let vec_user = usr_smile
+            .load::<User>(connection)
+            .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<User>>>())
+            .map_err(SmileError::from)?;
+        Ok(vec_user)
+    }
+    fn find_by_id<String>(
+        &self,
+        id: &String,
+        connection: &MysqlConnection,
+    ) -> Result<Box<User>, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        usr_smile
+            .find(id)
+            .first::<User>(connection)
+            .map(Box::new)
+            .map_err(SmileError::from)
+    }
+    // async fn validation(&self, input: &UserInput, connection: &MysqlConnection) -> (bool, bool) {
+    //      use crate::schema::usr_smile::dsl::*;
+    //      let is_username = usr_smile.filter(username.eq(input.username)).load::<User>().map(|e| true).map_err(|e| false);
+    //      let is_email = usr_smile.filter(email.eq(input.email)).load<User>().map(|e| true).map_err(|e| false);
+
+    //      futures::join!(is_username, is_email)
+    //  }
+
+    // fn login(
+    //     &self,
+    //     input: Box<UserInput>,
+    //     connection: &MysqlConnection,
+    // ) -> Result<Auth, SmileError> {
+    //     use crate::schema::usr_smile::dsl::*;
+    //     let user = usr_smile
+    //         .filter(username.eq(&self.username))
+    //         .first::<User>(connection)?;
+    //     let is_verify = verify(&self.password, &user.password)
+    //         .map_err(|_e| SmileError::PasswordNotMatch("Password Wrong".to_owned()))?;
+    //     return if is_verify {
+    //         OK(Auth::new(user.user_id))
+    //     } else {
+    //         Err(SmileError::WrongPassword("password wrong".to_owned()))
+    //     };
+    // }
+
+    fn input<UserInput>(
+        &self,
+        input: UserInput,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        input.user_id = uuid::Uuid::new_v4().to_string();
+        input.password = hash(input.password, DEFAULT_COST)?;
+        insert_into(usr_smile)
+            .values(&input)
+            .execute::<UserInput>(connection)
+            .map_err(SmileError::from)
+            .map(|_e| true)
+    }
+}

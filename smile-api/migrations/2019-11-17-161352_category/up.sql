@@ -4,10 +4,10 @@ CREATE TABLE `smile`.`category` (
     parentId INT,
     PRIMARY KEY (id)
 );
-
+ALTER TABLE `smile`.`category` AUTO_INCREMENT = 1;
 CREATE TABLE `smile`.`category_node` (
     id INT NOT NULL AUTO_INCREMENT,
-    categoryId INT DEFAULT 0,
+    categoryId INT DEFAULT 1,
     postId INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT CN_TO_CATEGORY_AS_CATNODE FOREIGN KEY (categoryId)
@@ -25,6 +25,6 @@ CREATE TRIGGER `smile`.set_default_if_category_null
             		WHERE categoryId = NULL;
 
 INSERT INTO
-  `smile`.`category`(`id`, `name`)
+  `smile`.`category`(`name`)
 VALUES
-  (0, "Uncategory");
+  ("Uncategory");

@@ -39,18 +39,13 @@ fn main() {
                     .max_age(3600),
             )
             .data(establish_connection())
-            .service(
-                web::resource("/graphql").route(web::post().to_async(handlers::graphql::graphql)),
-            )
-            .service(web::resource("/graphiql").route(web::get().to(handlers::graphql::graphiql)))
+            .service(web::resource("/graphql").route(web::post().to_async(graphql::api)))
+            .service(web::resource("/graphiql").route(web::get().to(graphql::client)))
             .service(
                 web::resource("/users")
                     .route(web::get().to_async(handlers::user::index))
                     .route(web::post().to_async(handlers::user::create)),
             )
-            .service(web::resource("/login").route(web::post().to(handlers::user::login)))
-            .service(web::resource("/logout").route(web::post().to(handlers::user::logout)))
-            .service(web::resource("/create").route(web::post().to(handlers::user::create)))
     })
     .bind(HOSTNAME)
     .unwrap()

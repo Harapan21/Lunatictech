@@ -1,5 +1,5 @@
+use super::schema::{create_context, Schema};
 use crate::db::MysqlPool;
-use crate::models::schema::{create_context, Schema};
 use crate::utils::Auth;
 use actix_identity::Identity;
 use actix_web::{web, Error, HttpResponse};
@@ -8,14 +8,14 @@ use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 use std::sync::Arc;
 
-pub fn graphiql() -> HttpResponse {
+pub fn client() -> HttpResponse {
     let html = graphiql_source("http://127.0.0.1:8088/graphql");
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(html)
 }
 
-pub fn graphql(
+pub fn api(
     st: web::Data<Arc<Schema>>,
     data: web::Json<GraphQLRequest>,
     id: Identity,

@@ -14,7 +14,7 @@ table! {
 }
 
 table! {
-use crate::models::post::Status;
+    use crate::models::post::Status;
     use diesel::sql_types::*;
     contrib_post_temp (id) {
         id -> Integer,

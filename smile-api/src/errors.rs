@@ -2,11 +2,17 @@ use bcrypt::BcryptError;
 use diesel::result;
 use std::fmt;
 
+pub enum ValidationError {
+    Username(&'static str),
+    Email(&'static str),
+}
+
 pub enum SmileError {
     HashError(BcryptError),
     DBError(result::Error),
     PasswordNotMatch(String),
     JwtError(jsonwebtoken::errors::Error),
+    Validation(ValidationError),
     Unauthorized,
     WrongPassword(String),
     Unreachable(&'static str),
@@ -27,6 +33,19 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "NOT_FOUND"
                 }),
             ),
+            SmileError::Validation(error) => {
+                let format: (&'static str, &'static str) = match error {
+                    ValidationError::Email(email) => (email, "EMAIL_NOT_VALID"),
+                    ValidationError::Username(username) => (username, "USERNAME_NOT_VALID"),
+                };
+                return juniper::FieldError::new(
+                    format!("{}, exist", format.0),
+                    graphql_value!({
+                        "type": ( format.1 )
+                    }),
+                );
+            }
+
             _ => juniper::FieldError::new(
                 "Internal server Error",
                 graphql_value!({

@@ -1,5 +1,3 @@
-use super::post::{PostInput, PostList, PostResolve};
-use super::user::{User, UserGraph, UserResolve};
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use diesel::prelude::*;
@@ -18,14 +16,13 @@ pub struct Query;
 #[juniper::object(
   Context = Context,
 )]
-
 impl Query {
-    fn me(context: &Context) -> Result<UserResolve, SmileError> {
+    fn me(context: &Context) -> Result<User, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
             let user = User::find(&context_id, &conn)?;
-            let posts = PostList::by_author_id(&user, conn)?.as_vec();
-            return Ok(UserResolve::flat(&user, posts));
+            let posts = PostList::by_author_id(&user, conn).as_vec();
+            return Ok(UserResolve::flat(user, posts));
         }
         Err(SmileError::Unauthorized)
     }

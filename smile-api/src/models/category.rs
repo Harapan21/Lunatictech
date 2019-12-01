@@ -1,14 +1,7 @@
-use super::post::{Post, PostResolve};
 use crate::errors::SmileError;
+use crate::graphql::post::Post;
 use crate::schema::{category, category_node};
 use diesel::prelude::*;
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, juniper::GraphQLObject)]
-pub struct CategoryResolve {
-    pub id: i32,
-    pub name: String,
-    posts: Vec<PostResolve>,
-}
 
 #[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "category"]
@@ -18,32 +11,20 @@ pub struct Category {
     pub parentId: Option<i32>,
 }
 
-impl Category {
-    pub(self) fn convert_to_resolve(vec_cat: Vec<Category>) -> Vec<CategoryResolve> {
-        vec_cat
-            .into_iter()
-            .map(|cat| CategoryResolve {
-                id: cat.id.into(),
-                name: cat.name.into(),
-                posts: Vec::new(),
-            })
-            .collect::<Vec<CategoryResolve>>()
-    }
-    pub fn list(connection: &MysqlConnection) -> Result<Vec<CategoryResolve>, SmileError> {
-        use crate::schema::category::dsl::*;
-        let vec_cat = category.load::<Category>(connection)?;
-        let result = Self::convert_to_resolve(vec_cat);
-        // let category_node = CategoryNode::belongs_to(&category).inner_join(post).load::<CategoryNode>(&connection),map_err(SmileError::from);
-        Ok(result)
-    }
-    pub fn get_by_id(&self, connection: &MysqlConnection, input_id: i32) -> Self {
-        use crate::schema::category::dsl::*;
-        let cat = category
-            .find(&input_id)
-            .first::<Category>(connection)
-            .expect("Error loading category");
-        cat
-    }
+#[derive(
+    Debug,
+    Clone,
+    juniper::GraphQLInputObject,
+    Queryable,
+    Insertable,
+    Serialize,
+    Deserialize,
+    PartialEq,
+)]
+#[table_name = "category"]
+pub struct CategoryInput {
+    pub name: String,
+    pub parentId: Option<i32>,
 }
 
 #[derive(
@@ -65,6 +46,7 @@ pub struct CategoryNode {
     categoryId: Option<i32>,
     postId: i32,
 }
+
 #[derive(Insertable, Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[table_name = "category_node"]
 pub struct CategoryNodeField {
@@ -82,7 +64,7 @@ impl CategoryNode {
     ) -> Result<bool, SmileError> {
         use crate::schema::category_node::dsl::*;
         let values: Vec<CategoryNodeField> = categories
-            .unwrap_or(vec![Some(0)])
+            .unwrap_or(vec![None])
             .into_iter()
             .map(|cat_id| CategoryNodeField {
                 categoryId: cat_id,
@@ -95,14 +77,21 @@ impl CategoryNode {
             .map(|_| true)
             .map_err(SmileError::from)
     }
-    pub fn get_by_postId(parentPost: &Post, connection: &MysqlConnection) /* -> Vec<CategoryResolve>  */
-    {
-        let get_node = Self::belonging_to(parentPost).load::<CategoryNode>(connection);
-        println!("{:?}", get_node);
-        // Category::convert_to_resolve(Category {
-        //     id: get_node.id.to_owned(),
-        //     name: get_node.name.to_owned(),
-        //     parentId: get_node.parentId.to_owned(),
-        // })
+    pub fn get_by_postId(parentPost: &Post, connection: &MysqlConnection) -> Vec<Category> {
+        let category_result: Vec<Category> = Self::belonging_to(parentPost)
+            .inner_join(category::table)
+            .select(category::all_columns)
+            .load(connection)
+            .expect("fialed to load category");
+        category_result
+    }
+    pub fn get_by_categoryId(parentCategory: &Category, connection: &MysqlConnection) -> Vec<Post> {
+        use crate::schema::post;
+        let post_result: Vec<Post> = Self::belonging_to(parentCategory)
+            .inner_join(post::table)
+            .select(post::all_columns)
+            .load(connection)
+            .expect("failed to load post");
+        post_result
     }
 }

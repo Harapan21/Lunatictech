@@ -30,7 +30,7 @@ pub use actix_web::{http::header, web, App, HttpServer};
 
 pub mod db;
 pub mod errors;
-pub mod handlers;
+pub mod graphql;
 pub mod models;
 pub mod schema;
 pub mod utils;
