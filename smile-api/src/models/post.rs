@@ -1,7 +1,6 @@
 use super::user::User;
 use crate::schema::post;
 use chrono::prelude::*;
-use diesel::prelude::*;
 
 #[derive(Debug, Serialize, Deserialize, DbEnum, PartialEq, Clone)]
 #[DieselType = "Status"]
@@ -42,6 +41,7 @@ pub struct Post {
 #[derive(
     juniper::GraphQLInputObject,
     Insertable,
+    Identifiable,
     AsChangeset,
     Serialize,
     Deserialize,
@@ -55,7 +55,7 @@ pub struct PostInput {
     id: Option<i32>,
     title: Option<String>,
     content: Option<String>,
-    author_id: Option<String>,
+    pub author_id: Option<String>,
     status: Option<StatusPost>,
     last_edited_at: Option<NaiveDateTime>,
     last_edited_by: Option<String>,

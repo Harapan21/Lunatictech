@@ -7,14 +7,14 @@ use crate::utils::Auth;
 use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::{insert_into, prelude::*, update};
 
-pub trait Handler {
-    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
-    fn find_by_id<T>(&self, id: &T, connection: &MysqlConnection) -> Result<Box<Self>, SmileError>;
-    fn input<T>(&self, input: T, connection: &MysqlConnection) -> Result<bool, SmileError>;
+pub trait Handler<T, M> {
+    fn list(connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
+    fn find_by_id(id: &T, connection: &MysqlConnection) -> Result<Box<Self>, SmileError>;
+    fn input(input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
 }
 
-impl Handler for Post {
-    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+impl Handler<i32, PostInput> for Post {
+    fn list(connection: &MysqlConnection) -> Result<Vec<Box<Post>>, SmileError> {
         use crate::schema::post::dsl::*;
         let vec_post = post
             .load::<Post>(connection)
@@ -23,22 +23,14 @@ impl Handler for Post {
         Ok(vec_post)
     }
 
-    fn find_by_id<i32>(
-        &self,
-        id: &i32,
-        connection: &MysqlConnection,
-    ) -> Result<Box<Post>, SmileError> {
-        use crate::schema::post::dsl::*;
+    fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Post>, SmileError> {
+        use crate::schema::post::dsl::post;
         post.find(id)
             .first::<Post>(connection)
             .map(Box::new)
             .map_err(SmileError::from)
     }
-    fn input<PostInput>(
-        &self,
-        input: PostInput,
-        connection: &MysqlConnection,
-    ) -> Result<bool, SmileError> {
+    fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         unimplemented!()
         // use crate::schema::post::dsl::*;
         //                 let posting = insert_into(post)
@@ -46,8 +38,7 @@ impl Handler for Post {
         //                 author_id: context.user_id.clone().into(),
         //                 ..*to_posting
         //             })
-        //             .execute(conn);
-        //         if posting.is_ok() {
+        //             .execute(conn); if posting.is_ok() {
         //             let id_post_to_push = post.select(id).order(id.desc()).first(conn)?;
         //             return CategoryNode::push_node(conn, categories, id_post_to_push);
         //         }
@@ -57,8 +48,8 @@ impl Handler for Post {
     }
 }
 
-impl Handler for Category {
-    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+impl Handler<i32, CategoryInput> for Category {
+    fn list(connection: &MysqlConnection) -> Result<Vec<Box<Category>>, SmileError> {
         use crate::schema::category::dsl::*;
         let vec_cat = category
             .load::<Category>(connection)
@@ -66,23 +57,15 @@ impl Handler for Category {
             .map_err(SmileError::from)?;
         Ok(vec_cat)
     }
-    fn find_by_id<i32>(
-        &self,
-        id: &i32,
-        connection: &MysqlConnection,
-    ) -> Result<Box<Category>, SmileError> {
-        use crate::schema::category::dsl::*;
+    fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Category>, SmileError> {
+        use crate::schema::category::dsl::category;
         category
             .find(id)
             .first::<Category>(connection)
             .map(Box::new)
             .map_err(SmileError::from)
     }
-    fn input<CategoryInput>(
-        &self,
-        input: CategoryInput,
-        connection: &MysqlConnection,
-    ) -> Result<bool, SmileError> {
+    fn input(input: CategoryInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::category::dsl::*;
         insert_into(category)
             .values(&input)
@@ -92,8 +75,8 @@ impl Handler for Category {
     }
 }
 
-impl Handler for User {
-    fn list(&self, connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError> {
+impl Handler<String, UserInput> for User {
+    fn list(connection: &MysqlConnection) -> Result<Vec<Box<User>>, SmileError> {
         use crate::schema::usr_smile::dsl::*;
         let vec_user = usr_smile
             .load::<User>(connection)
@@ -101,11 +84,8 @@ impl Handler for User {
             .map_err(SmileError::from)?;
         Ok(vec_user)
     }
-    fn find_by_id<String>(
-        &self,
-        id: &String,
-        connection: &MysqlConnection,
-    ) -> Result<Box<User>, SmileError> {
+
+    fn find_by_id(id: &String, connection: &MysqlConnection) -> Result<Box<User>, SmileError> {
         use crate::schema::usr_smile::dsl::*;
         usr_smile
             .find(id)
@@ -139,17 +119,13 @@ impl Handler for User {
     //     };
     // }
 
-    fn input<UserInput>(
-        &self,
-        input: UserInput,
-        connection: &MysqlConnection,
-    ) -> Result<bool, SmileError> {
+    fn input(mut input: UserInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::usr_smile::dsl::*;
         input.user_id = uuid::Uuid::new_v4().to_string();
         input.password = hash(input.password, DEFAULT_COST)?;
         insert_into(usr_smile)
             .values(&input)
-            .execute::<UserInput>(connection)
+            .execute(connection)
             .map_err(SmileError::from)
             .map(|_e| true)
     }

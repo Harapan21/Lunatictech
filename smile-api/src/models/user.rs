@@ -1,9 +1,9 @@
 use crate::schema::usr_smile;
 use chrono::prelude::*;
 
-#[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
-#[primary_key(user_id)]
+#[derive(Debug, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "usr_smile"]
+#[primary_key(user_id)]
 pub struct User {
     pub user_id: String,
     pub username: String,

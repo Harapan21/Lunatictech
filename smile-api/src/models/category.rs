@@ -1,5 +1,5 @@
+use super::post::Post;
 use crate::errors::SmileError;
-use crate::graphql::post::Post;
 use crate::schema::{category, category_node};
 use diesel::prelude::*;
 

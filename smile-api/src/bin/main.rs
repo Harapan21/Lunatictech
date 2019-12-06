@@ -16,7 +16,7 @@ fn main() {
     println!("{}", NICKNAME);
     let sys = actix::System::new("users");
     HttpServer::new(|| {
-        let schema = std::sync::Arc::new(models::schema::create_schema());
+        let schema = std::sync::Arc::new(graphql::schema::create_schema());
         App::new()
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
@@ -39,13 +39,8 @@ fn main() {
                     .max_age(3600),
             )
             .data(establish_connection())
-            .service(web::resource("/graphql").route(web::post().to_async(graphql::api)))
-            .service(web::resource("/graphiql").route(web::get().to(graphql::client)))
-            .service(
-                web::resource("/users")
-                    .route(web::get().to_async(handlers::user::index))
-                    .route(web::post().to_async(handlers::user::create)),
-            )
+            .service(web::resource("/graphql").route(web::post().to_async(graphql::handler::api)))
+            .service(web::resource("/graphiql").route(web::get().to(graphql::handler::client)))
     })
     .bind(HOSTNAME)
     .unwrap()

@@ -1,7 +1,10 @@
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
+use crate::models::handler::Handler;
+use crate::models::post::{Post, PostInput};
+use crate::models::user::User;
 use diesel::prelude::*;
-use juniper::{FieldResult, RootNode};
+use juniper::RootNode;
 use std::sync::Arc;
 
 pub struct Context {
@@ -13,22 +16,32 @@ impl juniper::Context for Context {}
 
 pub struct Query;
 
-#[juniper::object(
-  Context = Context,
+#[juniper::object( Context = Context,
 )]
 impl Query {
-    fn me(context: &Context) -> Result<User, SmileError> {
+    fn me(context: &Context) -> Result<super::user::User, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
-            let user = User::find(&context_id, &conn)?;
-            let posts = PostList::by_author_id(&user, conn).as_vec();
-            return Ok(UserResolve::flat(user, posts));
+            let user = User::find_by_id(&context_id, &conn)?;
+            let posts = Post::belonging_to(user.as_ref()).load::<Post>(conn)?;
+            return Ok(super::user::User {
+                user_id: user.user_id,
+                username: user.username,
+                email: user.email,
+                joinAt: user.joinAt,
+                lastEditedAt: user.lastEditedAt,
+                fullname: user.fullname,
+                password: user.password,
+                avatar: user.avatar,
+                isAdmin: user.isAdmin,
+                posts,
+            });
         }
         Err(SmileError::Unauthorized)
     }
 
-    fn post(context: &Context) -> FieldResult<Vec<PostResolve>> {
-        Ok(PostList::list(&context.conn).as_vec())
+    fn post(context: &Context) -> Result<Vec<Box<Post>>, SmileError> {
+        Post::list(&context.conn)
     }
 }
 
@@ -38,9 +51,10 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
-    fn post(context: &Context, id: Option<i32>, input: PostInput) -> Result<bool, SmileError> {
+    fn post(context: &Context, id: Option<i32>, mut input: PostInput) -> Result<bool, SmileError> {
         if let Some(context_id) = &context.user_id {
-            return input.execute(context, &id);
+            input.author_id = Some(context_id.to_owned());
+            return Post::input(input, &context.conn);
         }
         Err(SmileError::Unauthorized)
     }
