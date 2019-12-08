@@ -1,4 +1,3 @@
-use super::post::Post;
 use super::schema::Context;
 use crate::errors::SmileError;
 use crate::models::category::CategoryNode;
