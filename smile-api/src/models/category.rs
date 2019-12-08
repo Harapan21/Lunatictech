@@ -77,6 +77,7 @@ impl CategoryNode {
             .map(|_| true)
             .map_err(SmileError::from)
     }
+
     pub fn get_by_postId(parentPost: &Post, connection: &MysqlConnection) -> Vec<Category> {
         let category_result: Vec<Category> = Self::belonging_to(parentPost)
             .inner_join(category::table)
@@ -85,6 +86,7 @@ impl CategoryNode {
             .expect("fialed to load category");
         category_result
     }
+
     pub fn get_by_categoryId(parentCategory: &Category, connection: &MysqlConnection) -> Vec<Post> {
         use crate::schema::post;
         let post_result: Vec<Post> = Self::belonging_to(parentCategory)

@@ -31,20 +31,12 @@ impl Handler<i32, PostInput> for Post {
             .map_err(SmileError::from)
     }
     fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        unimplemented!()
-        // use crate::schema::post::dsl::*;
-        //                 let posting = insert_into(post)
-        //             .values(PostField {
-        //                 author_id: context.user_id.clone().into(),
-        //                 ..*to_posting
-        //             })
-        //             .execute(conn); if posting.is_ok() {
-        //             let id_post_to_push = post.select(id).order(id.desc()).first(conn)?;
-        //             return CategoryNode::push_node(conn, categories, id_post_to_push);
-        //         }
-        //         Err(SmileError::Unreachable("post"))
-        //     }
-        // };
+        use crate::schema::post::dsl::*;
+        insert_into(post)
+            .values(input)
+            .execute(connection)
+            .map(|e| true)
+            .map_err(SmileError::from)
     }
 }
 

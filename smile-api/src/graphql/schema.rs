@@ -1,7 +1,8 @@
+use super::post::PostInput;
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use crate::models::handler::Handler;
-use crate::models::post::{Post, PostInput};
+use crate::models::post::Post;
 use crate::models::user::User;
 use diesel::prelude::*;
 use juniper::RootNode;
@@ -51,10 +52,37 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
-    fn post(context: &Context, id: Option<i32>, mut input: PostInput) -> Result<bool, SmileError> {
+    fn post(context: &Context, mut input: PostInput) -> Result<bool, SmileError> {
+        let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
-            input.author_id = Some(context_id.to_owned());
-            return Post::input(input, &context.conn);
+            let PostInput {
+                id,
+                title,
+                content,
+                author_id,
+                status,
+                last_edited_at,
+                last_edited_by,
+                category,
+            } = input;
+            if Post::input(
+                crate::models::post::PostInput {
+                    id: id.clone(),
+                    title,
+                    content,
+                    author_id: Some(context_id.to_owned()),
+                    status,
+                    last_edited_at,
+                    last_edited_by,
+                },
+                &conn,
+            )? {
+                return crate::models::category::CategoryNode::push_node(
+                    &conn,
+                    category,
+                    id.unwrap(),
+                );
+            }
         }
         Err(SmileError::Unauthorized)
     }
