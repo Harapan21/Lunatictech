@@ -28,14 +28,14 @@ pub enum StatusPost {
 #[belongs_to(User, foreign_key = "author_id")]
 #[table_name = "post"]
 pub struct Post {
-    id: i32,
-    author_id: Option<String>,
-    title: Option<String>,
-    createdAt: NaiveDateTime,
-    content: Option<String>,
-    status: Option<StatusPost>,
-    last_edited_at: Option<NaiveDateTime>,
-    last_edited_by: Option<String>,
+    pub id: i32,
+    pub author_id: Option<String>,
+    pub title: Option<String>,
+    pub createdAt: NaiveDateTime,
+    pub content: Option<String>,
+    pub status: Option<StatusPost>,
+    pub last_edited_at: Option<NaiveDateTime>,
+    pub last_edited_by: Option<String>,
 }
 
 #[derive(
@@ -52,11 +52,11 @@ pub struct Post {
 #[table_name = "post"]
 pub struct PostInput {
     #[serde(skip)]
-    id: Option<i32>,
-    title: Option<String>,
-    content: Option<String>,
+    pub id: Option<i32>,
+    pub title: Option<String>,
+    pub content: Option<String>,
     pub author_id: Option<String>,
-    status: Option<StatusPost>,
-    last_edited_at: Option<NaiveDateTime>,
-    last_edited_by: Option<String>,
+    pub status: Option<StatusPost>,
+    pub last_edited_at: Option<NaiveDateTime>,
+    pub last_edited_by: Option<String>,
 }

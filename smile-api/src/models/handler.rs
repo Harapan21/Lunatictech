@@ -49,6 +49,7 @@ impl Handler<i32, CategoryInput> for Category {
             .map_err(SmileError::from)?;
         Ok(vec_cat)
     }
+
     fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Category>, SmileError> {
         use crate::schema::category::dsl::category;
         category
@@ -57,6 +58,7 @@ impl Handler<i32, CategoryInput> for Category {
             .map(Box::new)
             .map_err(SmileError::from)
     }
+
     fn input(input: CategoryInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::category::dsl::*;
         insert_into(category)

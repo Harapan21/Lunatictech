@@ -5,15 +5,15 @@ use chrono::prelude::*;
 
 #[derive(juniper::GraphQLObject, Clone, Serialize, Deserialize, PartialEq, Debug)]
 pub struct Post {
-    id: i32,
-    author_id: Option<String>,
-    title: Option<String>,
-    createdAt: NaiveDateTime,
-    content: Option<String>,
-    status: Option<crate::models::post::StatusPost>,
-    last_edited_at: Option<NaiveDateTime>,
-    last_edited_by: Option<String>,
-    category: Vec<Category>,
+    pub id: i32,
+    pub author_id: Option<String>,
+    pub title: Option<String>,
+    pub createdAt: NaiveDateTime,
+    pub content: Option<String>,
+    pub status: Option<crate::models::post::StatusPost>,
+    pub last_edited_at: Option<NaiveDateTime>,
+    pub last_edited_by: Option<String>,
+    pub category: Vec<Category>,
 }
 
 #[derive(juniper::GraphQLInputObject, Serialize, Deserialize, PartialEq, Debug, Clone)]

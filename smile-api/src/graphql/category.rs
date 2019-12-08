@@ -1,8 +1,8 @@
+use super::post::Post;
 use super::schema::Context;
 use crate::errors::SmileError;
 use crate::models::category::CategoryNode;
 use crate::models::handler::Handler;
-use crate::models::post::Post;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Category {
@@ -19,7 +19,7 @@ impl Category {
         self.id
     }
     fn name(&self) -> &str {
-        self.name.as_str()
+        &self.name.as_str()
     }
     fn parent(&self, context: &Context) -> Result<Option<Box<Category>>, SmileError> {
         if self.parentId.is_some() {
@@ -33,13 +33,40 @@ impl Category {
         }
         Ok(None)
     }
-    fn post(&self, context: &Context) -> Vec<Post> {
+    fn post(&self, context: &Context) -> Result<Vec<crate::graphql::post::Post>, SmileError> {
         let conn = &context.conn;
         let cat = crate::models::category::Category {
             id: self.id,
             name: self.name,
             parentId: self.parentId,
         };
-        CategoryNode::get_by_categoryId(&cat, conn)
+        let posts = CategoryNode::get_by_categoryId(&cat, &conn);
+
+        let result = posts
+            .iter()
+            .map(|e| {
+                let category = CategoryNode::get_by_postId(&e, &conn);
+                let category = category
+                    .iter()
+                    .map(|e| Category {
+                        id: e.id,
+                        name: e.name,
+                        parentId: e.parentId,
+                    })
+                    .collect::<Vec<Category>>();
+                return crate::graphql::post::Post {
+                    id: e.id,
+                    author_id: e.author_id,
+                    title: e.title,
+                    createdAt: e.createdAt,
+                    content: e.content,
+                    status: e.status,
+                    last_edited_at: e.last_edited_at,
+                    last_edited_by: e.last_edited_by,
+                    category,
+                };
+            })
+            .collect::<Vec<crate::graphql::post::Post>>();
+        Ok(result)
     }
 }
