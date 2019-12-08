@@ -1,5 +1,4 @@
 use super::schema::Context;
-use crate::errors::SmileError;
 use crate::models::category::CategoryNode;
 use crate::models::handler::Handler;
 
@@ -14,25 +13,27 @@ pub struct Category {
 Context = Context
     )]
 impl Category {
-    fn id(&self) -> i32 {
+    pub fn id(&self) -> i32 {
         self.id
     }
-    fn name(&self) -> &str {
+    pub fn name(&self) -> &str {
         &self.name.as_str()
     }
-    fn parent(&self, context: &Context) -> Result<Option<Box<Category>>, SmileError> {
+    pub fn parent(&self, context: &Context) -> Option<Box<Category>> {
         if self.parentId.is_some() {
             use crate::models::category::Category as CategoryModels;
-            let parent = CategoryModels::find_by_id(&self.parentId.unwrap(), &context.conn)?;
-            return Ok(Some(Box::new(Category {
+            let parent = CategoryModels::find_by_id(&self.parentId.unwrap(), &context.conn)
+                .ok()
+                .unwrap();
+            return Some(Box::new(Category {
                 id: parent.id,
                 name: parent.name,
                 parentId: parent.parentId,
-            })));
+            }));
         }
-        Ok(None)
+        None
     }
-    fn post(&self, context: &Context) -> Result<Vec<crate::graphql::post::Post>, SmileError> {
+    pub fn post(&self, context: &Context) -> Vec<crate::graphql::post::Post> {
         let conn = &context.conn;
         let cat = crate::models::category::Category {
             id: self.id,
@@ -66,6 +67,6 @@ impl Category {
                 };
             })
             .collect::<Vec<crate::graphql::post::Post>>();
-        Ok(result)
+        result
     }
 }
