@@ -1,5 +1,7 @@
 use super::schema::Context;
+use crate::graphql::post::Post;
 use crate::models::category::CategoryNode;
+extern crate juniper;
 use crate::models::handler::Handler;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -19,21 +21,21 @@ impl Category {
     pub fn name(&self) -> &str {
         &self.name.as_str()
     }
-    pub fn parent(&self, context: &Context) -> Option<Box<Category>> {
+    pub fn parent(&self, context: &Context) -> Option<Category> {
         if self.parentId.is_some() {
             use crate::models::category::Category as CategoryModels;
             let parent = CategoryModels::find_by_id(&self.parentId.unwrap(), &context.conn)
                 .ok()
                 .unwrap();
-            return Some(Box::new(Category {
+            return Some(Category {
                 id: parent.id,
                 name: parent.name,
                 parentId: parent.parentId,
-            }));
+            });
         }
         None
     }
-    pub fn post(&self, context: &Context) -> Vec<crate::graphql::post::Post> {
+    pub fn post(&self, context: &Context) -> Vec<Post> {
         let conn = &context.conn;
         let cat = crate::models::category::Category {
             id: self.id,
@@ -54,7 +56,7 @@ impl Category {
                         parentId: e.parentId,
                     })
                     .collect::<Vec<Category>>();
-                return crate::graphql::post::Post {
+                return Post {
                     id: e.id,
                     author_id: e.author_id,
                     title: e.title,
@@ -66,7 +68,7 @@ impl Category {
                     category,
                 };
             })
-            .collect::<Vec<crate::graphql::post::Post>>();
+            .collect::<Vec<Post>>();
         result
     }
 }
