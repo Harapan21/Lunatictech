@@ -1,4 +1,4 @@
-use super::category::Category;
+use crate::graphql::category::Category;
 use crate::models::category::Categories;
 use crate::models::post::StatusPost;
 use chrono::prelude::*;
@@ -10,7 +10,7 @@ pub struct Post {
     pub title: Option<String>,
     pub createdAt: NaiveDateTime,
     pub content: Option<String>,
-    pub status: Option<crate::models::post::StatusPost>,
+    pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
     pub category: Vec<Category>,

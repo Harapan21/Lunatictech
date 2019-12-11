@@ -14,7 +14,7 @@ struct Claims {
     exp: usize,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, juniper::GraphQLObject)]
 pub struct Auth {
     pub token: Option<String>,
     pub login: Option<bool>,

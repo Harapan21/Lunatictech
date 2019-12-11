@@ -4,6 +4,9 @@ use crate::errors::SmileError;
 use crate::models::handler::Handler;
 use crate::models::post::Post;
 use crate::models::user::User;
+use crate::models::user::UserInput;
+use crate::utils::Auth;
+use bcrypt::verify;
 use diesel::prelude::*;
 use juniper::RootNode;
 use std::sync::Arc;
@@ -52,6 +55,20 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
+    fn login(context: &Context, input: UserInput) -> Result<Auth, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        let conn: &MysqlConnection = &context.conn;
+        let user = usr_smile
+            .filter(username.eq(&input.username))
+            .first::<User>(conn)?;
+        let is_verify = verify(&input.password, &input.password)
+            .map_err(|_e| SmileError::PasswordNotMatch("Password Wrong".to_owned()))?;
+        return if is_verify {
+            Ok(Auth::new(user.user_id))
+        } else {
+            Err(SmileError::WrongPassword("password wrong".to_owned()))
+        };
+    }
     fn post(context: &Context, mut input: PostInput) -> Result<bool, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
@@ -90,9 +107,9 @@ impl Mutation {
 
 pub type Schema = RootNode<'static, Query, Mutation>;
 
-pub fn create_context(logged_user_id: Option<String>, mysql_pool: MysqlPoolConnection) -> Context {
+pub fn create_context(user_id: Option<String>, mysql_pool: MysqlPoolConnection) -> Context {
     Context {
-        user_id: logged_user_id,
+        user_id,
         conn: Arc::new(mysql_pool),
     }
 }

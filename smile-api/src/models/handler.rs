@@ -3,8 +3,7 @@ use super::category::{Category, CategoryInput};
 use super::post::{Post, PostInput};
 use super::user::{User, UserInput};
 use crate::errors::SmileError;
-use crate::utils::Auth;
-use bcrypt::{hash, verify, DEFAULT_COST};
+use bcrypt::{hash, DEFAULT_COST};
 use diesel::{insert_into, prelude::*, update};
 
 pub trait Handler<T, M> {
@@ -87,13 +86,25 @@ impl Handler<String, UserInput> for User {
             .map(Box::new)
             .map_err(SmileError::from)
     }
-    // async fn validation(&self, input: &UserInput, connection: &MysqlConnection) -> (bool, bool) {
-    //      use crate::schema::usr_smile::dsl::*;
-    //      let is_username = usr_smile.filter(username.eq(input.username)).load::<User>().map(|e| true).map_err(|e| false);
-    //      let is_email = usr_smile.filter(email.eq(input.email)).load<User>().map(|e| true).map_err(|e| false);
+    // fn validation(
+    //     &self,
+    //     input: &UserInput,
+    //     connection: &MysqlConnection,
+    // ) -> Future<Item = (bool, bool)> {
+    //     use crate::schema::usr_smile::dsl::*;
+    //     let is_username = usr_smile
+    //         .filter(username.eq(input.username))
+    //         .load::<User>(connection)
+    //         .map(|e| true)
+    //         .map_err(|e| false);
+    //     let is_email = usr_smile
+    //         .filter(email.eq(input.email))
+    //         .load::<User>(connection)
+    //         .map(|e| true)
+    //         .map_err(|e| false);
 
-    //      futures::join!(is_username, is_email)
-    //  }
+    //     Future::join(is_username, is_email)
+    // }
 
     // fn login(
     //     &self,

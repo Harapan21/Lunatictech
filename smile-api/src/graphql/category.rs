@@ -18,9 +18,11 @@ impl Category {
     pub fn id(&self) -> i32 {
         self.id
     }
+
     pub fn name(&self) -> &str {
-        &self.name.as_str()
+        self.name.as_str()
     }
+
     pub fn parent(&self, context: &Context) -> Option<Category> {
         if self.parentId.is_some() {
             use crate::models::category::Category as CategoryModels;
@@ -35,6 +37,7 @@ impl Category {
         }
         None
     }
+
     pub fn post(&self, context: &Context) -> Vec<Post> {
         let conn = &context.conn;
         let cat = crate::models::category::Category {
