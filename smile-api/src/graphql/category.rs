@@ -1,8 +1,7 @@
 use super::schema::Context;
 use crate::graphql::post::Post;
-use crate::models::category::CategoryNode;
-extern crate juniper;
 use crate::models::handler::Handler;
+use crate::models::node::CategoryNode;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Category {

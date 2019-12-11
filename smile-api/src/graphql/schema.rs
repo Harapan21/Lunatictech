@@ -20,8 +20,7 @@ impl juniper::Context for Context {}
 
 pub struct Query;
 
-#[juniper::object( Context = Context,
-)]
+#[juniper::object( Context = Context,)]
 impl Query {
     fn me(context: &Context) -> Result<super::user::User, SmileError> {
         let conn: &MysqlConnection = &context.conn;
@@ -94,11 +93,7 @@ impl Mutation {
                 },
                 &conn,
             )? {
-                return crate::models::category::CategoryNode::push_node(
-                    &conn,
-                    category,
-                    id.unwrap(),
-                );
+                return crate::models::node::CategoryNode::push_node(&conn, category, id.unwrap());
             }
         }
         Err(SmileError::Unauthorized)

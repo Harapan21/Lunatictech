@@ -1,5 +1,5 @@
 use crate::graphql::category::Category;
-use crate::models::category::Categories;
+use crate::models::node::Categories;
 use crate::models::post::StatusPost;
 use chrono::prelude::*;
 

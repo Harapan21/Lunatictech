@@ -1,37 +1,37 @@
 use crate::graphql::Context;
-use crate::models::category::Category;
-use crate::models::category::CategoryNode;
+use crate::models::category::{Category, CategoryNode};
 use crate::models::post::Post;
 use crate::models::user::User;
 
 trait Node<T> {
     fn id(&self) -> T;
-    fn posts(&self) -> Option<Box<Vec<Post>>>;
-    fn categories(&self) -> Option<Box<Vec<Category>>>;
-    fn user(&self) -> Option<Box<Vec<User>>>;
+    fn posts(&self) -> Option<Vec<Box<Post>>> {
+        None
+    }
+    fn categories(&self) -> Option<Vec<Box<Category>>> {
+        None
+    }
+    fn user(&self) -> Option<Vec<Box<User>>> {
+        None
+    }
 }
-
-struct
 
 impl Node<T> for CategoryNode {
     fn id(&self) -> T {
         self.id
     }
 
-    fn categories(&self) -> Option<Box<Vec<Category>>> {
+    fn categories(&self) -> Option<Vec<Box<Category>>> {
         None
     }
 }
 
 impl Node<T> for Post {
-
     fn id(&self) -> T {
         self.id
     }
 
-    fn posts(&self) -> Option<Box<Vec<Post>>> {
-
-    }
+    fn posts(&self) -> Option<Vec<Box<Post>>> {}
 }
 
 juniper::graphql_interface!(<'a> &'a Character: Database as "Character" |&self| {
