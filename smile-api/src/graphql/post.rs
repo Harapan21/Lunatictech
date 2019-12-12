@@ -1,9 +1,8 @@
-use crate::graphql::category::Category;
-use crate::models::node::Categories;
+use crate::models::node::CategoryNode;
 use crate::models::post::StatusPost;
 use chrono::prelude::*;
 
-#[derive(juniper::GraphQLObject, Clone, Serialize, Deserialize, PartialEq, Debug)]
+#[derive(juniper::GraphQLObject, Debug)]
 pub struct Post {
     pub id: i32,
     pub author_id: Option<String>,
@@ -13,7 +12,7 @@ pub struct Post {
     pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
-    pub category: Vec<Category>,
+    pub category: CategoryNode,
 }
 
 #[derive(juniper::GraphQLInputObject, Serialize, Deserialize, PartialEq, Debug, Clone)]

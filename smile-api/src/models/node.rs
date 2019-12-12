@@ -5,12 +5,11 @@ use crate::schema::{category, category_node};
 use diesel::prelude::*;
 
 #[derive(
+    juniper::GraphQLObject,
     Insertable,
     Queryable,
     Associations,
     Identifiable,
-    Debug,
-    Clone,
     Serialize,
     Deserialize,
     PartialEq,
@@ -19,9 +18,9 @@ use diesel::prelude::*;
 #[belongs_to(Post, foreign_key = "postId")]
 #[table_name = "category_node"]
 pub struct CategoryNode {
-    id: i32,
-    categoryId: Option<i32>,
-    postId: i32,
+    pub id: i32,
+    pub categoryId: Option<i32>,
+    pub postId: i32,
 }
 
 #[derive(Insertable, Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -73,4 +72,9 @@ impl CategoryNode {
             .expect("failed to load post");
         post_result
     }
+}
+
+#[derive(juniper::GraphQLObject)]
+pub struct PostNode {
+    pub user_id: String,
 }

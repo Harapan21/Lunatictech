@@ -2,9 +2,9 @@ use super::post::PostInput;
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use crate::models::handler::Handler;
+use crate::models::node::PostNode;
 use crate::models::post::Post;
-use crate::models::user::User;
-use crate::models::user::UserInput;
+use crate::models::user::{User, UserInput};
 use crate::utils::Auth;
 use bcrypt::verify;
 use diesel::prelude::*;
@@ -20,13 +20,16 @@ impl juniper::Context for Context {}
 
 pub struct Query;
 
-#[juniper::object( Context = Context,)]
+#[juniper::object(Context = Context)]
 impl Query {
     fn me(context: &Context) -> Result<super::user::User, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         if let Some(context_id) = &context.user_id {
             let user = User::find_by_id(&context_id, &conn)?;
-            let posts = Post::belonging_to(user.as_ref()).load::<Post>(conn)?;
+            let node = PostNode {
+                user_id: user.user_id.clone(),
+            };
+
             return Ok(super::user::User {
                 user_id: user.user_id,
                 username: user.username,
@@ -37,7 +40,7 @@ impl Query {
                 password: user.password,
                 avatar: user.avatar,
                 isAdmin: user.isAdmin,
-                posts,
+                node,
             });
         }
         Err(SmileError::Unauthorized)
