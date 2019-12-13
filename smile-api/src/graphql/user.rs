@@ -1,4 +1,4 @@
-use super::node::Node;
+use crate::models::node::PostNode;
 use chrono::prelude::*;
 
 #[derive(juniper::GraphQLObject, Serialize)]
@@ -13,5 +13,5 @@ pub struct User {
     pub password: String,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
-    pub node: dyn Node<String>,
+    pub node: PostNode,
 }

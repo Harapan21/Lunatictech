@@ -5,41 +5,41 @@ use crate::models::category::Category;
 use crate::models::node::{CategoryNode, PostNode};
 use diesel::prelude::*;
 
-pub trait Node<T> {
-    fn id(&self) -> T;
-    fn posts(&self, conn: &MysqlConnection) -> Option<Vec<Box<Post>>> {
+pub trait Node {
+    fn id(&self) -> &str;
+    fn posts(&self, conn: &MysqlConnection) -> Option<Vec<Post>> {
         None
     }
-    fn categories(&self, conn: &MysqlConnection) -> Option<Vec<Box<Category>>> {
+    fn categories(&self, conn: &MysqlConnection) -> Option<Vec<Category>> {
         None
     }
-    fn user(&self, conn: &MysqlConnection) -> Option<Vec<Box<User>>> {
-        None
-    }
-}
-
-impl Node<i32> for CategoryNode {
-    fn id(&self) -> i32 {
-        self.id
-    }
-
-    fn categories(&self, conn: &MysqlConnection) -> Option<Vec<Box<Category>>> {
+    fn user(&self, conn: &MysqlConnection) -> Option<Vec<User>> {
         None
     }
 }
 
-impl Node<String> for PostNode {
-    fn id(&self) -> String {
-        self.user_id
+impl Node for CategoryNode {
+    fn id(&self) -> &str {
+        String::from(self.id).as_str()
     }
 
-    fn posts(&self, conn: &MysqlConnection) -> Option<Vec<Box<Post>>> {
+    fn categories(&self, conn: &MysqlConnection) -> Option<Vec<Category>> {
         None
     }
 }
 
-juniper::graphql_interface!(<'a, T> &'a dyn Node<T>: Context as "Node" |&self| {
-    field id() -> T { self.id() }
+impl Node for PostNode {
+    fn id(&self) -> &str {
+        self.user_id.as_str()
+    }
+
+    fn posts(&self, conn: &MysqlConnection) -> Option<Vec<Post>> {
+        None
+    }
+}
+
+juniper::graphql_interface!(<'a> &'a dyn Node: Context as "Node" |&self| {
+    field id() -> &str{ self.id() }
 
     instance_resolvers: |&context| {
         &CategoryNode => self.categories(&context.conn),

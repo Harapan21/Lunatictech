@@ -24,5 +24,5 @@ pub struct PostInput {
     pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
-    pub category: Categories,
+    pub category: Vec<i32>,
 }
