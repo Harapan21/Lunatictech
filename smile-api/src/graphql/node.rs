@@ -20,7 +20,7 @@ pub trait Node {
 
 impl Node for CategoryNode {
     fn id(&self) -> &str {
-        String::from(self.id).as_str()
+        self.id.to_string().as_str()
     }
 
     fn categories(&self, conn: &MysqlConnection) -> Option<Vec<Category>> {

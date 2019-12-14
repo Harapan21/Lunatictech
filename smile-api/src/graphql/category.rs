@@ -1,7 +1,7 @@
+use super::node::CategoryNode;
+use super::post::Post;
 use super::schema::Context;
-use crate::graphql::post::Post;
 use crate::models::handler::Handler;
-use crate::models::node::CategoryNode;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Category {
@@ -50,14 +50,7 @@ impl Category {
             .iter()
             .map(|e| {
                 let category = CategoryNode::get_by_postId(&e, &conn);
-                let category = category
-                    .iter()
-                    .map(|e| Category {
-                        id: e.id,
-                        name: e.name,
-                        parentId: e.parentId,
-                    })
-                    .collect::<Vec<Category>>();
+
                 return Post {
                     id: e.id,
                     author_id: e.author_id,
