@@ -13,5 +13,5 @@ pub struct User {
     pub password: String,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
-    pub node: PostNode,
+    pub post: Vec<PostNode>,
 }

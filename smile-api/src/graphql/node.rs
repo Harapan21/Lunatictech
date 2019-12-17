@@ -2,7 +2,7 @@ use crate::graphql::post::Post;
 use crate::graphql::schema::Context;
 use crate::graphql::user::User;
 use crate::models::category::Category;
-use crate::models::node::{CategoryNode, PostNode};
+pub use crate::models::node::{CategoryNode, PostNode};
 use diesel::prelude::*;
 
 pub trait Node {

@@ -12,7 +12,7 @@ pub struct Post {
     pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
-    pub category: CategoryNode,
+    pub category: Vec<CategoryNode>,
 }
 
 #[derive(juniper::GraphQLInputObject, Serialize, Deserialize, PartialEq, Debug, Clone)]

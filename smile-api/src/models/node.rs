@@ -1,7 +1,7 @@
 use super::category::Category;
 use super::post::Post;
 use crate::errors::SmileError;
-use crate::schema::{category, category_node};
+use crate::schema::category_node;
 use diesel::prelude::*;
 
 #[derive(
@@ -11,6 +11,7 @@ use diesel::prelude::*;
     Associations,
     Identifiable,
     Serialize,
+    Debug,
     Deserialize,
     PartialEq,
 )]
@@ -54,27 +55,22 @@ impl CategoryNode {
             .map_err(SmileError::from)
     }
 
-    pub fn get_by_postId(parentPost: &Post, connection: &MysqlConnection) -> Vec<Category> {
-        let category_result: Vec<Category> = Self::belonging_to(parentPost)
-            .inner_join(category::table)
-            .select(category::all_columns)
+    pub fn get_by_postId(parentPost: &Post, connection: &MysqlConnection) -> Vec<Self> {
+        let category_result: Vec<CategoryNode> = Self::belonging_to(parentPost)
             .load(connection)
             .expect("fialed to load category");
         category_result
     }
 
-    pub fn get_by_categoryId(parentCategory: &Category, connection: &MysqlConnection) -> Vec<Post> {
-        use crate::schema::post;
-        let post_result: Vec<Post> = Self::belonging_to(parentCategory)
-            .inner_join(post::table)
-            .select(post::all_columns)
+    pub fn get_by_categoryId(parentCategory: &Category, connection: &MysqlConnection) -> Vec<Self> {
+        let post_result: Vec<CategoryNode> = Self::belonging_to(parentCategory)
             .load(connection)
             .expect("failed to load post");
         post_result
     }
 }
 
-#[derive(juniper::GraphQLObject)]
+#[derive(juniper::GraphQLObject, Debug)]
 pub struct PostNode {
     pub user_id: String,
 }
