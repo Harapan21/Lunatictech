@@ -1,13 +1,14 @@
-use super::post::PostInput;
+use crate::graphql::post::PostSchema;
+// use super::post::PostInput;
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
 use crate::models::handler::Handler;
-use crate::models::node::PostNode;
+// use crate::models::node::PostNode;
 use crate::models::post::Post;
-use crate::models::user::{User, UserInput};
-use crate::utils::Auth;
-use bcrypt::verify;
-use diesel::prelude::*;
+// use crate::models::user::{User, UserInput};
+// use crate::utils::Auth;
+// use bcrypt::verify;
+// use diesel::prelude::*;
 use juniper::RootNode;
 use std::sync::Arc;
 
@@ -22,32 +23,9 @@ pub struct Query;
 
 #[juniper::object(Context = Context)]
 impl Query {
-    fn me(context: &Context) -> Result<super::user::User, SmileError> {
-        let conn: &MysqlConnection = &context.conn;
-        if let Some(context_id) = &context.user_id {
-            let user = User::find_by_id(&context_id, &conn)?;
-            let node = PostNode {
-                user_id: user.user_id.clone(),
-            };
-
-            return Ok(super::user::User {
-                user_id: user.user_id,
-                username: user.username,
-                email: user.email,
-                joinAt: user.joinAt,
-                lastEditedAt: user.lastEditedAt,
-                fullname: user.fullname,
-                password: user.password,
-                avatar: user.avatar,
-                isAdmin: user.isAdmin,
-                node,
-            });
-        }
-        Err(SmileError::Unauthorized)
-    }
-
-    fn post(context: &Context) -> Result<Vec<Box<Post>>, SmileError> {
-        Post::list(&context.conn)
+    fn post(context: &Context) -> Result<Vec<Box<dyn PostSchema>>, SmileError> {
+        let post = Post::list(&context.conn)?;
+        Ok(post.into_iter().map(|e| e as Box<dyn PostSchema>).collect())
     }
 }
 
@@ -56,52 +34,7 @@ pub struct Mutation;
 #[juniper::object(
     Context = Context,
 )]
-impl Mutation {
-    fn login(context: &Context, input: UserInput) -> Result<Auth, SmileError> {
-        use crate::schema::usr_smile::dsl::*;
-        let conn: &MysqlConnection = &context.conn;
-        let user = usr_smile
-            .filter(username.eq(&input.username))
-            .first::<User>(conn)?;
-        let is_verify = verify(&input.password, &input.password)
-            .map_err(|_e| SmileError::PasswordNotMatch("Password Wrong".to_owned()))?;
-        return if is_verify {
-            Ok(Auth::new(user.user_id))
-        } else {
-            Err(SmileError::WrongPassword("password wrong".to_owned()))
-        };
-    }
-    fn post(context: &Context, mut input: PostInput) -> Result<bool, SmileError> {
-        let conn: &MysqlConnection = &context.conn;
-        if let Some(context_id) = &context.user_id {
-            let PostInput {
-                id,
-                title,
-                content,
-                author_id,
-                status,
-                last_edited_at,
-                last_edited_by,
-                category,
-            } = input;
-            if Post::input(
-                crate::models::post::PostInput {
-                    id: id.clone(),
-                    title,
-                    content,
-                    author_id: Some(context_id.to_owned()),
-                    status,
-                    last_edited_at,
-                    last_edited_by,
-                },
-                &conn,
-            )? {
-                return crate::models::node::CategoryNode::push_node(&conn, category, id.unwrap());
-            }
-        }
-        Err(SmileError::Unauthorized)
-    }
-}
+impl Mutation {}
 
 pub type Schema = RootNode<'static, Query, Mutation>;
 

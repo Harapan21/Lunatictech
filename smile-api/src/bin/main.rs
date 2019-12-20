@@ -12,9 +12,9 @@ const NICKNAME: &'static str = r#"
 "#;
 const HOSTNAME: &'static str = "127.0.0.1:8088";
 
-fn main() {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     println!("{}", NICKNAME);
-    let sys = actix::System::new("users");
     HttpServer::new(|| {
         let schema = std::sync::Arc::new(graphql::schema::create_schema());
         App::new()
@@ -39,12 +39,11 @@ fn main() {
                     .max_age(3600),
             )
             .data(establish_connection())
-            .service(web::resource("/graphql").route(web::post().to_async(graphql::handler::api)))
+            .service(web::resource("/graphql").route(web::post().to(graphql::handler::api)))
             .service(web::resource("/graphiql").route(web::get().to(graphql::handler::client)))
     })
-    .bind(HOSTNAME)
-    .unwrap()
-    .start();
+    .bind(HOSTNAME)?
+    .start()
+    .await;
     println!("Listen  {}", HOSTNAME);
-    let _ = sys.run();
 }

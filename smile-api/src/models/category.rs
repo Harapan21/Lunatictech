@@ -8,16 +8,7 @@ pub struct Category {
     pub parentId: Option<i32>,
 }
 
-#[derive(
-    Debug,
-    Clone,
-    juniper::GraphQLInputObject,
-    Queryable,
-    Insertable,
-    Serialize,
-    Deserialize,
-    PartialEq,
-)]
+#[derive(Debug, Clone, Queryable, Insertable, Serialize, Deserialize, PartialEq)]
 #[table_name = "category"]
 pub struct CategoryInput {
     pub name: String,

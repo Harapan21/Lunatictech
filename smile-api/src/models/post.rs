@@ -14,17 +14,7 @@ pub enum StatusPost {
     Hide,
 }
 
-#[derive(
-    juniper::GraphQLObject,
-    Clone,
-    Serialize,
-    Deserialize,
-    Identifiable,
-    Queryable,
-    PartialEq,
-    Debug,
-    Associations,
-)]
+#[derive(Clone, Serialize, Deserialize, Identifiable, Queryable, PartialEq, Debug, Associations)]
 #[belongs_to(User, foreign_key = "author_id")]
 #[table_name = "post"]
 pub struct Post {

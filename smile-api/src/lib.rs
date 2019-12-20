@@ -3,10 +3,9 @@
     proc_macro_derive_resolution_fallback,
     non_camel_case_types
 )]
-extern crate actix;
+
 extern crate actix_cors;
 extern crate actix_identity;
-extern crate futures;
 extern crate jsonwebtoken as jwt;
 #[macro_use]
 extern crate juniper;
@@ -17,6 +16,7 @@ extern crate uuid;
 extern crate lazy_static;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
 extern crate actix_web;
 extern crate dotenv;
 #[macro_use]
