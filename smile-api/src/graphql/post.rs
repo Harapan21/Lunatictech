@@ -52,7 +52,9 @@ impl PostSchema for Post {
     }
 }
 
-#[juniper::object(Context=Context)]
+#[juniper::object(
+    name="Post",
+    Context=Context)]
 impl Box<dyn PostSchema> {
     fn id(&self) -> &i32 {
         &self.id()

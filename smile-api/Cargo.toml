@@ -10,18 +10,18 @@ name = "smile_api_lib"
 path = "src/lib.rs"
 
 [dependencies]
-actix-web = "1.0.8"
-actix = "0.8.3"
-actix-cors = "0.1.0"
+actix-web = "2.0.0-rc"
+actix-rt = "1.0.0"
+actix-cors = "0.2"
 diesel-derive-enum = { version = "0.4", features = ["mysql"] }
 async-std = { git = 'https://github.com/stjepang/async-std', branch = 'new-scheduler' }
-actix-identity = "0.1.0"
-serde_json = "1.0.41"
-serde_derive = "1.0.102"
-serde = "1.0.102"
-jsonwebtoken = "6.0.1"
+actix-identity = "0.2.0"
+serde_json = "1.0"
+serde_derive = "1.0"
+serde = "1.0"
+jsonwebtoken = "7.0.0-alpha.2"
 dotenv = "0.15.0"
-chrono = { version = "0.4.9", features = ["serde"] }
+chrono = { version = "0.4.10", features = ["serde"] }
 uuid = { version = "0.8", features = ["serde", "v4"] }
 lazy_static = "1.4.0"
 bcrypt = "0.6.1"

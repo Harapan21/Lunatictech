@@ -15,7 +15,7 @@ const HOSTNAME: &'static str = "127.0.0.1:8088";
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     println!("{}", NICKNAME);
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         let schema = std::sync::Arc::new(graphql::schema::create_schema());
         App::new()
             .wrap(IdentityService::new(
@@ -36,7 +36,8 @@ async fn main() -> std::io::Result<()> {
                         header::CONTENT_TYPE,
                         header::ACCEPT,
                     ])
-                    .max_age(3600),
+                    .max_age(3600)
+                    .finish(),
             )
             .data(establish_connection())
             .service(web::resource("/graphql").route(web::post().to(graphql::handler::api)))
@@ -44,6 +45,5 @@ async fn main() -> std::io::Result<()> {
     })
     .bind(HOSTNAME)?
     .start()
-    .await;
-    println!("Listen  {}", HOSTNAME);
+    .await
 }

@@ -34,7 +34,7 @@ impl Handler<i32, PostInput> for Post {
         insert_into(post)
             .values(input)
             .execute(connection)
-            .map(|e| true)
+            .map(|_| true)
             .map_err(SmileError::from)
     }
 }
