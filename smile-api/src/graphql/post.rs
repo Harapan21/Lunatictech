@@ -1,13 +1,16 @@
 use super::category::CategorySchema;
 use crate::graphql::schema::Context;
+use crate::graphql::user::UserSchema;
+use crate::models::handler::Handler;
 use crate::models::node::CategoryNode;
 use crate::models::post::{Post, StatusPost};
+use crate::models::user::User;
 use chrono::prelude::*;
 use diesel::prelude::*;
 
 pub trait PostSchema {
     fn id(&self) -> &i32;
-    fn author(&self) -> &Option<String>;
+    fn author(&self, context: &Context) -> Option<Box<dyn UserSchema>>;
     fn title(&self) -> &Option<String>;
     fn createdAt(&self) -> &NaiveDateTime;
     fn content(&self) -> &Option<String>;
@@ -21,8 +24,14 @@ impl PostSchema for Post {
     fn id(&self) -> &i32 {
         &self.id
     }
-    fn author(&self) -> &Option<String> {
-        &self.author_id
+    fn author(&self, context: &Context) -> Option<Box<dyn UserSchema>> {
+        if let Some(user_id) = &self.author_id {
+            return match User::find_by_id(user_id, &context.conn) {
+                Ok(e) => Some(e),
+                Err(_) => None,
+            };
+        }
+        None
     }
     fn title(&self) -> &Option<String> {
         &self.title
@@ -59,8 +68,8 @@ impl Box<dyn PostSchema> {
     fn id(&self) -> &i32 {
         &self.id()
     }
-    fn author(&self) -> &Option<String> {
-        &self.author()
+    fn author(&self, context: &Context) -> Option<Box<dyn UserSchema>> {
+        self.author(context)
     }
     fn title(&self) -> &Option<String> {
         &self.title()
@@ -80,7 +89,7 @@ impl Box<dyn PostSchema> {
     fn last_edited_by(&self) -> &Option<String> {
         &self.last_edited_by()
     }
-    fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>> {
+    fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema + 'static>> {
         self.category(context)
     }
 }

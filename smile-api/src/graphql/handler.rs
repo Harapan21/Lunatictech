@@ -24,14 +24,13 @@ pub async fn api(
         Some(token) => Some(Auth::from(token).get_id_authorize().ok().unwrap()),
         None => None,
     };
-    let handler = async move {
+    let handler = web::block(move || {
         let mysql_poll = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
         let context = create_context(aunt_id, mysql_poll);
         let res = data.execute(&st, &context);
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
-    }
-    .await
-    .map_err(Error::from)?;
+    })
+    .await?;
 
     Ok(HttpResponse::Ok()
         .content_type("application/json")

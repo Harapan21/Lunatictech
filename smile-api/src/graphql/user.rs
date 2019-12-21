@@ -4,7 +4,7 @@ use crate::models::post::Post;
 use crate::models::user::User;
 use chrono::prelude::*;
 
-trait UserSchema {
+pub trait UserSchema {
     fn id(&self) -> &str;
     fn username(&self) -> &str;
     fn email(&self) -> &Option<String>;
@@ -55,7 +55,9 @@ impl UserSchema for User {
     }
 }
 
-#[juniper::object(Context=Context)]
+#[juniper::object(
+    name="User",
+    Context=Context)]
 impl Box<dyn UserSchema> {
     fn id(&self) -> &str {
         &self.id()
@@ -81,7 +83,7 @@ impl Box<dyn UserSchema> {
     fn isAdmin(&self) -> &Option<bool> {
         &self.isAdmin()
     }
-    fn post(&self, context: &Context) -> Vec<Box<dyn PostSchema>> {
+    fn post(&self, context: &Context) -> Vec<Box<dyn PostSchema + 'static>> {
         self.post(context)
     }
 }

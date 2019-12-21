@@ -53,8 +53,8 @@ impl From<String> for Auth {
 }
 
 impl Auth {
-    pub fn new(id: String) -> Self {
-        let claim = Claims::new(id);
+    pub fn new(id: &String) -> Self {
+        let claim = Claims::new(id.clone());
         match claim.create_token() {
             Ok(token) => Auth {
                 token: Some(token),
@@ -79,7 +79,7 @@ mod tests {
     #[test]
     fn test_token_is_valid() {
         let id = "dummy".to_string();
-        let auth = Auth::new(id.clone()).get_id_authorize().ok().unwrap();
+        let auth = Auth::new(&id).get_id_authorize().ok().unwrap();
         assert_eq!(id, auth);
     }
 }

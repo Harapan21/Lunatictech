@@ -5,9 +5,8 @@ use crate::errors::SmileError;
 use crate::models::handler::Handler;
 // use crate::models::node::PostNode;
 use crate::models::post::Post;
-// use crate::models::user::{User, UserInput};
-// use crate::utils::Auth;
-// use bcrypt::verify;
+use crate::models::user::{User, UserInput};
+use crate::utils::Auth;
 // use diesel::prelude::*;
 use juniper::RootNode;
 use std::sync::Arc;
@@ -23,7 +22,7 @@ pub struct Query;
 
 #[juniper::object(Context = Context)]
 impl Query {
-    fn post(context: &Context) -> Result<Vec<Box<dyn PostSchema>>, SmileError> {
+    fn post(context: &Context) -> Result<Vec<Box<dyn PostSchema + 'static>>, SmileError> {
         let post = Post::list(&context.conn)?;
         Ok(post.into_iter().map(|e| e as Box<dyn PostSchema>).collect())
     }
@@ -34,7 +33,11 @@ pub struct Mutation;
 #[juniper::object(
     Context = Context,
 )]
-impl Mutation {}
+impl Mutation {
+    fn login(username: String, password: String, context: &Context) -> Result<Auth, SmileError> {
+        User::login(username, password, &context.conn)
+    }
+}
 
 pub type Schema = RootNode<'static, Query, Mutation>;
 

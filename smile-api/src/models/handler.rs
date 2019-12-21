@@ -3,6 +3,8 @@ use super::category::{Category, CategoryInput};
 use super::post::{Post, PostInput};
 use super::user::{User, UserInput};
 use crate::errors::SmileError;
+use crate::utils::Auth;
+use bcrypt::verify;
 use bcrypt::{hash, DEFAULT_COST};
 use diesel::{insert_into, prelude::*, update};
 
@@ -106,24 +108,6 @@ impl Handler<String, UserInput> for User {
     //     Future::join(is_username, is_email)
     // }
 
-    // fn login(
-    //     &self,
-    //     input: Box<UserInput>,
-    //     connection: &MysqlConnection,
-    // ) -> Result<Auth, SmileError> {
-    //     use crate::schema::usr_smile::dsl::*;
-    //     let user = usr_smile
-    //         .filter(username.eq(&self.username))
-    //         .first::<User>(connection)?;
-    //     let is_verify = verify(&self.password, &user.password)
-    //         .map_err(|_e| SmileError::PasswordNotMatch("Password Wrong".to_owned()))?;
-    //     return if is_verify {
-    //         OK(Auth::new(user.user_id))
-    //     } else {
-    //         Err(SmileError::WrongPassword("password wrong".to_owned()))
-    //     };
-    // }
-
     fn input(mut input: UserInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::usr_smile::dsl::*;
         input.user_id = uuid::Uuid::new_v4().to_string();
@@ -133,5 +117,25 @@ impl Handler<String, UserInput> for User {
             .execute(connection)
             .map_err(SmileError::from)
             .map(|_e| true)
+    }
+}
+
+impl User {
+    pub fn login(
+        input_username: String,
+        input_password: String,
+        connection: &MysqlConnection,
+    ) -> Result<Auth, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        let user = usr_smile
+            .filter(username.eq(&input_username))
+            .first::<User>(connection)?;
+        let is_verify = verify(&input_password, &user.password)
+            .map_err(|_e| SmileError::PasswordNotMatch("Password Wrong".to_owned()))?;
+        return if is_verify {
+            Ok(Auth::new(&user.user_id))
+        } else {
+            Err(SmileError::WrongPassword("password wrong".to_owned()))
+        };
     }
 }

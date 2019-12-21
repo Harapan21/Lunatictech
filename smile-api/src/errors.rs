@@ -33,6 +33,12 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "NOT_FOUND"
                 }),
             ),
+            SmileError::WrongPassword(msg) => juniper::FieldError::new(
+                msg,
+                graphql_value!({
+                    "type": "PASSWORD_WRONG"
+                }),
+            ),
             SmileError::Validation(error) => {
                 let format: (&'static str, &'static str) = match error {
                     ValidationError::Email(email) => (email, "EMAIL_NOT_VALID"),

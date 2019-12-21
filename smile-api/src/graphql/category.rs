@@ -36,7 +36,10 @@ impl Box<dyn CategorySchema> {
     fn name(&self) -> &str {
         &self.name()
     }
-    fn parent(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError> {
+    fn parent(
+        &self,
+        context: &Context,
+    ) -> Result<Option<Box<dyn CategorySchema + 'static>>, SmileError> {
         self.parent(context)
     }
 }
