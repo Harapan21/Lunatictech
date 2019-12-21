@@ -66,7 +66,7 @@ impl Auth {
             },
         }
     }
-    pub fn get_id_authorize(self) -> Result<String, SmileError> {
+    pub fn verify(self) -> Result<String, SmileError> {
         let token = self.token.unwrap();
         Claims::translate_token(token).map(|e| e.id.into())
     }
@@ -77,9 +77,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_token_is_valid() {
+    fn test_token_is_valid() -> Result<(), SmileError> {
         let id = "dummy".to_string();
-        let auth = Auth::new(&id).get_id_authorize().ok().unwrap();
+        let auth = Auth::new(&id).verify()?;
         assert_eq!(id, auth);
+        Ok(())
     }
 }

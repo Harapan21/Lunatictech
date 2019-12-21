@@ -21,15 +21,15 @@ pub async fn api(
     pool: web::Data<MysqlPool>,
 ) -> Result<HttpResponse, Error> {
     let aunt_id: Option<String> = match id.identity() {
-        Some(token) => Some(Auth::from(token).get_id_authorize().ok().unwrap()),
+        Some(token) => Some(Auth::from(token).verify().unwrap()),
         None => None,
     };
-    let handler = web::block(move || {
+    let handler = async move {
         let mysql_poll = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
         let context = create_context(aunt_id, mysql_poll);
         let res = data.execute(&st, &context);
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
-    })
+    }
     .await?;
 
     Ok(HttpResponse::Ok()

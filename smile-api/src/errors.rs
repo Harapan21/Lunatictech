@@ -2,11 +2,12 @@ use bcrypt::BcryptError;
 use diesel::result;
 use std::fmt;
 
+#[derive(Debug)]
 pub enum ValidationError {
     Username(&'static str),
     Email(&'static str),
 }
-
+#[derive(Debug)]
 pub enum SmileError {
     HashError(BcryptError),
     DBError(result::Error),
