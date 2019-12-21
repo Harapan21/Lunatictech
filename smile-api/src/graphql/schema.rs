@@ -7,6 +7,7 @@ use crate::models::handler::Handler;
 use crate::models::post::Post;
 use crate::models::user::{User, UserInput};
 use crate::utils::Auth;
+use actix_identity::Identity;
 // use diesel::prelude::*;
 use juniper::RootNode;
 use std::sync::Arc;
@@ -14,6 +15,7 @@ use std::sync::Arc;
 pub struct Context {
     pub user_id: Option<String>,
     pub conn: Arc<MysqlPoolConnection>,
+    pub id: Arc<Identity>,
 }
 
 impl juniper::Context for Context {}
@@ -35,16 +37,23 @@ pub struct Mutation;
 )]
 impl Mutation {
     fn login(username: String, password: String, context: &Context) -> Result<Auth, SmileError> {
-        User::login(username, password, &context.conn)
+        let me = User::login(username, password, &context.conn)?;
+        context.id.remember(me.token.clone().unwrap());
+        Ok(me)
     }
 }
 
 pub type Schema = RootNode<'static, Query, Mutation>;
 
-pub fn create_context(user_id: Option<String>, mysql_pool: MysqlPoolConnection) -> Context {
+pub fn create_context(
+    user_id: Option<String>,
+    mysql_pool: MysqlPoolConnection,
+    id: Arc<Identity>,
+) -> Context {
     Context {
         user_id,
         conn: Arc::new(mysql_pool),
+        id,
     }
 }
 

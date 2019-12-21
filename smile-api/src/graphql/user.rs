@@ -44,14 +44,16 @@ impl UserSchema for User {
     fn post(&self, context: &Context) -> Vec<Box<dyn PostSchema>> {
         use diesel::prelude::*;
         let conn: &MysqlConnection = &context.conn;
-        let post_result: Vec<Box<Post>> = Post::belonging_to(self)
+        let post_result: Vec<Box<dyn PostSchema>> = Post::belonging_to(self)
             .load(conn)
-            .map(|e: Vec<Post>| e.into_iter().map(Box::from).collect())
+            .map(|e: Vec<Post>| {
+                e.into_iter()
+                    .map(Box::from)
+                    .map(|e| e as Box<dyn PostSchema>)
+                    .collect()
+            })
             .expect("failed to laod post");
         post_result
-            .into_iter()
-            .map(|e| e as Box<dyn PostSchema>)
-            .collect()
     }
 }
 
