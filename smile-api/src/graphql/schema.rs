@@ -59,12 +59,21 @@ impl Mutation {
         }
         Ok(Default::default())
     }
-    fn post(input: PostInput, categories: Vec<i32>, context: &Context) -> Result<bool, SmileError> {
+    fn post(
+        mut input: PostInput,
+        categories: Option<Vec<i32>>,
+        context: &Context,
+    ) -> Result<bool, SmileError> {
         use crate::schema::post::dsl::*;
         let conn: &MysqlConnection = &context.conn;
-        if Post::input(input, conn)? && !categories.is_empty() {
-            let result = post.order(id.desc()).first::<Post>(conn)?;
-            return CategoryNode::push_node(&context.conn, categories, result.id);
+        if let Some(aunt_id) = &context.user_id {
+            input.author_id = Some(aunt_id.to_owned());
+            if Post::input(input, conn)? {
+                let result = post.order(id.desc()).first::<Post>(conn)?;
+                return CategoryNode::push_node(&context.conn, categories, result.id);
+            }
+        } else {
+            return Err(SmileError::Unauthorized);
         }
         Ok(false)
     }

@@ -34,11 +34,12 @@ pub struct CategoryNodeField {
 impl CategoryNode {
     pub fn push_node(
         conn: &MysqlConnection,
-        categories: Vec<i32>,
+        categories: Option<Vec<i32>>,
         post_id: i32,
     ) -> Result<bool, SmileError> {
         use crate::schema::category_node::dsl::*;
         let values: Vec<CategoryNodeField> = categories
+            .unwrap_or(vec![1])
             .into_iter()
             .map(|cat_id| CategoryNodeField {
                 categoryId: cat_id,
