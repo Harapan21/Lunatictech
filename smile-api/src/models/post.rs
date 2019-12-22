@@ -1,6 +1,11 @@
 use super::user::User;
+use crate::errors::SmileError;
+use crate::models::embed::{Embed, EmbedInput};
+use crate::models::node::CategoryNode;
 use crate::schema::post;
+use async_std::task;
 use chrono::prelude::*;
+use diesel::{prelude::*, update};
 
 #[derive(Debug, Serialize, Deserialize, DbEnum, PartialEq, Clone)]
 #[DieselType = "Status"]
@@ -49,4 +54,47 @@ pub struct PostInput {
     pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
+}
+
+impl Post {
+    pub fn handler_input_node(
+        vec_category: Option<Vec<i32>>,
+        embed_value: Option<EmbedInput>,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        let push_task = async move {
+            let result_cat = Self::push_cat_node(vec_category, connection).await?;
+            let result_embed: Option<bool> = if embed_value.is_some() {
+                Some(Self::push_embed_node(embed_value, connection).await?)
+            } else {
+                None
+            };
+            if result_cat && (result_embed.is_none() || result_embed == Some(true)) {
+                Ok(true)
+            } else {
+                Ok(false)
+            }
+        };
+        return task::block_on(push_task);
+    }
+    pub(self) async fn push_cat_node(
+        categories: Option<Vec<i32>>,
+        conn: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        use crate::schema::post::dsl::*;
+        let result = post.order(id.desc()).first::<Post>(conn)?;
+        return CategoryNode::push_node(conn, categories, result.id);
+    }
+    pub(self) async fn push_embed_node(
+        embed_input: Option<EmbedInput>,
+        conn: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        use crate::schema::embed::dsl::*;
+        let result = embed.order(id.desc()).first::<Embed>(conn)?;
+        return update(embed.find(result.id))
+            .set(embed_input)
+            .execute(conn)
+            .map(|_| true)
+            .map_err(SmileError::from);
+    }
 }

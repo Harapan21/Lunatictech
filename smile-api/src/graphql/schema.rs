@@ -1,9 +1,11 @@
 use crate::db::MysqlPoolConnection;
 use crate::errors::SmileError;
+use crate::graphql::category::CategorySchema;
 use crate::graphql::post::PostSchema;
 use crate::graphql::user::UserSchema;
+use crate::models::category::{Category, CategoryInput};
+use crate::models::embed::EmbedInput;
 use crate::models::handler::Handler;
-use crate::models::node::CategoryNode;
 use crate::models::post::{Post, PostInput};
 use crate::models::user::{User, UserInput};
 use crate::utils::Auth;
@@ -34,6 +36,13 @@ impl Query {
         let post = Post::list(&context.conn)?;
         Ok(post.into_iter().map(|e| e as Box<dyn PostSchema>).collect())
     }
+    fn category(context: &Context) -> Result<Vec<Box<dyn CategorySchema + 'static>>, SmileError> {
+        Category::list(&context.conn).map(|list| {
+            list.into_iter()
+                .map(|item| item as Box<dyn CategorySchema>)
+                .collect()
+        })
+    }
 }
 
 pub struct Mutation;
@@ -62,20 +71,22 @@ impl Mutation {
     fn post(
         mut input: PostInput,
         categories: Option<Vec<i32>>,
+        embed: Option<EmbedInput>,
         context: &Context,
     ) -> Result<bool, SmileError> {
-        use crate::schema::post::dsl::*;
         let conn: &MysqlConnection = &context.conn;
         if let Some(aunt_id) = &context.user_id {
             input.author_id = Some(aunt_id.to_owned());
             if Post::input(input, conn)? {
-                let result = post.order(id.desc()).first::<Post>(conn)?;
-                return CategoryNode::push_node(&context.conn, categories, result.id);
+                return Post::handler_input_node(categories, embed, conn);
             }
         } else {
             return Err(SmileError::Unauthorized);
         }
         Ok(false)
+    }
+    fn category(input: CategoryInput, context: &Context) -> Result<bool, SmileError> {
+        Category::input(input, &context.conn)
     }
 }
 

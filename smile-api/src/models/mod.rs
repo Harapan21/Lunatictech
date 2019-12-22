@@ -1,5 +1,6 @@
 pub mod category;
 pub mod drive;
+pub mod embed;
 pub mod handler;
 pub mod node;
 pub mod post;

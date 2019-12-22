@@ -1,6 +1,7 @@
 use super::category::CategorySchema;
 use crate::graphql::schema::Context;
 use crate::graphql::user::UserSchema;
+use crate::models::embed::Embed;
 use crate::models::handler::Handler;
 use crate::models::node::CategoryNode;
 use crate::models::post::{Post, StatusPost};
@@ -17,9 +18,9 @@ pub trait PostSchema {
     fn status(&self) -> &Option<StatusPost>;
     fn last_edited_at(&self) -> &Option<NaiveDateTime>;
     fn last_edited_by(&self) -> &Option<String>;
+    fn embed(&self, context: &Context) -> Embed;
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>>;
 }
-
 impl PostSchema for Post {
     fn id(&self) -> &i32 {
         &self.id
@@ -50,6 +51,12 @@ impl PostSchema for Post {
     }
     fn last_edited_by(&self) -> &Option<String> {
         &self.last_edited_by
+    }
+    fn embed(&self, context: &Context) -> Embed {
+        let conn: &MysqlConnection = &context.conn;
+        Embed::belonging_to(self)
+            .first::<Embed>(conn)
+            .expect("failed to load embd")
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>> {
         let conn: &MysqlConnection = &context.conn;
@@ -88,6 +95,9 @@ impl Box<dyn PostSchema> {
     }
     fn last_edited_by(&self) -> &Option<String> {
         &self.last_edited_by()
+    }
+    fn embed(&self, context: &Context) -> Embed {
+        self.embed(context)
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema + 'static>> {
         self.category(context)
