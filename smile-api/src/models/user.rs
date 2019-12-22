@@ -22,7 +22,7 @@ pub struct User {
 #[table_name = "usr_smile"]
 pub struct UserInput {
     #[serde(skip_deserializing)]
-    pub user_id: String,
+    pub user_id: Option<String>,
     pub username: String,
     pub email: Option<String>,
     pub fullname: String,

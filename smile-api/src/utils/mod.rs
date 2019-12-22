@@ -51,7 +51,14 @@ impl From<String> for Auth {
         }
     }
 }
-
+impl Default for Auth {
+    fn default() -> Self {
+        Auth {
+            token: None,
+            login: Some(false),
+        }
+    }
+}
 impl Auth {
     pub fn new(id: &String) -> Self {
         let claim = Claims::new(id.clone());
@@ -60,10 +67,7 @@ impl Auth {
                 token: Some(token),
                 login: Some(true),
             },
-            Err(_) => Auth {
-                token: None,
-                login: Some(false),
-            },
+            Err(_) => Default::default(),
         }
     }
     pub fn verify(self) -> Result<String, SmileError> {

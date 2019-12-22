@@ -6,6 +6,7 @@
 extern crate actix_cors;
 extern crate actix_identity;
 extern crate jsonwebtoken as jwt;
+extern crate rayon;
 #[macro_use]
 extern crate juniper;
 extern crate serde;

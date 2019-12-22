@@ -6,7 +6,7 @@ use crate::errors::SmileError;
 use crate::utils::Auth;
 use bcrypt::verify;
 use bcrypt::{hash, DEFAULT_COST};
-use diesel::{insert_into, prelude::*, update};
+use diesel::{insert_into, prelude::*};
 
 pub trait Handler<T, M> {
     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
@@ -34,7 +34,7 @@ impl Handler<i32, PostInput> for Post {
     fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::post::dsl::*;
         insert_into(post)
-            .values(input)
+            .values(&input)
             .execute(connection)
             .map(|_| true)
             .map_err(SmileError::from)
@@ -66,7 +66,7 @@ impl Handler<i32, CategoryInput> for Category {
             .values(&input)
             .execute(connection)
             .map_err(SmileError::from)
-            .map(|_e| true)
+            .map(|_| true)
     }
 }
 
@@ -88,34 +88,18 @@ impl Handler<String, UserInput> for User {
             .map(Box::new)
             .map_err(SmileError::from)
     }
-    // fn validation(
-    //     &self,
-    //     input: &UserInput,
-    //     connection: &MysqlConnection,
-    // ) -> Future<Item = (bool, bool)> {
-    //     use crate::schema::usr_smile::dsl::*;
-    //     let is_username = usr_smile
-    //         .filter(username.eq(input.username))
-    //         .load::<User>(connection)
-    //         .map(|e| true)
-    //         .map_err(|e| false);
-    //     let is_email = usr_smile
-    //         .filter(email.eq(input.email))
-    //         .load::<User>(connection)
-    //         .map(|e| true)
-    //         .map_err(|e| false);
-
-    //     Future::join(is_username, is_email)
-    // }
 
     fn input(mut input: UserInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::usr_smile::dsl::*;
-        input.user_id = uuid::Uuid::new_v4().to_string();
+        input.user_id = Some(uuid::Uuid::new_v4().to_string());
         input.password = hash(input.password, DEFAULT_COST)?;
         insert_into(usr_smile)
             .values(&input)
             .execute(connection)
-            .map_err(SmileError::from)
+            .map_err(|e| {
+                println!("{:?}", e);
+                SmileError::from(e)
+            })
             .map(|_e| true)
     }
 }

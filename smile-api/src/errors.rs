@@ -3,17 +3,11 @@ use diesel::result;
 use std::fmt;
 
 #[derive(Debug)]
-pub enum ValidationError {
-    Username(&'static str),
-    Email(&'static str),
-}
-#[derive(Debug)]
 pub enum SmileError {
     HashError(BcryptError),
     DBError(result::Error),
     PasswordNotMatch(String),
     JwtError(jsonwebtoken::errors::Error),
-    Validation(ValidationError),
     Unauthorized,
     WrongPassword(String),
     Unreachable(&'static str),
@@ -28,6 +22,19 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "Unauthorized"
                 }),
             ),
+            SmileError::DBError(result::Error::DatabaseError(_, err)) => {
+                let message = err.column_name().unwrap();
+                println!("{}", err.details().unwrap());
+                let format = match message {
+                    "username" => "EMAIL_NOT_VALID",
+                    "email" => "USERNAME_NOT_VALID",
+                    _ => unreachable!(),
+                };
+                return juniper::FieldError::new(
+                    format!("{}, exist", message),
+                    graphql_value!({ "type": (format) }),
+                );
+            }
             SmileError::DBError(result::Error::NotFound) => juniper::FieldError::new(
                 "User Not found",
                 graphql_value!({
@@ -40,19 +47,6 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "PASSWORD_WRONG"
                 }),
             ),
-            SmileError::Validation(error) => {
-                let format: (&'static str, &'static str) = match error {
-                    ValidationError::Email(email) => (email, "EMAIL_NOT_VALID"),
-                    ValidationError::Username(username) => (username, "USERNAME_NOT_VALID"),
-                };
-                return juniper::FieldError::new(
-                    format!("{}, exist", format.0),
-                    graphql_value!({
-                        "type": ( format.1 )
-                    }),
-                );
-            }
-
             _ => juniper::FieldError::new(
                 "Internal server Error",
                 graphql_value!({
@@ -92,7 +86,7 @@ impl fmt::Display for SmileError {
             SmileError::JwtError(error) => write!(f, "{}", error),
             SmileError::Unreachable(location) => write!(f, "unreachable in {}", location),
             SmileError::Unauthorized => write!(f, "access graphql without token"),
-            _ => write!(f, "other error"),
+            // _ => write!(f, "other error"),
         }
     }
 }

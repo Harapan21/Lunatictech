@@ -27,21 +27,18 @@ pub struct CategoryNode {
 #[derive(Insertable, Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[table_name = "category_node"]
 pub struct CategoryNodeField {
-    categoryId: Option<i32>,
+    categoryId: i32,
     postId: i32,
 }
-
-pub type Categories = Option<Vec<Option<i32>>>;
 
 impl CategoryNode {
     pub fn push_node(
         conn: &MysqlConnection,
-        categories: Categories,
+        categories: Vec<i32>,
         post_id: i32,
     ) -> Result<bool, SmileError> {
         use crate::schema::category_node::dsl::*;
         let values: Vec<CategoryNodeField> = categories
-            .unwrap_or(vec![None])
             .into_iter()
             .map(|cat_id| CategoryNodeField {
                 categoryId: cat_id,
