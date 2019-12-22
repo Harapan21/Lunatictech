@@ -23,16 +23,17 @@ impl juniper::IntoFieldError for SmileError {
                 }),
             ),
             SmileError::DBError(result::Error::DatabaseError(_, err)) => {
-                let message = err.column_name().unwrap();
-                println!("{}", err.details().unwrap());
-                let format = match message {
-                    "username" => "EMAIL_NOT_VALID",
-                    "email" => "USERNAME_NOT_VALID",
-                    _ => unreachable!(),
+                let message = err.message();
+                let format = if message.contains("username") {
+                    "USERNAME_NOT_VALID"
+                } else if message.contains("email") {
+                    "EMAIL_NOT_VALID"
+                } else {
+                    ""
                 };
                 return juniper::FieldError::new(
                     format!("{}, exist", message),
-                    graphql_value!({ "type": (format) }),
+                    graphql_value!({ "type": format }),
                 );
             }
             SmileError::DBError(result::Error::NotFound) => juniper::FieldError::new(
