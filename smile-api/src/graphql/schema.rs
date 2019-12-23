@@ -69,6 +69,7 @@ impl Mutation {
         Ok(Default::default())
     }
     fn post(
+        id: Option<i32>,
         mut input: PostInput,
         categories: Option<Vec<i32>>,
         embed: Option<EmbedInput>,
