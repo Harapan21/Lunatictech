@@ -1,8 +1,4 @@
-#![allow(
-    non_snake_case,
-    proc_macro_derive_resolution_fallback,
-    non_camel_case_types
-)]
+#![allow(non_snake_case, proc_macro_derive_resolution_fallback, non_camel_case_types)]
 extern crate actix_cors;
 extern crate actix_identity;
 extern crate jsonwebtoken as jwt;

@@ -22,10 +22,7 @@ pub struct Auth {
 
 impl Claims {
     pub fn new(id: String) -> Self {
-        Claims {
-            id,
-            exp: (Local::now() + Duration::hours(24)).timestamp() as usize,
-        }
+        Claims { id, exp: (Local::now() + Duration::hours(24)).timestamp() as usize }
     }
     pub fn create_token(&self) -> Result<String, SmileError> {
         let mut header = Header::default();
@@ -33,40 +30,27 @@ impl Claims {
         Ok(encode(&header, self, PRIVATE_KEY.as_ref())?)
     }
     pub fn translate_token(token: String) -> Result<Claims, SmileError> {
-        decode::<Claims>(
-            &token,
-            PRIVATE_KEY.as_ref(),
-            &Validation::new(Algorithm::HS256),
-        )
-        .map(|data| data.claims.into())
-        .map_err(|e| SmileError::JwtError(e))
+        decode::<Claims>(&token, PRIVATE_KEY.as_ref(), &Validation::new(Algorithm::HS256))
+            .map(|data| data.claims.into())
+            .map_err(|e| SmileError::JwtError(e))
     }
 }
 
 impl From<String> for Auth {
     fn from(token: String) -> Self {
-        Auth {
-            token: Some(token),
-            login: None,
-        }
+        Auth { token: Some(token), login: None }
     }
 }
 impl Default for Auth {
     fn default() -> Self {
-        Auth {
-            token: None,
-            login: Some(false),
-        }
+        Auth { token: None, login: Some(false) }
     }
 }
 impl Auth {
     pub fn new(id: &String) -> Self {
         let claim = Claims::new(id.clone());
         match claim.create_token() {
-            Ok(token) => Auth {
-                token: Some(token),
-                login: Some(true),
-            },
+            Ok(token) => Auth { token: Some(token), login: Some(true) },
             Err(_) => Default::default(),
         }
     }

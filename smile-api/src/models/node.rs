@@ -41,10 +41,7 @@ impl CategoryNode {
         let values: Vec<CategoryNodeField> = categories
             .unwrap_or(vec![1])
             .into_iter()
-            .map(|cat_id| CategoryNodeField {
-                categoryId: cat_id,
-                postId: post_id,
-            })
+            .map(|cat_id| CategoryNodeField { categoryId: cat_id, postId: post_id })
             .collect::<Vec<CategoryNodeField>>();
         diesel::insert_into(category_node)
             .values(&values)

@@ -9,9 +9,7 @@ use std::sync::Arc;
 
 pub fn client() -> HttpResponse {
     let html = graphiql_source("http://127.0.0.1:8088/graphql");
-    HttpResponse::Ok()
-        .content_type("text/html; charset=utf-8")
-        .body(html)
+    HttpResponse::Ok().content_type("text/html; charset=utf-8").body(html)
 }
 
 pub async fn api(
@@ -33,7 +31,5 @@ pub async fn api(
     }
     .await?;
 
-    Ok(HttpResponse::Ok()
-        .content_type("application/json")
-        .body(handler))
+    Ok(HttpResponse::Ok().content_type("application/json").body(handler))
 }

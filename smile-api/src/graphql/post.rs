@@ -54,9 +54,7 @@ impl PostSchema for Post {
     }
     fn embed(&self, context: &Context) -> Embed {
         let conn: &MysqlConnection = &context.conn;
-        Embed::belonging_to(self)
-            .first::<Embed>(conn)
-            .expect("failed to load embd")
+        Embed::belonging_to(self).first::<Embed>(conn).expect("failed to load embd")
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>> {
         let conn: &MysqlConnection = &context.conn;

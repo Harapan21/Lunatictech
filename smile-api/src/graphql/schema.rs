@@ -37,11 +37,8 @@ impl Query {
         Ok(post.into_iter().map(|e| e as Box<dyn PostSchema>).collect())
     }
     fn category(context: &Context) -> Result<Vec<Box<dyn CategorySchema + 'static>>, SmileError> {
-        Category::list(&context.conn).map(|list| {
-            list.into_iter()
-                .map(|item| item as Box<dyn CategorySchema>)
-                .collect()
-        })
+        Category::list(&context.conn)
+            .map(|list| list.into_iter().map(|item| item as Box<dyn CategorySchema>).collect())
     }
 }
 
@@ -98,11 +95,7 @@ pub fn create_context(
     mysql_pool: MysqlPoolConnection,
     id: Arc<Identity>,
 ) -> Context {
-    Context {
-        user_id,
-        conn: Arc::new(mysql_pool),
-        id,
-    }
+    Context { user_id, conn: Arc::new(mysql_pool), id }
 }
 
 pub fn create_schema() -> Schema {

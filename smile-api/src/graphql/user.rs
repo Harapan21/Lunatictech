@@ -47,10 +47,7 @@ impl UserSchema for User {
         let post_result: Vec<Box<dyn PostSchema>> = Post::belonging_to(self)
             .load(conn)
             .map(|e: Vec<Post>| {
-                e.into_iter()
-                    .map(Box::from)
-                    .map(|e| e as Box<dyn PostSchema>)
-                    .collect()
+                e.into_iter().map(Box::from).map(|e| e as Box<dyn PostSchema>).collect()
             })
             .expect("failed to laod post");
         post_result
