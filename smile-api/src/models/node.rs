@@ -19,16 +19,16 @@ use diesel::prelude::*;
 #[belongs_to(Post, foreign_key = "postId")]
 #[table_name = "category_node"]
 pub struct CategoryNode {
-    pub id: i32,
+    pub id:         i32,
     pub categoryId: Option<i32>,
-    pub postId: i32,
+    pub postId:     i32,
 }
 
 #[derive(Insertable, Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[table_name = "category_node"]
 pub struct CategoryNodeField {
     categoryId: i32,
-    postId: i32,
+    postId:     i32,
 }
 
 impl CategoryNode {

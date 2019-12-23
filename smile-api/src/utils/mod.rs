@@ -10,7 +10,7 @@ lazy_static! {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
-    id: String,
+    id:  String,
     exp: usize,
 }
 

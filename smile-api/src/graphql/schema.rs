@@ -16,8 +16,8 @@ use std::sync::Arc;
 
 pub struct Context {
     pub user_id: Option<String>,
-    pub conn: Arc<MysqlPoolConnection>,
-    pub id: Arc<Identity>,
+    pub conn:    Arc<MysqlPoolConnection>,
+    pub id:      Arc<Identity>,
 }
 
 impl juniper::Context for Context {}
