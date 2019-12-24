@@ -1,7 +1,8 @@
 use super::schema::Context;
-use crate::errors::SmileError;
-use crate::models::category::Category;
-use crate::models::handler::Handler;
+use crate::{
+    errors::SmileError,
+    models::{category::Category, handler::Handler},
+};
 
 pub trait CategorySchema {
     fn id(&self) -> &i32;

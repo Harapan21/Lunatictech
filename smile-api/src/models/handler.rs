@@ -1,11 +1,11 @@
 extern crate uuid;
-use super::category::{Category, CategoryInput};
-use super::post::{Post, PostInput};
-use super::user::{User, UserInput};
-use crate::errors::SmileError;
-use crate::utils::Auth;
-use bcrypt::verify;
-use bcrypt::{hash, DEFAULT_COST};
+use super::{
+    category::{Category, CategoryInput},
+    post::{Post, PostInput},
+    user::{User, UserInput},
+};
+use crate::{errors::SmileError, utils::Auth};
+use bcrypt::{hash, verify, DEFAULT_COST};
 use diesel::{insert_into, prelude::*};
 
 pub trait Handler<T, M> {
@@ -102,7 +102,7 @@ impl User {
         return if is_verify {
             Ok(Auth::new(&user.user_id))
         } else {
-            Err(SmileError::WrongPassword("password wrong".to_owned()))
+            Err(SmileError::WrongPassword("Password Wrong".to_owned()))
         };
     }
 }

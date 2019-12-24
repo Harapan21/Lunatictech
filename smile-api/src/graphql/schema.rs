@@ -1,23 +1,26 @@
-use crate::db::MysqlPoolConnection;
-use crate::errors::SmileError;
-use crate::graphql::category::CategorySchema;
-use crate::graphql::post::PostSchema;
-use crate::graphql::user::UserSchema;
-use crate::models::category::{Category, CategoryInput};
-use crate::models::embed::EmbedInput;
-use crate::models::handler::Handler;
-use crate::models::post::{Post, PostInput};
-use crate::models::user::{User, UserInput};
-use crate::utils::Auth;
+use crate::{
+    db::MysqlPoolConnection,
+    errors::SmileError,
+    graphql::{category::CategorySchema, post::PostSchema, user::UserSchema},
+    models::{
+        category::{Category, CategoryInput},
+        embed::EmbedInput,
+        handler::Handler,
+        post::{Post, PostInput},
+        user::{User, UserInput},
+    },
+    utils::Auth,
+};
 use actix_identity::Identity;
+use async_std::task;
 use diesel::prelude::*;
 use juniper::RootNode;
 use std::sync::Arc;
 
 pub struct Context {
     pub user_id: Option<String>,
-    pub conn:    Arc<MysqlPoolConnection>,
-    pub id:      Arc<Identity>,
+    pub conn: Arc<MysqlPoolConnection>,
+    pub id: Arc<Identity>,
 }
 
 impl juniper::Context for Context {}
@@ -55,6 +58,10 @@ impl Mutation {
         }
         Ok(login)
     }
+    fn logout(context: &Context) -> Result<Auth, SmileError> {
+        context.id.forget();
+        Ok(Default::default())
+    }
     fn register(mut input: UserInput, context: &Context) -> Result<Auth, SmileError> {
         if User::input(input.clone(), &context.conn)? {
             let login = User::login(input.username, input.password, &context.conn)?;
@@ -76,7 +83,7 @@ impl Mutation {
         if let Some(aunt_id) = &context.user_id {
             input.author_id = Some(aunt_id.to_owned());
             if Post::input(input, conn)? {
-                return Post::handler_input_node(categories, embed, conn);
+                return task::block_on(Post::handler_input_node(categories, embed, conn));
             }
         } else {
             return Err(SmileError::Unauthorized);

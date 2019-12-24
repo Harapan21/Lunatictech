@@ -3,8 +3,8 @@ use crate::schema::category;
 #[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
 #[table_name = "category"]
 pub struct Category {
-    pub id:       i32,
-    pub name:     String,
+    pub id: i32,
+    pub name: String,
     pub parentId: Option<i32>,
 }
 
@@ -20,6 +20,6 @@ pub struct Category {
 )]
 #[table_name = "category"]
 pub struct CategoryInput {
-    pub name:     String,
+    pub name: String,
     pub parentId: Option<i32>,
 }

@@ -1,9 +1,13 @@
 use super::user::User;
-use crate::errors::SmileError;
-use crate::models::embed::{Embed, EmbedInput};
-use crate::models::node::CategoryNode;
-use crate::schema::post;
-use async_std::task;
+use crate::{
+    errors::SmileError,
+    models::{
+        embed::{Embed, EmbedInput},
+        node::CategoryNode,
+    },
+    schema::post,
+};
+// use async_std::task;
 use chrono::prelude::*;
 use diesel::{prelude::*, update};
 
@@ -23,12 +27,12 @@ pub enum StatusPost {
 #[belongs_to(User, foreign_key = "author_id")]
 #[table_name = "post"]
 pub struct Post {
-    pub id:             i32,
-    pub author_id:      Option<String>,
-    pub title:          Option<String>,
-    pub createdAt:      NaiveDateTime,
-    pub content:        Option<String>,
-    pub status:         Option<StatusPost>,
+    pub id: i32,
+    pub author_id: Option<String>,
+    pub title: Option<String>,
+    pub createdAt: NaiveDateTime,
+    pub content: Option<String>,
+    pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
 }
@@ -47,35 +51,32 @@ pub struct Post {
 #[table_name = "post"]
 pub struct PostInput {
     #[serde(skip)]
-    pub id:             Option<i32>,
-    pub title:          Option<String>,
-    pub content:        Option<String>,
-    pub author_id:      Option<String>,
-    pub status:         Option<StatusPost>,
+    pub id: Option<i32>,
+    pub title: Option<String>,
+    pub content: Option<String>,
+    pub author_id: Option<String>,
+    pub status: Option<StatusPost>,
     pub last_edited_at: Option<NaiveDateTime>,
     pub last_edited_by: Option<String>,
 }
 
 impl Post {
-    pub fn handler_input_node(
+    pub async fn handler_input_node(
         vec_category: Option<Vec<i32>>,
         embed_value: Option<EmbedInput>,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        let push_task = async move {
-            let result_cat = Self::push_cat_node(vec_category, connection).await?;
-            let result_embed: Option<bool> = if embed_value.is_some() {
-                Some(Self::push_embed_node(embed_value, connection).await?)
-            } else {
-                None
-            };
-            if result_cat && (result_embed.is_none() || result_embed == Some(true)) {
-                Ok(true)
-            } else {
-                Ok(false)
-            }
+        let result_cat = Self::push_cat_node(vec_category, connection).await?;
+        let result_embed: Option<bool> = if embed_value.is_some() {
+            Some(Self::push_embed_node(embed_value, connection).await?)
+        } else {
+            None
         };
-        return task::block_on(push_task);
+        if result_cat && (result_embed.is_none() || result_embed == Some(true)) {
+            return Ok(true);
+        } else {
+            return Ok(false);
+        }
     }
     pub(self) async fn push_cat_node(
         categories: Option<Vec<i32>>,
@@ -85,6 +86,7 @@ impl Post {
         let result = post.order(id.desc()).first::<Post>(conn)?;
         return CategoryNode::push_node(conn, categories, result.id);
     }
+
     pub(self) async fn push_embed_node(
         embed_input: Option<EmbedInput>,
         conn: &MysqlConnection,

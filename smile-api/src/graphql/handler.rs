@@ -1,10 +1,8 @@
 use super::schema::{create_context, Schema};
-use crate::db::MysqlPool;
-use crate::utils::Auth;
+use crate::{db::MysqlPool, utils::Auth};
 use actix_identity::Identity;
 use actix_web::{web, Error, HttpResponse};
-use juniper::http::graphiql::graphiql_source;
-use juniper::http::GraphQLRequest;
+use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 use std::sync::Arc;
 
 pub fn client() -> HttpResponse {

@@ -1,5 +1,7 @@
-use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use diesel::{
+    prelude::*,
+    r2d2::{ConnectionManager, Pool, PoolError, PooledConnection},
+};
 use dotenv::dotenv;
 use std::env;
 

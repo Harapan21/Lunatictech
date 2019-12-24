@@ -1,7 +1,5 @@
-use super::post::PostSchema;
-use super::schema::Context;
-use crate::models::post::Post;
-use crate::models::user::User;
+use super::{post::PostSchema, schema::Context};
+use crate::models::{post::Post, user::User};
 use chrono::prelude::*;
 
 pub trait UserSchema {

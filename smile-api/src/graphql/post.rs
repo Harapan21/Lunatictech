@@ -1,11 +1,14 @@
 use super::category::CategorySchema;
-use crate::graphql::schema::Context;
-use crate::graphql::user::UserSchema;
-use crate::models::embed::Embed;
-use crate::models::handler::Handler;
-use crate::models::node::CategoryNode;
-use crate::models::post::{Post, StatusPost};
-use crate::models::user::User;
+use crate::{
+    graphql::{schema::Context, user::UserSchema},
+    models::{
+        embed::Embed,
+        handler::Handler,
+        node::CategoryNode,
+        post::{Post, StatusPost},
+        user::User,
+    },
+};
 use chrono::prelude::*;
 use diesel::prelude::*;
 
