@@ -66,16 +66,15 @@ impl Post {
         embed_value: Option<EmbedInput>,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        let result_cat = Self::push_cat_node(vec_category, connection).await?;
-        let result_embed: Option<bool> = if embed_value.is_some() {
-            Some(Self::push_embed_node(embed_value, connection).await?)
-        } else {
-            None
+        let result_cat = Self::push_cat_node(vec_category, connection);
+        let result_embed: Option<bool> = match embed_value {
+            Some(value) => Some(Self::push_embed_node(value, connection).await?),
+            None => None,
         };
-        if result_cat && (result_embed.is_none() || result_embed == Some(true)) {
-            return Ok(true);
+        if result_cat.await? && (result_embed.is_none() || result_embed == Some(true)) {
+            Ok(true)
         } else {
-            return Ok(false);
+            Ok(false)
         }
     }
     pub(self) async fn push_cat_node(
@@ -88,7 +87,7 @@ impl Post {
     }
 
     pub(self) async fn push_embed_node(
-        embed_input: Option<EmbedInput>,
+        embed_input: EmbedInput,
         conn: &MysqlConnection,
     ) -> Result<bool, SmileError> {
         use crate::schema::embed::dsl::*;

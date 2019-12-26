@@ -18,11 +18,13 @@ impl CategorySchema for Category {
         &self.name.as_str()
     }
     fn parent(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError> {
-        if let Some(parent_id) = &self.parentId {
-            let category = Category::find_by_id(parent_id, &context.conn)?;
-            return Ok(Some(category));
+        match &self.parentId {
+            Some(parent_id) => {
+                let category = Category::find_by_id(parent_id, &context.conn)?;
+                return Ok(Some(category));
+            }
+            None => Ok(None),
         }
-        Ok(None)
     }
 }
 

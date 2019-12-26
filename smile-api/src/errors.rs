@@ -6,6 +6,7 @@ use std::fmt;
 pub enum SmileError {
     HashError(BcryptError),
     DBError(result::Error),
+    Required(&'static str),
     PasswordNotMatch(String),
     JwtError(jsonwebtoken::errors::Error),
     Unauthorized,
@@ -48,6 +49,10 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "PASSWORD_WRONG"
                 }),
             ),
+            SmileError::Required(field) => juniper::FieldError::new(
+                format!(" {} required", field),
+                graphql_value!({ "type": (format!("{}_REQUIRED", field.to_uppercase())) }),
+            ),
             _ => juniper::FieldError::new(
                 "Internal server Error",
                 graphql_value!({
@@ -87,7 +92,7 @@ impl fmt::Display for SmileError {
             SmileError::JwtError(error) => write!(f, "{}", error),
             SmileError::Unreachable(location) => write!(f, "unreachable in {}", location),
             SmileError::Unauthorized => write!(f, "access graphql without token"),
-            // _ => write!(f, "other error"),
+            _ => unreachable!(),
         }
     }
 }

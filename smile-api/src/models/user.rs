@@ -16,17 +16,25 @@ pub struct User {
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
 }
+
 #[derive(
-    Debug, juniper::GraphQLInputObject, Insertable, Serialize, Deserialize, PartialEq, Clone,
+    Debug,
+    AsChangeset,
+    juniper::GraphQLInputObject,
+    Insertable,
+    Serialize,
+    Deserialize,
+    PartialEq,
+    Clone,
 )]
 #[table_name = "usr_smile"]
 pub struct UserInput {
     #[serde(skip_deserializing)]
     pub user_id: Option<String>,
-    pub username: String,
+    pub username: Option<String>,
     pub email: Option<String>,
-    pub fullname: String,
-    pub password: String,
+    pub fullname: Option<String>,
+    pub password: Option<String>,
     pub avatar: Option<String>,
     pub isAdmin: Option<bool>,
 }

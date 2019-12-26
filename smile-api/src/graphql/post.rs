@@ -2,7 +2,7 @@ use super::category::CategorySchema;
 use crate::{
     graphql::{schema::Context, user::UserSchema},
     models::{
-        embed::Embed,
+        embed::{Embed, Rating},
         handler::Handler,
         node::CategoryNode,
         post::{Post, StatusPost},
@@ -22,6 +22,7 @@ pub trait PostSchema {
     fn last_edited_at(&self) -> &Option<NaiveDateTime>;
     fn last_edited_by(&self) -> &Option<String>;
     fn embed(&self, context: &Context) -> Embed;
+    fn rating(&self, context: &Context) -> Rating;
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>>;
 }
 impl PostSchema for Post {
@@ -57,15 +58,18 @@ impl PostSchema for Post {
     }
     fn embed(&self, context: &Context) -> Embed {
         let conn: &MysqlConnection = &context.conn;
-        Embed::belonging_to(self).first::<Embed>(conn).expect("failed to load embd")
+        Embed::belonging_to(self).first::<Embed>(conn).expect("failed to load embed")
+    }
+    fn rating(&self, context: &Context) -> Rating {
+        let conn: &MysqlConnection = &context.conn;
+        Rating::belonging_to(self).first::<Rating>(conn).expect("failed to load rating")
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>> {
         let conn: &MysqlConnection = &context.conn;
-        let node = CategoryNode::get_by_postId(&self, conn)
+        CategoryNode::get_by_postId(&self, conn)
             .into_iter()
             .map(|e| e as Box<dyn CategorySchema>)
-            .collect();
-        node
+            .collect()
     }
 }
 
@@ -96,6 +100,9 @@ impl Box<dyn PostSchema> {
     }
     fn last_edited_by(&self) -> &Option<String> {
         &self.last_edited_by()
+    }
+    fn rating(&self, context: &Context) -> Rating {
+        self.rating(context)
     }
     fn embed(&self, context: &Context) -> Embed {
         self.embed(context)

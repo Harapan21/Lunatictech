@@ -44,6 +44,6 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/graphiql").route(web::get().to(graphql::handler::client)))
     })
     .bind(HOSTNAME)?
-    .start()
+    .run()
     .await
 }

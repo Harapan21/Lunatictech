@@ -12,6 +12,7 @@ pub trait Handler<T, M> {
     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
     fn find_by_id(id: &T, connection: &MysqlConnection) -> Result<Box<Self>, SmileError>;
     fn input(input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
+    fn update(id: T, input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
 }
 
 impl Handler<i32, PostInput> for Post {
@@ -29,8 +30,16 @@ impl Handler<i32, PostInput> for Post {
         post.find(id).first::<Post>(connection).map(Box::new).map_err(SmileError::from)
     }
     fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        use crate::schema::post::dsl::*;
+        use crate::schema::post::dsl::post;
         insert_into(post).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
+    }
+    fn update(id: i32, input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
+        use crate::schema::post::dsl::post;
+        diesel::update(post.find(id))
+            .set(input)
+            .execute(connection)
+            .map(|_| true)
+            .map_err(SmileError::from)
     }
 }
 
@@ -57,6 +66,13 @@ impl Handler<i32, CategoryInput> for Category {
             .map_err(SmileError::from)
             .map(|_| true)
     }
+    fn update(
+        id: i32,
+        input: CategoryInput,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        unimplemented!();
+    }
 }
 
 impl Handler<String, UserInput> for User {
@@ -77,15 +93,29 @@ impl Handler<String, UserInput> for User {
     fn input(mut input: UserInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::usr_smile::dsl::*;
         input.user_id = Some(uuid::Uuid::new_v4().to_string());
-        input.password = hash(input.password, DEFAULT_COST)?;
-        insert_into(usr_smile)
-            .values(&input)
+        match input.password {
+            Some(val_password) => {
+                input.password = Some(hash(val_password, DEFAULT_COST)?);
+                insert_into(usr_smile)
+                    .values(&input)
+                    .execute(connection)
+                    .map(|_| true)
+                    .map_err(SmileError::from)
+            }
+            None => Err(SmileError::Required("password")),
+        }
+    }
+    fn update(
+        id: String,
+        input: UserInput,
+        connection: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        use crate::schema::usr_smile::dsl::*;
+        diesel::update(usr_smile.find(id))
+            .set(input)
             .execute(connection)
-            .map_err(|e| {
-                println!("{:?}", e);
-                SmileError::from(e)
-            })
-            .map(|_e| true)
+            .map(|_| true)
+            .map_err(SmileError::from)
     }
 }
 
