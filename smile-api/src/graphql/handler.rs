@@ -16,12 +16,12 @@ pub async fn api(
     id: Identity,
     pool: web::Data<MysqlPool>,
 ) -> Result<HttpResponse, Error> {
-    let aunt_id: Option<String> = match &id.identity() {
-        Some(token) => Some(Auth::from(token.to_owned()).verify().unwrap()),
-        None => None,
-    };
     let identity_arc = Arc::new(id);
     let handler = async move {
+        let aunt_id = match &identity_arc.identity() {
+            Some(token) => Some(Auth::from(token.to_owned()).verify().unwrap()),
+            None => None,
+        };
         let mysql_poll = pool.get().map_err(|e| serde::ser::Error::custom(e))?;
         let context = create_context(aunt_id, mysql_poll, identity_arc);
         let res = data.execute(&st, &context);
