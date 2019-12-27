@@ -90,39 +90,55 @@ impl Mutation {
     }
     fn post(
         post_id: Option<i32>,
-        mut input: PostInput,
+        mut input: Option<PostInput>,
         categories: Option<Vec<i32>>,
         embed: Option<EmbedInput>,
         context: &Context,
-        action_option: ActionOption,
+        action: ActionOption,
     ) -> Result<bool, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         match &context.user_id {
-            Some(aunt_id) => {
-                input.author_id = Some(aunt_id.to_owned());
-                match (action_option, post_id) {
-                    (ActionOption::INPUT, _) => {
-                        if Post::input(input, conn)? {
-                            return task::block_on(Post::handler_input_node(
-                                categories, embed, conn,
-                            ));
-                        }
-                        Ok(false)
+            Some(aunt_id) => match (action, post_id, input) {
+                (ActionOption::INPUT, _, Some(mut input)) => {
+                    input.author_id = Some(aunt_id.to_owned());
+                    if Post::input(input, conn)? {
+                        return task::block_on(Post::handler_input_node(categories, embed, conn));
                     }
-                    (ActionOption::UPDATE, Some(post_id)) => {
-                        return Post::update(post_id, input, conn);
-                    }
-                    (ActionOption::REMOVE, Some(post_id)) => {
-                        unimplemented!("not implimented yet ");
-                    }
-                    _ => unreachable!(),
+                    Ok(false)
                 }
-            }
+                (ActionOption::UPDATE, Some(post_id), Some(mut input)) => {
+                    input.author_id = Some(aunt_id.to_owned());
+                    Post::update(post_id, input, conn)
+                }
+                (ActionOption::REMOVE, Some(post_id), None) => {
+                    let is_author = async {
+                        let result_post = Post::find_by_id(&post_id, conn).unwrap();
+                        result_post.author_id == Some(aunt_id.to_owned())
+                    };
+                    task::block_on(async move {
+                        if is_author.await {
+                            Post::remove(post_id, conn)
+                        } else {
+                            Err(SmileError::AccessDenied)
+                        }
+                    })
+                }
+                _ => unreachable!(),
+            },
             None => Err(SmileError::Unauthorized),
         }
     }
-    fn category(input: CategoryInput, context: &Context) -> Result<bool, SmileError> {
-        Category::input(input, &context.conn)
+    fn category(
+        id: Option<i32>,
+        input: CategoryInput,
+        context: &Context,
+        action: ActionOption,
+    ) -> Result<bool, SmileError> {
+        match (action, id) {
+            (ActionOption::INPUT, None) => Category::input(input, &context.conn),
+            (ActionOption::UPDATE, Some(id)) => Category::update(id, input, &context.conn),
+            _ => unreachable!(),
+        }
     }
 }
 

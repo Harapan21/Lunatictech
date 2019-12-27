@@ -11,6 +11,7 @@ pub enum SmileError {
     JwtError(jsonwebtoken::errors::Error),
     Unauthorized,
     WrongPassword(String),
+    AccessDenied,
     Unreachable(&'static str),
 }
 
@@ -23,6 +24,12 @@ impl juniper::IntoFieldError for SmileError {
                     "type": "Unauthorized"
                 }),
             ),
+            SmileError::AccessDenied => juniper::FieldError::new(
+                "You don't have access for this action",
+                graphql_value!({
+                    "type": "ACCESS_DENIED" }),
+            ),
+
             SmileError::DBError(result::Error::DatabaseError(_, err)) => {
                 let message = err.message();
                 let format = if message.contains("username") {

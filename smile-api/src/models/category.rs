@@ -15,6 +15,7 @@ pub struct Category {
     Queryable,
     Insertable,
     Serialize,
+    AsChangeset,
     Deserialize,
     PartialEq,
 )]

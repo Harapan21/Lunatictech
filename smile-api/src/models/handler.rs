@@ -6,13 +6,14 @@ use super::{
 };
 use crate::{errors::SmileError, utils::Auth};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use diesel::{insert_into, prelude::*};
+use diesel::{delete, insert_into, prelude::*, update as dieselUpdate};
 
 pub trait Handler<T, M> {
     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
     fn find_by_id(id: &T, connection: &MysqlConnection) -> Result<Box<Self>, SmileError>;
     fn input(input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
     fn update(id: T, input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
+    fn remove(id: T, connection: &MysqlConnection) -> Result<bool, SmileError>;
 }
 
 impl Handler<i32, PostInput> for Post {
@@ -35,11 +36,15 @@ impl Handler<i32, PostInput> for Post {
     }
     fn update(id: i32, input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         use crate::schema::post::dsl::post;
-        diesel::update(post.find(id))
+        dieselUpdate(post.find(id))
             .set(input)
             .execute(connection)
             .map(|_| true)
             .map_err(SmileError::from)
+    }
+    fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
+        use crate::schema::post::dsl::post;
+        delete(post.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 
@@ -71,7 +76,16 @@ impl Handler<i32, CategoryInput> for Category {
         input: CategoryInput,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        unimplemented!();
+        use crate::schema::category::dsl::category;
+        dieselUpdate(category.find(id))
+            .set(input)
+            .execute(connection)
+            .map(|_| true)
+            .map_err(SmileError::from)
+    }
+    fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
+        use crate::schema::category::dsl::category;
+        delete(category.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 
@@ -111,11 +125,15 @@ impl Handler<String, UserInput> for User {
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
         use crate::schema::usr_smile::dsl::*;
-        diesel::update(usr_smile.find(id))
+        dieselUpdate(usr_smile.find(id))
             .set(input)
             .execute(connection)
             .map(|_| true)
             .map_err(SmileError::from)
+    }
+    fn remove(id: String, connection: &MysqlConnection) -> Result<bool, SmileError> {
+        use crate::schema::usr_smile::dsl::usr_smile;
+        delete(usr_smile.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 
