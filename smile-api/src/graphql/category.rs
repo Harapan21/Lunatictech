@@ -30,8 +30,8 @@ impl CategorySchema for Category {
 
 #[juniper::object(
     name="Category",
-Context= Context
-    )]
+    Context= Context
+)]
 impl Box<dyn CategorySchema> {
     fn id(&self) -> &i32 {
         &self.id()

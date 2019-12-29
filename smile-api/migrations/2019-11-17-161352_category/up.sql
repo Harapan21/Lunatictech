@@ -1,6 +1,6 @@
 CREATE TABLE `smile`.`category` (
     id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     parentId INT,
     PRIMARY KEY (id)
 );
@@ -10,6 +10,7 @@ CREATE TABLE `smile`.`category_node` (
     categoryId INT DEFAULT 1,
     postId INT NOT NULL,
     PRIMARY KEY (id),
+    UNIQUE KEY category_node_id (categoryId , postId),
     CONSTRAINT CN_TO_CATEGORY_AS_CATNODE FOREIGN KEY (categoryId)
         REFERENCES category (id)
         ON UPDATE CASCADE ON DELETE SET NULL,

@@ -32,13 +32,18 @@ impl juniper::IntoFieldError for SmileError {
 
             SmileError::DBError(result::Error::DatabaseError(_, err)) => {
                 let message = err.message();
-                let format = if message.contains("username") {
-                    "USERNAME_NOT_VALID"
-                } else if message.contains("email") {
-                    "EMAIL_NOT_VALID"
-                } else {
-                    ""
-                };
+                let format = format!(
+                    "{}_NOT_VALID",
+                    if message.contains("username") {
+                        "USERNAME"
+                    } else if message.contains("email") {
+                        "EMAIL"
+                    } else if message.contains("category") {
+                        "CATEGORY"
+                    } else {
+                        ""
+                    }
+                );
                 return juniper::FieldError::new(
                     format!("{}, exist", message),
                     graphql_value!({ "type": format }),

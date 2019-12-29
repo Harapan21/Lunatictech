@@ -11,6 +11,7 @@ use crate::{
     },
     utils::Auth,
 };
+
 use actix_identity::Identity;
 use async_std::task;
 use diesel::prelude::*;

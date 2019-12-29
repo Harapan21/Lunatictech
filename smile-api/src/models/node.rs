@@ -36,13 +36,13 @@ impl CategoryNode {
     pub fn push_node(
         conn: &MysqlConnection,
         categories: Option<Vec<i32>>,
-        post_id: i32,
+        postId: i32,
     ) -> Result<bool, SmileError> {
-        use crate::schema::category_node::dsl::*;
+        use crate::schema::category_node::dsl::category_node;
         let values: Vec<CategoryNodeField> = categories
             .unwrap_or(vec![1])
             .into_iter()
-            .map(|cat_id| CategoryNodeField { categoryId: cat_id, postId: post_id })
+            .map(|categoryId| CategoryNodeField { categoryId, postId })
             .collect::<Vec<CategoryNodeField>>();
         diesel::insert_into(category_node)
             .values(&values)

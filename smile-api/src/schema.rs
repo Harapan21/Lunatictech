@@ -5,6 +5,7 @@ table! {
         parentId -> Nullable<Integer>,
     }
 }
+
 table! {
     category_node (id) {
         id -> Integer,
