@@ -4,8 +4,8 @@ use jwt::{decode, encode, Algorithm, Header, Validation};
 use std::fs;
 
 lazy_static! {
-    static ref PRIVATE_KEY: String = fs::read_to_string("src/utils/key/private.key").unwrap();
-    static ref PUBLIC_KEY: String = fs::read_to_string("src/utils/key/public.key").unwrap();
+    static ref PRIVATE_KEY: Vec<u8> = fs::read("src/utils/key/jwtRS256.key").unwrap();
+    static ref PUBLIC_KEY: Vec<u8> = fs::read("src/utils/key/jwtRS256.key.pub").unwrap();
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -25,14 +25,13 @@ impl Claims {
         Claims { id, exp: (Local::now() + Duration::hours(24)).timestamp() as usize }
     }
     pub fn create_token(&self) -> Result<String, SmileError> {
-        let mut header = Header::default();
-        header.alg = Algorithm::HS256;
-        Ok(encode(&header, self, PRIVATE_KEY.as_ref())?)
+        Ok(encode(&Header::new(Algorithm::RS256), self, PRIVATE_KEY.as_ref())
+            .map_err(SmileError::JwtError)?)
     }
     pub fn translate_token(token: String) -> Result<Claims, SmileError> {
-        decode::<Claims>(&token, PRIVATE_KEY.as_ref(), &Validation::new(Algorithm::HS256))
+        decode::<Claims>(&token, PUBLIC_KEY.as_ref(), &Validation::new(Algorithm::RS256))
             .map(|data| data.claims.into())
-            .map_err(|e| SmileError::JwtError(e))
+            .map_err(SmileError::JwtError)
     }
 }
 
