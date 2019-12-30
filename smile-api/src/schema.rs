@@ -15,6 +15,18 @@ table! {
 }
 
 table! {
+    comment (id) {
+        id -> Integer,
+        postId -> Integer,
+        userId -> Nullable<Char>,
+        createdAt -> Nullable<Timestamp>,
+        content -> Nullable<Longtext>,
+        reply -> Bool,
+        reply_for_id -> Nullable<Integer>,
+    }
+}
+
+table! {
     use crate::models::post::Status;
     use diesel::sql_types::*;
     contrib_post_temp (id) {
@@ -81,6 +93,8 @@ table! {
 
 joinable!(category_node -> category (categoryId));
 joinable!(category_node -> post (postId));
+joinable!(comment -> post (postId));
+joinable!(comment -> usr_smile (userId));
 joinable!(contrib_post_temp -> post (postId));
 joinable!(embed -> post (postId));
 joinable!(post -> usr_smile (author_id));
@@ -89,6 +103,7 @@ joinable!(rating -> post (postId));
 allow_tables_to_appear_in_same_query!(
     category,
     category_node,
+    comment,
     contrib_post_temp,
     embed,
     post,

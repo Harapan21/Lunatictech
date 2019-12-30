@@ -8,6 +8,7 @@ pub enum SmileError {
     DBError(result::Error),
     Required(&'static str),
     PasswordNotMatch(String),
+    ErrorKind(&'static str),
     JwtError(jsonwebtoken::errors::Error),
     Unauthorized,
     WrongPassword(String),
@@ -18,6 +19,13 @@ pub enum SmileError {
 impl juniper::IntoFieldError for SmileError {
     fn into_field_error(self) -> juniper::FieldError {
         match self {
+            SmileError::ErrorKind(msg) => juniper::FieldError::new(
+                msg,
+                graphql_value!({
+                    "type": "ERROR_KIND"
+                }),
+            ),
+
             SmileError::Unauthorized => juniper::FieldError::new(
                 "You mush login first",
                 graphql_value!({

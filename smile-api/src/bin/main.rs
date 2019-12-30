@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
-                    .domain("127.0.0.1")
+                    .domain("localhost:1234")
                     .name("aunt")
                     .path("/")
                     .max_age(chrono::Duration::days(1).num_seconds())

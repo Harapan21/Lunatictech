@@ -23,10 +23,12 @@ impl Claims {
     pub fn new(id: String) -> Self {
         Claims { id, exp: (Local::now() + Duration::hours(24)).timestamp() as usize }
     }
+
     pub fn create_token(&self) -> Result<String, SmileError> {
         Ok(encode(&Header::new(Algorithm::RS256), self, include_bytes!("./key/jwtRS256.key"))
             .map_err(SmileError::JwtError)?)
     }
+
     pub fn translate_token(token: String) -> Result<Claims, SmileError> {
         decode::<Claims>(
             &token,

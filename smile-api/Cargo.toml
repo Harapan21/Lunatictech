@@ -24,7 +24,6 @@ jsonwebtoken = "7.0.0-alpha.2"
 dotenv = "0.15.0"
 chrono = { version = "0.4.10", features = ["serde"] }
 uuid = { version = "0.8", features = ["serde", "v4"] }
-lazy_static = "1.4.0"
 bcrypt = "0.6.1"
 juniper = "0.14.1"
 diesel = { version= "1.4.3", features = ["chrono", "mysql", "r2d2"] }

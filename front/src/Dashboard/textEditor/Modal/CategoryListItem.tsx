@@ -39,11 +39,11 @@ const CategoryListItem: React.SFC<CategoryListItemProps> = ({
     padding: 40,
     textAlign: "center"
   };
-  
+
   const ListItem = React.useCallback(
     ({ name, id, child }: CategoryListState) => {
       const ChildListFiltered =
-        child &&    
+        child &&
         handleSearch(child).map(({ id, name }: CategoryListState) =>
           ListItem({ id: +id, name })
         );
