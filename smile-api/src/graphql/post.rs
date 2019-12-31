@@ -1,7 +1,8 @@
-use super::category::CategorySchema;
+use super::{category::CategorySchema, comment::CommentSchema};
 use crate::{
     graphql::{schema::Context, user::UserSchema},
     models::{
+        comment::Comment,
         embed::{Embed, Rating},
         handler::Handler,
         node::CategoryNode,
@@ -24,6 +25,7 @@ pub trait PostSchema {
     fn embed(&self, context: &Context) -> Embed;
     fn rating(&self, context: &Context) -> Rating;
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>>;
+    fn comment(&self, context: &Context) -> Vec<Box<dyn CommentSchema>>;
 }
 impl PostSchema for Post {
     fn id(&self) -> &i32 {
@@ -71,6 +73,19 @@ impl PostSchema for Post {
             .map(|e| e as Box<dyn CategorySchema>)
             .collect()
     }
+    fn comment(&self, context: &Context) -> Vec<Box<dyn CommentSchema + 'static>> {
+        let conn: &MysqlConnection = &context.conn;
+        Comment::belonging_to(self)
+            .load::<Comment>(conn)
+            .map(|e| {
+                e.into_iter()
+                    .filter(|x| x.reply_for_id.is_none())
+                    .map(Box::from)
+                    .map(|e| e as Box<dyn CommentSchema>)
+                    .collect()
+            })
+            .expect("failed load comment")
+    }
 }
 
 #[juniper::object(
@@ -109,5 +124,8 @@ impl Box<dyn PostSchema> {
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema + 'static>> {
         self.category(context)
+    }
+    fn comment(&self, context: &Context) -> Vec<Box<dyn CommentSchema + 'static>> {
+        self.comment(context)
     }
 }

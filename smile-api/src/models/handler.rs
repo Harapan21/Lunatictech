@@ -36,9 +36,11 @@ impl Handler<i32, PostInput> for Post {
     fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Post>, SmileError> {
         post.find(id).first::<Post>(connection).map(Box::new).map_err(SmileError::from)
     }
+
     fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         insert_into(post).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
     }
+
     fn update(id: i32, input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
         dieselUpdate(post.find(id))
             .set(input)

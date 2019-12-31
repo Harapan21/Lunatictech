@@ -4,7 +4,8 @@ use crate::{
     graphql::{category::CategorySchema, post::PostSchema, user::UserSchema},
     models::{
         category::{Category, CategoryInput},
-        embed::EmbedInput,
+        comment::{Comment, CommentInput},
+        embed::{Embed, EmbedInput},
         handler::Handler,
         post::{Post, PostInput},
         user::{User, UserInput},
@@ -99,17 +100,23 @@ impl Mutation {
     ) -> Result<bool, SmileError> {
         let conn: &MysqlConnection = &context.conn;
         match &context.user_id {
-            Some(aunt_id) => match (action, post_id, input) {
+            Some(aunt_id) => match (action, post_id, input.clone()) {
                 (ActionOption::INPUT, _, Some(mut input)) => {
                     input.author_id = Some(aunt_id.to_owned());
                     if Post::input(input, conn)? {
-                        return task::block_on(Post::handler_input_node(categories, embed, conn));
+                        return task::block_on(Post::push_mul(categories, embed, conn));
                     }
                     Ok(false)
                 }
-                (ActionOption::UPDATE, Some(post_id), Some(mut input)) => {
-                    input.author_id = Some(aunt_id.to_owned());
-                    Post::update(post_id, input, conn)
+                (ActionOption::UPDATE, Some(post_id), _) => {
+                    if let Some(embed_value) = embed {
+                        Embed::update(&post_id, embed_value, conn)?;
+                    }
+                    if let Some(mut input) = input {
+                        input.author_id = Some(aunt_id.to_owned());
+                        Post::update(post_id, input, conn)?;
+                    }
+                    Ok(true)
                 }
                 (ActionOption::REMOVE, Some(post_id), None) => {
                     let is_author = async {
@@ -140,6 +147,28 @@ impl Mutation {
             (ActionOption::UPDATE, Some(id)) => Category::update(id, input, &context.conn),
             _ => unreachable!(),
         }
+    }
+    fn comment(
+        commentId: Option<i32>,
+        mut input: CommentInput,
+        context: &Context,
+        action: ActionOption,
+    ) -> Result<bool, SmileError> {
+        return match (action, &context.user_id, commentId) {
+            (_, None, _) => Err(SmileError::Unauthorized),
+            (ActionOption::INPUT, Some(user_id), _) => {
+                input.userId = Some(user_id.to_owned());
+                Comment::input(input, &context.conn)
+            }
+            (ActionOption::UPDATE, Some(user_id), Some(commentId)) => {
+                input.userId = Some(user_id.to_owned());
+                Comment::update(input, commentId, &context.conn)
+            }
+            (ActionOption::REMOVE, Some(user_id), Some(commentId)) => {
+                Comment::delete(user_id, commentId, &context.conn)
+            }
+            _ => unreachable!(),
+        };
     }
 }
 

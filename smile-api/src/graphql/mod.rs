@@ -1,4 +1,5 @@
 pub mod category;
+pub mod comment;
 pub mod drive;
 pub mod handler;
 pub mod post;

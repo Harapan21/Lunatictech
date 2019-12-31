@@ -21,7 +21,6 @@ table! {
         userId -> Nullable<Char>,
         createdAt -> Nullable<Timestamp>,
         content -> Nullable<Longtext>,
-        reply -> Bool,
         reply_for_id -> Nullable<Integer>,
     }
 }

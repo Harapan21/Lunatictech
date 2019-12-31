@@ -9,7 +9,7 @@ use crate::{
 };
 // use async_std::task;
 use chrono::prelude::*;
-use diesel::{prelude::*, update};
+use diesel::prelude::*;
 
 #[derive(Debug, Serialize, Deserialize, DbEnum, PartialEq, Clone)]
 #[DieselType = "Status"]
@@ -61,41 +61,25 @@ pub struct PostInput {
 }
 
 impl Post {
-    pub async fn handler_input_node(
+    pub async fn push_mul(
         vec_category: Option<Vec<i32>>,
         embed_value: Option<EmbedInput>,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        let result_cat = Self::push_cat_node(vec_category, connection);
-        let result_embed: Option<bool> = match embed_value {
-            Some(value) => Some(Self::push_embed_node(value, connection).await?),
-            None => None,
-        };
-        if result_cat.await? && (result_embed.is_none() || result_embed == Some(true)) {
-            Ok(true)
-        } else {
-            Ok(false)
-        }
-    }
-    pub(self) async fn push_cat_node(
-        categories: Option<Vec<i32>>,
-        conn: &MysqlConnection,
-    ) -> Result<bool, SmileError> {
         use crate::schema::post::dsl::*;
-        let result = post.order(id.desc()).first::<Post>(conn)?;
-        return CategoryNode::push_node(conn, categories, result.id);
-    }
-
-    pub(self) async fn push_embed_node(
-        embed_input: EmbedInput,
-        conn: &MysqlConnection,
-    ) -> Result<bool, SmileError> {
-        use crate::schema::embed::dsl::*;
-        let result = embed.order(id.desc()).first::<Embed>(conn)?;
-        return update(embed.find(result.id))
-            .set(embed_input)
-            .execute(conn)
-            .map(|_| true)
-            .map_err(SmileError::from);
+        let post_target = Box::new(post.order(id.desc()).first::<Post>(connection)?);
+        let post_id = &post_target.id;
+        let t2 = async move {
+            match embed_value {
+                Some(value) => {
+                    Some(Embed::update(&post_id, value, connection).expect("failed load embed"))
+                }
+                None => None,
+            }
+        };
+        let t1 =
+            async move { CategoryNode::push_node(connection, vec_category, post_id.to_owned()) };
+        let t3: Option<bool> = t2.await;
+        if t1.await? && (t3.is_none() || t3 == Some(true)) { Ok(true) } else { Ok(false) }
     }
 }

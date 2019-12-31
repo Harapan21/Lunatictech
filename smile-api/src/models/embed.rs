@@ -1,7 +1,9 @@
 use crate::{
+    errors::SmileError,
     models::post::Post,
-    schema::{embed, rating},
+    schema::{embed, embed::dsl::*, rating},
 };
+use diesel::{prelude::*, update as dieselUpdate};
 
 #[derive(
     juniper::GraphQLObject,
@@ -53,4 +55,18 @@ pub struct Rating {
     pub share: i32,
     pub comment: i32,
     pub video_rate: Option<i32>,
+}
+
+impl Embed {
+    pub fn update(
+        post_id: &i32,
+        input: EmbedInput,
+        conn: &MysqlConnection,
+    ) -> Result<bool, SmileError> {
+        dieselUpdate(embed.filter(postId.eq(post_id)))
+            .set(input)
+            .execute(conn)
+            .map(|_| true)
+            .map_err(SmileError::from)
+    }
 }

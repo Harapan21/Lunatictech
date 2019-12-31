@@ -4,7 +4,6 @@ CREATE TABLE `smile`.`comment` (
     userId CHAR(36),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
-    reply BOOLEAN NOT NULL DEFAULT FALSE,
     reply_for_id INT NULL,
     PRIMARY KEY (id),
     CONSTRAINT CN_TO_USER_AS_COMMENT FOREIGN KEY (userId)
