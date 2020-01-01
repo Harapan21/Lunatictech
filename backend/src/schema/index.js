@@ -64,7 +64,7 @@ const typeDefs = gql`
     joinAt: Date!
     lastEditedAt: Date!
     fullname: String!
-    avatar: Stringj
+    avatar: String
     isAdmin: Boolean
     post: [Post]
     firstLetter: String!

@@ -116,6 +116,7 @@ impl Mutation {
                         input.author_id = Some(aunt_id.to_owned());
                         Post::update(post_id, input, conn)?;
                     }
+                    if let Some(mut input) = categories {}
                     Ok(true)
                 }
                 (ActionOption::REMOVE, Some(post_id), None) => {

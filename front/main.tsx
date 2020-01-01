@@ -13,14 +13,7 @@ import { ApolloLink } from "apollo-link";
 import { onError } from "apollo-link-error";
 
 const SmileApp: React.SFC = () => {
-  const [token, setTokenStoreage] = React.useState(
-    localStorage.getItem("token")
-  );
   // const [isDark, setTheme] = React.useState(false);
-
-  React.useEffect(() => {
-    localStorage.setItem("token", token as string);
-  }, [token]);
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -38,10 +31,7 @@ const SmileApp: React.SFC = () => {
         }
       }),
       createUploadLink({
-        uri: "http://localhost:4000/graphql",
-        headers: {
-          token: token ? token : ""
-        }
+        uri: "http://localhost:1234/graphql"
       })
     ]),
     cache: new InMemoryCache()
@@ -57,8 +47,7 @@ const SmileApp: React.SFC = () => {
           handleLayoutState,
           user
         }: ChildrenLayoutProps) => {
-          const handleLogin = ({ token, login }: any) => {
-            setTokenStoreage(token);
+          const handleLogin = ({ login }: any) => {
             handleLayoutState({ isLogin: login });
           };
           return (
