@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Formik, Form, FormikProps, Field } from 'formik';
-import Title from './Title';
-import Toolbar from './Toolbar';
-import Content from './Content';
-import Modal from './Modal';
-import * as Yup from 'yup';
+import * as React from "react";
+import { Formik, Form, FormikProps, Field } from "formik";
+import Title from "./Title";
+import Toolbar from "./Toolbar";
+import Content from "./Content";
+import Modal from "./Modal";
+import * as Yup from "yup";
 const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
   const [isModal, setModalToggle] = React.useState(false);
   const handleToggle = React.useCallback(() => {
@@ -13,9 +13,9 @@ const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
   return (
     <Formik
       initialValues={{
-        title: '',
-        content: '',
-        status: 'draft'
+        title: "",
+        content: "",
+        status: "draft"
       }}
       validationSchema={Yup.object().shape({
         title: Yup.string().required(),
@@ -28,11 +28,11 @@ const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
         return (
           <Form
             style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              position: 'relative',
-              flexDirection: 'column'
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              position: "relative",
+              flexDirection: "column"
             }}
           >
             <Title>
@@ -40,10 +40,10 @@ const TextEditor: React.SFC<TextEditorProps> = React.memo(({ user }) => {
                 component="select"
                 name="status"
                 style={{
-                  all: 'unset',
-                  fontSize: 'var(--font-size-medium)',
-                  cursor: 'pointer',
-                  textAlign: 'center'
+                  all: "unset",
+                  fontSize: "var(--font-size-medium)",
+                  cursor: "pointer",
+                  textAlign: "center"
                 }}
               >
                 <option value="draft">Draft</option>

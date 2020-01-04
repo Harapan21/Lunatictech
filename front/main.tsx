@@ -31,7 +31,7 @@ const SmileApp: React.SFC = () => {
         }
       }),
       createUploadLink({
-        uri: "http://localhost:1234/graphql"
+        uri: "http://127.0.0.1:8088/graphql"
       })
     ]),
     cache: new InMemoryCache()

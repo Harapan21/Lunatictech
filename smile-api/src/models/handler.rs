@@ -1,9 +1,11 @@
 extern crate uuid;
+
 use super::{
     category::{Category, CategoryInput},
     post::{Post, PostInput},
     user::{User, UserInput},
 };
+
 use crate::{
     errors::SmileError,
     schema::{
@@ -13,8 +15,10 @@ use crate::{
     },
     utils::Auth,
 };
+
 use bcrypt::{hash, verify, DEFAULT_COST};
-use diesel::{delete, insert_into, prelude::*, update as dieselUpdate};
+
+use diesel::{delete as Delete, insert_into as Insert, prelude::*, update as Remove};
 
 pub trait Handler<T, M> {
     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Self>>, SmileError>;
@@ -38,18 +42,14 @@ impl Handler<i32, PostInput> for Post {
     }
 
     fn input(input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        insert_into(post).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
+        Insert(post).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 
     fn update(id: i32, input: PostInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        dieselUpdate(post.find(id))
-            .set(input)
-            .execute(connection)
-            .map(|_| true)
-            .map_err(SmileError::from)
+        Remove(post.find(id)).set(input).execute(connection).map(|_| true).map_err(SmileError::from)
     }
     fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        delete(post.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
+        Delete(post.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 
@@ -67,25 +67,21 @@ impl Handler<i32, CategoryInput> for Category {
     }
 
     fn input(input: CategoryInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        insert_into(category)
-            .values(&input)
-            .execute(connection)
-            .map_err(SmileError::from)
-            .map(|_| true)
+        Insert(category).values(&input).execute(connection).map_err(SmileError::from).map(|_| true)
     }
     fn update(
         id: i32,
         input: CategoryInput,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        dieselUpdate(category.find(id))
+        Remove(category.find(id))
             .set(input)
             .execute(connection)
             .map(|_| true)
             .map_err(SmileError::from)
     }
     fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        delete(category.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
+        Delete(category.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 
@@ -107,7 +103,7 @@ impl Handler<String, UserInput> for User {
         match input.password {
             Some(val_password) => {
                 input.password = Some(hash(val_password, DEFAULT_COST)?);
-                insert_into(usr_smile)
+                Insert(usr_smile)
                     .values(&input)
                     .execute(connection)
                     .map(|_| true)
@@ -121,14 +117,14 @@ impl Handler<String, UserInput> for User {
         input: UserInput,
         connection: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        dieselUpdate(usr_smile.find(id))
+        Remove(usr_smile.find(id))
             .set(input)
             .execute(connection)
             .map(|_| true)
             .map_err(SmileError::from)
     }
     fn remove(id: String, connection: &MysqlConnection) -> Result<bool, SmileError> {
-        delete(usr_smile.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
+        Delete(usr_smile.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
 }
 

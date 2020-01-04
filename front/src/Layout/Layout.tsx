@@ -12,19 +12,22 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
     isLogin: false,
     active: 0
   });
+
   const handleLogin = React.useCallback(() => {
     setState((state: LayoutState) => ({
       ...state,
       isLogin: true
     }));
   }, [state]);
+
   React.useEffect(() => {
     if (!loading) {
-      if (data && data.me) {
+      if (data?.me) {
         handleLogin();
       }
     }
   }, [data, loading]);
+
   const { active } = state;
   const Switcher = (active === 0 || 1) && (
     <button
@@ -62,7 +65,7 @@ const Layout: React.SFC<LayoutProps> = React.memo(({ children }) => {
           handleLayoutState: (payload: any) =>
             setState((state: LayoutState) => ({ ...state, ...payload })),
           switcher: Switcher,
-          user: { data, loading }
+          user: { data: data ?? {}, loading }
         })
       ) : (
         <div>Error</div>
