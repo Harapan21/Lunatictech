@@ -1,26 +1,25 @@
-<style>
-  p {
-    text-align: center;
-    margin: 0 auto;
+<script context="module">
+  import { client } from "../graphql/client";
+  import { POSTLIST } from "../graphql/query/post";
+  export async function preload() {
+    return {
+      post: await client.query({
+        query: POSTLIST
+      })
+    };
   }
+</script>
 
-  img {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 0 1em 0;
-  }
-
-  p {
-    margin: 1em auto;
-  }
-
-  /* @media (min-width: 480px) {
-    h1 {
-      font-size: 4em;
-    }
-  } */
-</style>
+<script>
+  export let post;
+</script>
 
 <svelte:head>
-  <title>Sapper project template</title>
+  <title>Lunatictech</title>
 </svelte:head>
+<div class="mx-auto">
+  <div class="flex mb-4">
+    <div class="w-1/2 bg-gray-400 h-12">s</div>
+    <div class="w-1/2 bg-gray-500 h-12">s</div>
+  </div>
+</div>

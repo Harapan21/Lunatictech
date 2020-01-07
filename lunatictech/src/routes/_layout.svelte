@@ -1,23 +1,34 @@
 <script>
-  import Nav from "../components/Nav.svelte";
   import TailWind from "../components/Tailwind.svelte";
+  import Sidebar from "../components/Sidebar.svelte";
   export let segment;
 </script>
 
 <style>
+  .root {
+    @apply flex h-screen;
+  }
   main {
+    @apply flex-1;
     position: relative;
-    max-width: 56em;
     background-color: white;
-    padding: 2em;
-    margin: 0 auto;
     box-sizing: border-box;
+  }
+
+  #panel {
+    @apply w-1/5 rounded-l-lg;
+    background-color: var(--black);
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
   }
 </style>
 
 <TailWind />
-<Nav {segment} />
 
-<main>
-  <slot />
-</main>
+<div class="root">
+  <Sidebar {segment} />
+  <main>
+    <slot />
+  </main>
+  <div id="panel" />
+</div>
