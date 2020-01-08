@@ -1,6 +1,6 @@
 use crate::{
     errors::SmileError,
-    models::post::Post,
+    models::{game::Game, movie::Movie, post::Post},
     schema::{embed, embed::dsl::*, rating},
 };
 use diesel::{prelude::*, update as dieselUpdate};
@@ -16,6 +16,8 @@ use diesel::{prelude::*, update as dieselUpdate};
     Associations,
 )]
 #[belongs_to(Post, foreign_key = "postId")]
+#[belongs_to(Game, foreign_key = "game")]
+#[belongs_to(Movie, foreign_key = "movie")]
 #[table_name = "embed"]
 pub struct Embed {
     pub id: i32,
@@ -34,6 +36,8 @@ pub struct Embed {
 pub struct EmbedInput {
     pub thumbnail: Option<String>,
     pub video: Option<String>,
+    pub game: Option<i32>,
+    pub movie: Option<i32>,
 }
 
 #[derive(

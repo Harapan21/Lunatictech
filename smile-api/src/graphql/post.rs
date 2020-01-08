@@ -1,4 +1,4 @@
-use super::{category::CategorySchema, comment::CommentSchema};
+use super::{category::CategorySchema, comment::CommentSchema, embed::EmbedSchema};
 use crate::{
     graphql::{schema::Context, user::UserSchema},
     models::{
@@ -22,7 +22,7 @@ pub trait PostSchema {
     fn status(&self) -> &Option<StatusPost>;
     fn last_edited_at(&self) -> &Option<NaiveDateTime>;
     fn last_edited_by(&self) -> &Option<String>;
-    fn embed(&self, context: &Context) -> Embed;
+    fn embed(&self, context: &Context) -> Box<dyn EmbedSchema>;
     fn rating(&self, context: &Context) -> Rating;
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema>>;
     fn comment(&self, context: &Context) -> Vec<Box<dyn CommentSchema>>;
@@ -58,9 +58,13 @@ impl PostSchema for Post {
     fn last_edited_by(&self) -> &Option<String> {
         &self.last_edited_by
     }
-    fn embed(&self, context: &Context) -> Embed {
+    fn embed(&self, context: &Context) -> Box<dyn EmbedSchema> {
         let conn: &MysqlConnection = &context.conn;
-        Embed::belonging_to(self).first::<Embed>(conn).expect("failed to load embed")
+        Embed::belonging_to(self)
+            .first::<Embed>(conn)
+            .map(Box::new)
+            .map(|embd| embd as Box<dyn EmbedSchema>)
+            .expect("failed to load embed")
     }
     fn rating(&self, context: &Context) -> Rating {
         let conn: &MysqlConnection = &context.conn;
@@ -119,7 +123,7 @@ impl Box<dyn PostSchema> {
     fn rating(&self, context: &Context) -> Rating {
         self.rating(context)
     }
-    fn embed(&self, context: &Context) -> Embed {
+    fn embed(&self, context: &Context) -> Box<dyn EmbedSchema> {
         self.embed(context)
     }
     fn category(&self, context: &Context) -> Vec<Box<dyn CategorySchema + 'static>> {

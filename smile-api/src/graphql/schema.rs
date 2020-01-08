@@ -6,7 +6,9 @@ use crate::{
         category::{Category, CategoryInput},
         comment::{Comment, CommentInput},
         embed::{Embed, EmbedInput},
+        game::{Game, GameInput},
         handler::Handler,
+        movie::{Movie, MovieInput},
         post::{Post, PostInput},
         user::{User, UserInput},
     },
@@ -23,6 +25,12 @@ pub struct Context {
     pub user_id: Option<String>,
     pub conn: Arc<MysqlPoolConnection>,
     pub id: Arc<Identity>,
+}
+
+#[derive(Debug, Serialize, Deserialize, juniper::GraphQLEnum)]
+pub enum Card {
+    MOVIE,
+    GAME,
 }
 
 #[derive(Debug, Serialize, Deserialize, DbEnum, PartialEq, Clone, juniper::GraphQLEnum)]
@@ -88,6 +96,46 @@ impl Mutation {
         match &context.user_id {
             Some(auth_id) => User::update(auth_id.to_owned(), input, &context.conn),
             None => Err(SmileError::Unauthorized),
+        }
+    }
+    fn add_card(
+        id: Option<i32>,
+        name: String,
+        thumbnail: Option<String>,
+        card: Card,
+        action: ActionOption,
+        context: &Context,
+    ) -> Result<bool, SmileError> {
+        match (id, action) {
+            (None, ActionOption::INPUT) => match card {
+                Card::GAME => {
+                    let input = GameInput { name, thumbnail };
+                    return Game::input(input, &context.conn);
+                }
+                Card::MOVIE => {
+                    let input = MovieInput { name, thumbnail };
+                    return Movie::input(input, &context.conn);
+                }
+            },
+            (Some(id), ActionOption::UPDATE) => match card {
+                Card::GAME => {
+                    let input = GameInput { name, thumbnail };
+                    return Game::update(id, input, &context.conn);
+                }
+                Card::MOVIE => {
+                    let input = MovieInput { name, thumbnail };
+                    return Movie::update(id, input, &context.conn);
+                }
+            },
+            (Some(id), ActionOption::REMOVE) => match card {
+                Card::GAME => {
+                    return Game::remove(id, &context.conn);
+                }
+                Card::MOVIE => {
+                    return Movie::remove(id, &context.conn);
+                }
+            },
+            _ => unreachable!(),
         }
     }
     fn post(
