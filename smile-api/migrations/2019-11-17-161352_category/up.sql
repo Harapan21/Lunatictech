@@ -28,4 +28,6 @@ CREATE TRIGGER `smile`.set_default_if_category_null
 INSERT INTO
   `smile`.`category`(`name`)
 VALUES
-  ("Uncategory");
+  ("Uncategory"), 
+  ("Movie"), 
+  ("Game");

@@ -60,6 +60,12 @@ impl Query {
         Category::list(&context.conn)
             .map(|list| list.into_iter().map(|item| item as Box<dyn CategorySchema>).collect())
     }
+    fn game(context: &Context) -> Result<Vec<Box<Game>>, SmileError> {
+        Game::list(&context.conn)
+    }
+    fn movie(context: &Context) -> Result<Vec<Box<Movie>>, SmileError> {
+        Movie::list(&context.conn)
+    }
 }
 
 pub struct Mutation;
