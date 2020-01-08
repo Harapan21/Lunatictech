@@ -5,12 +5,12 @@ CREATE TABLE `smile`.`post` (
     title VARCHAR(255),
     createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content LONGTEXT,
-    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft', -- note: snake_case
+    status ENUM('publish', 'draft', 'hide') NOT NULL DEFAULT 'draft',
     last_edited_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_edited_by CHAR(36),
     PRIMARY KEY (id),
     CONSTRAINT CN_TO_USER FOREIGN KEY (author_id)
-	REFERENCES usr_smile (user_id)
+        REFERENCES usr_smile (user_id)
         ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -38,16 +38,12 @@ CREATE TABLE `smile`.`rating` (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TRIGGER  `smile` . push_embed_if_status_publish
-	AFTER INSERT ON post 
-	FOR EACH ROW 
-    		INSERT INTO 
-			`smile`.`embed` (`postId`) 
-    		VALUES (new.id);
+CREATE 
+    TRIGGER  `smile` . push_embed_if_status_publish
+ AFTER INSERT ON post FOR EACH ROW 
+    INSERT INTO `smile`.`embed` (`postId`) VALUES (new.id);
 
-CREATE TRIGGER `smile`.push_rating_if_status_publish
-	AFTER INSERT ON `smile`.`post`
-	FOR EACH ROW 
-		INSERT INTO
-	  		`smile`.`rating`(postId)
-		VALUES(new.id);
+CREATE 
+    TRIGGER  `smile` . push_rating_if_status_publish
+ AFTER INSERT ON `smile`.`post` FOR EACH ROW 
+    INSERT INTO `smile`.`rating` (postId) VALUES (new.id);

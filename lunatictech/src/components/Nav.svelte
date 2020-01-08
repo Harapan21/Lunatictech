@@ -25,7 +25,7 @@
   }
   h1 {
     font-size: 1.3rem;
-    font-family: var(--lato);
+    font-family: var(--roboto);
     font-weight: 600;
     color: var(--green);
   }

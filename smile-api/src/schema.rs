@@ -47,6 +47,24 @@ table! {
         postId -> Integer,
         thumbnail -> Nullable<Varchar>,
         video -> Nullable<Longtext>,
+        game -> Nullable<Integer>,
+        movie -> Nullable<Integer>,
+    }
+}
+
+table! {
+    game (id) {
+        id -> Integer,
+        name -> Varchar,
+        thumbnail -> Nullable<Varchar>,
+    }
+}
+
+table! {
+    movie (id) {
+        id -> Integer,
+        name -> Varchar,
+        thumbnail -> Nullable<Varchar>,
     }
 }
 
@@ -95,6 +113,8 @@ joinable!(category_node -> post (postId));
 joinable!(comment -> post (postId));
 joinable!(comment -> usr_smile (userId));
 joinable!(contrib_post_temp -> post (postId));
+joinable!(embed -> game (game));
+joinable!(embed -> movie (movie));
 joinable!(embed -> post (postId));
 joinable!(post -> usr_smile (author_id));
 joinable!(rating -> post (postId));
@@ -105,6 +125,8 @@ allow_tables_to_appear_in_same_query!(
     comment,
     contrib_post_temp,
     embed,
+    game,
+    movie,
     post,
     rating,
     usr_smile,

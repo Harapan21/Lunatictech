@@ -13,17 +13,33 @@
   ul {
     @apply flex content-between flex-col;
   }
+
   li {
     @apply items-center px-6 py-2;
+  }
+
+  #menu a {
+    transition: all 0.2s ease-in-out;
+  }
+  #menu a.selected {
+    @apply pl-1;
+    font-size: 120%;
+    font-weight: 700;
+  }
+  #information {
+    @apply mt-12;
+  }
+  #information > li {
+    @apply py-1;
   }
 </style>
 
 <div id="sidebar">
   <Headline />
   <nav>
-    <ul>
+    <ul id="menu">
       <li>
-        <a class:selected={segment === 'category'} href="category">Discover</a>
+        <a class:selected={segment === 'discover'} href="discover">Discover</a>
       </li>
       <li>
         <a class:selected={segment === 'about'} href="about">Movie</a>
@@ -32,6 +48,20 @@
         <a rel="prefetch" class:selected={segment === 'blog'} href="blog">
           Game
         </a>
+      </li>
+    </ul>
+    <ul id="information">
+      <li>
+        <h3>Lunatictech</h3>
+      </li>
+      <li>
+        <a class:selected={segment === 'about'} href="about">about</a>
+      </li>
+      <li>
+        <a class:selected={segment === 'privacy'} href="privacy">privacy</a>
+      </li>
+      <li>
+        <a class:selected={segment === 'contact'} href="contact">contact</a>
       </li>
     </ul>
   </nav>

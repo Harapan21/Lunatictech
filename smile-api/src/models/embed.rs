@@ -23,6 +23,8 @@ pub struct Embed {
     pub postId: i32,
     pub thumbnail: Option<String>,
     pub video: Option<String>,
+    pub game: Option<i32>,
+    pub movie: Option<i32>,
 }
 
 #[derive(

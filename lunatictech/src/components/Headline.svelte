@@ -7,8 +7,9 @@
     font-size: 1.3em;
   }
   h3 {
-    font-family: var(--lato);
-    font-size: 1em;
+    font-family: var(--roboto);
+    font-weight: 700;
+    font-size: 0.8em;
   }
 </style>
 
