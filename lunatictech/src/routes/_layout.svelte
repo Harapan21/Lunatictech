@@ -6,7 +6,7 @@
 
 <style>
   .root {
-    @apply flex h-screen;
+    @apply flex h-screen w-screen rounded;
   }
   main {
     @apply flex-1;

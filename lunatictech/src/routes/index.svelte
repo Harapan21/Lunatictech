@@ -1,4 +1,8 @@
-<script context="module">
+<!-- <script>
+  export let post;
+</script> -->
+
+<!-- <script context="module">
   import { client } from "../graphql/client";
   import { POSTLIST } from "../graphql/query/post";
   export async function preload() {
@@ -8,12 +12,7 @@
       })
     };
   }
-</script>
-
-<script>
-  export let post;
-</script>
-
+</script> -->
 <svelte:head>
   <title>Lunatictech</title>
 </svelte:head>
