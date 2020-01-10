@@ -1,38 +1,57 @@
 <script>
-  import { spring } from "svelte/motion";
   let notification = false;
   export let count;
-  let notificationElement;
   function handleNotification() {
     notification = !notification;
   }
 </script>
 
 <style>
-  svg {
-    @apply absolute;
+  div {
+    @apply relative p-3  shadow-xl flex items-center justify-center select-none;
+    background: var(--green);
+    border-radius: 0.5rem;
+    height: 35px;
+    width: 35px;
+    z-index: 2;
   }
-  rect {
-    fill: var(--green);
+  div:before,
+  div:after {
+    content: "";
+    border-radius: 0.5rem;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--green2);
+    z-index: -1;
+  }
+  div:hover:before,
+  div:hover:after {
+    -webkit-animation: none;
+    animation: none;
+  }
+  div:before {
+    animation: ripple 2s linear infinite;
+  }
+  div:after {
+    animation: ripple 2s linear 1s infinite;
+  }
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(1.3);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
   }
 </style>
 
-<svg
-  height="100%"
-  width="100%"
-  bind:this={notificationElement}
-  class="notification"
-  on:mouseenter={() => {
-    console.log(notificationElement);
-  }}
-  on:click={handleNotification}>
-  <rect x="0" y="0" width="100%" height="100%" />
-  <text
-    x="50%"
-    y="50%"
-    dominant-baseline="middle"
-    text-anchor="middle"
-    fill="currentColor">
-    {notification ? 'x' : count}
-  </text>
-</svg>
+<div on:click={handleNotification}>{notification ? 'x' : count}</div>
