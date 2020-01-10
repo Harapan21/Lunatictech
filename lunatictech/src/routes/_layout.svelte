@@ -1,6 +1,8 @@
 <script>
   import TailWind from "../components/Tailwind.svelte";
+  import PostItem from "../components/PostItem.svelte";
   import Sidebar from "../components/Sidebar.svelte";
+  import Panel from "../components/Panel.svelte";
   export let segment;
 </script>
 
@@ -9,17 +11,20 @@
     @apply flex h-screen w-screen rounded;
   }
   main {
-    @apply flex-1;
+    @apply flex-1 max-h-full overflow-y-auto;
     position: relative;
     background-color: white;
     box-sizing: border-box;
+    scrollbar-color: var(--green) transparent;
+    scrollbar-width: thin;
   }
-
-  #panel {
-    @apply w-1/5 rounded-l-lg;
-    background-color: var(--black);
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
+  main::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  main::-webkit-scrollbar-thumb {
+    background-color: var(--green);
+    border-radius: 6px;
+    border: 3px solid transparent;
   }
 </style>
 
@@ -30,5 +35,5 @@
   <main>
     <slot />
   </main>
-  <div id="panel" />
+  <Panel />
 </div>

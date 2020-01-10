@@ -1,5 +1,6 @@
 <script>
   import Headline from "./Headline.svelte";
+  import { title } from "../store";
   export let segment;
 </script>
 
@@ -19,6 +20,7 @@
   }
 
   #menu a {
+    @apply text-sm;
     transition: all 0.2s ease-in-out;
   }
   #menu a.selected {
@@ -38,6 +40,11 @@
   <Headline />
   <nav>
     <ul id="menu">
+      {#if title != ''}
+        <li>
+          <a class:selected={title != ''} href="discover">{$title}</a>
+        </li>
+      {/if}
       <li>
         <a class:selected={segment === 'discover'} href="discover">Discover</a>
       </li>
@@ -45,7 +52,7 @@
         <a class:selected={segment === 'about'} href="about">Movie</a>
       </li>
       <li>
-        <a rel="prefetch" class:selected={segment === 'blog'} href="blog">
+        <a rel="prefetch" class:selected={segment === 'game'} href="game">
           Game
         </a>
       </li>

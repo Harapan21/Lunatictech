@@ -9,16 +9,26 @@
   img {
     height: 30px;
     width: 30px;
-    @apply rounded-sm;
+    @apply rounded-lg;
+  }
+  span {
+    display: flex;
+    flex-direction: column;
+    @apply ml-3;
   }
   h3 {
     font-family: var(--roboto);
-    @apply ml-3;
     font-weight: 400;
+  }
+  p {
+    font-size: 0.8rem;
   }
 </style>
 
 <div>
   <img src={avatar} />
-  <h3>James McMahon</h3>
+  <span>
+    <h3>James McMahon</h3>
+    <p>Published on 29 October 2019</p>
+  </span>
 </div>
