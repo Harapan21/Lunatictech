@@ -1,3 +1,3 @@
 import { writable } from "svelte/store";
 
-export const title = writable("");
+export const active_post = writable();

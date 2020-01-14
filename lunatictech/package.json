@@ -17,6 +17,7 @@
     "apollo-link": "^1.2.13",
     "apollo-link-error": "^1.1.12",
     "compression": "^1.7.1",
+    "feather-icons": "^4.25.0",
     "graphql": "^14.5.8",
     "isomorphic-unfetch": "^3.0.0",
     "polka": "next",

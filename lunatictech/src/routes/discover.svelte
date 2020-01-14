@@ -9,7 +9,6 @@
 </script>
 
 <script>
-  import Search from "../components/Search.svelte";
   import Author from "../components/Author.svelte";
   import PostItem from "../components/PostItem.svelte";
   export let posts;
@@ -49,7 +48,7 @@
 <svelte:head>
   <title>Discover</title>
 </svelte:head>
-<Search />
+
 <div class="discover">
   <div
     id="headline-post"

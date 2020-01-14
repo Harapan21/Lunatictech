@@ -15,13 +15,15 @@
 
 <script>
   import { onMount, onDestroy } from "svelte";
-
+  import CategoryBadgeList from "../../components/CategoryBadgeList.svelte";
+  export let thumbnail = "detektiv.jpg";
   export let post;
-  import { title } from "../../store";
+  let category = ["Movie", "Netflix", "2020"];
+  import { active_post } from "../../store";
   onMount(() => {
-    title.set(post.title);
+    active_post.set(post);
   });
-  onDestroy(() => title.set(""));
+  onDestroy(() => active_post.set());
 </script>
 
 <style>
@@ -50,14 +52,22 @@
   .content :global(li) {
     margin: 0 0 0.5em 0;
   }
+  span h1 {
+    @apply text-3xl mt-3;
+  }
+  span {
+    @apply py-4 block  flex-col;
+  }
 </style>
 
 <svelte:head>
   <title>{post.title}</title>
 </svelte:head>
-
-<h1>{post.title}</h1>
-
+<img src={thumbnail} />
+<span>
+  <CategoryBadgeList {category} />
+  <h1>{post.title}</h1>
+</span>
 <div class="content">
   {@html post.html}
 </div>

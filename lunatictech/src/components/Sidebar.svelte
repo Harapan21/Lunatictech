@@ -1,6 +1,7 @@
 <script>
   import Headline from "./Headline.svelte";
-  import { title } from "../store";
+  import { active_post } from "../store";
+  import Icon from "./Icon.svelte";
   export let segment;
 </script>
 
@@ -14,13 +15,15 @@
   ul {
     @apply flex content-between flex-col;
   }
-
+  a {
+    @apply outline-none;
+  }
   li {
     @apply items-center px-6 py-2;
   }
 
   #menu a {
-    @apply text-sm;
+    @apply text-sm flex items-center;
     transition: all 0.2s ease-in-out;
   }
   #menu a.selected {
@@ -28,32 +31,52 @@
     font-size: 120%;
     font-weight: 700;
   }
+  #menu a span {
+    @apply ml-2;
+  }
   #information {
     @apply mt-12;
   }
   #information > li {
     @apply py-1;
   }
+  .create-post {
+    @apply flex items-center cursor-pointer text-white p-3 text-base;
+    background: var(--green);
+  }
 </style>
 
 <div id="sidebar">
   <Headline />
   <nav>
+    <a class="create-post" href="#">
+      <Icon width={15} height={15} icon="plus" />
+      <span>Post</span>
+    </a>
     <ul id="menu">
-      {#if title != ''}
+      {#if active_post.title}
         <li>
-          <a class:selected={title != ''} href="discover">{$title}</a>
+          <a class:selected={$active_post.title != ''} href="discover">
+            {$active_post.title}
+          </a>
         </li>
       {/if}
       <li>
-        <a class:selected={segment === 'discover'} href="discover">Discover</a>
+        <a class:selected={segment === 'discover'} href="discover">
+          <Icon width={15} height={15} icon="rss" />
+          <span>Discover</span>
+        </a>
       </li>
       <li>
-        <a class:selected={segment === 'about'} href="about">Movie</a>
+        <a class:selected={segment === 'movie'} href="movie">
+          <Icon width={15} height={15} icon="film" />
+          <span>Movie</span>
+        </a>
       </li>
       <li>
         <a rel="prefetch" class:selected={segment === 'game'} href="game">
-          Game
+          <Icon width={15} height={15} icon="codesandbox" />
+          <span>Game</span>
         </a>
       </li>
     </ul>

@@ -1,7 +1,9 @@
 <script>
   export let thumbnail = "detektiv.jpg";
+  import CategoryBadgeList from "./CategoryBadgeList.svelte";
   import Author from "./Author.svelte";
   export let post;
+  export let category = ["Movie", "Netflix", "2020"];
 </script>
 
 <style>
@@ -22,9 +24,6 @@
   .content {
     @apply ml-5 flex flex-col justify-around;
   }
-  li {
-    @apply inline-block bg-gray-200 rounded px-2 py-0 text-sm font-semibold text-gray-700 mr-2;
-  }
   h1 {
     @apply text-lg;
   }
@@ -33,11 +32,8 @@
 <a rel="prefetch" href="blog/{post.slug}">
   <span style="background: url({thumbnail}) no-repeat center;" />
   <div class="content">
-    <ul>
-      <li># Movie</li>
-      <li># Netflix</li>
-      <li># 2020</li>
-    </ul>
+
+    <CategoryBadgeList {category} />
     <h1>{post.title}</h1>
     <Author />
   </div>
