@@ -1,11 +1,12 @@
 <script>
+  import { panel_router } from "../store";
   import Notification from "./Notification.svelte";
   import NotificationList from "./NotificationList.svelte";
   import Trending from "./Trending.svelte";
   export let avatar = "faces.jpg";
-
+  let routerPanel = { notification: Notification, treding: Trending };
   let notification = false;
-  function handleNotification() {
+  function handleNotification(param) {
     notification = !notification;
   }
 </script>
@@ -45,13 +46,9 @@
 
 <div id="panel" class="sm:w-full" class:active={notification}>
   <div class="menu">
-    <Notification count={2} {notification} {handleNotification} />
+    <Notification count={2} {notification} on:click={handleNotification} />
     <img alt="profile" src={avatar} />
   </div>
   <h1>{notification ? 'Notification' : 'Trending'}</h1>
-  {#if notification}
-    <NotificationList />
-  {:else}
-    <Trending />
-  {/if}
+  <routerPanel[$panel_router] />
 </div>

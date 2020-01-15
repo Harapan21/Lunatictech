@@ -2,7 +2,6 @@
   import Icon from "./Icon.svelte";
   export let notification;
   export let count;
-  export let handleNotification;
 </script>
 
 <style>
@@ -63,10 +62,7 @@
   }
 </style>
 
-<div
-  on:click={handleNotification}
-  class:active={notification}
-  class:ripple={count}>
+<div on:click class:active={notification} class:ripple={count}>
   {#if notification}
     <Icon width={30} height={30} icon="x" opt={{ 'stroke-width': 3 }} />
   {:else if count}

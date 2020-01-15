@@ -10,7 +10,7 @@
 
 <script>
   import Author from "../components/Author.svelte";
-  import PostItem from "../components/PostItem.svelte";
+  import PostList from "../components/PostList.svelte";
   export let posts;
   export let imageurl = "dummy.jpg";
 </script>
@@ -32,16 +32,19 @@
   }
 
   section {
-    transition: padding 0.2s ease-in-out;
     @apply cursor-pointer text-white absolute left-0 bottom-0 p-5 w-full;
   }
 
-  section:hover {
-    @apply pb-10;
+  section:hover h1 {
+    @apply text-2xl;
   }
 
   h1 {
-    @apply text-2xl py-5;
+    @apply text-xl pb-5 pt-2;
+    transition: font-size 0.1s ease-in-out;
+  }
+  span {
+    @apply border border-white rounded px-3 text-white;
   }
 </style>
 
@@ -55,13 +58,10 @@
     style="background: url({imageurl}) no-repeat center; background-size: 100%
     100%;">
     <section>
+      <span>headline</span>
       <h1>Demonstran Hong Kong Demo Virtual di GTA V Online</h1>
       <Author />
     </section>
   </div>
-  <div class="post-item">
-    {#each posts as post}
-      <PostItem {post} />
-    {/each}
-  </div>
+  <PostList {posts} />
 </div>
