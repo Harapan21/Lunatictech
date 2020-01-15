@@ -3,7 +3,7 @@
   export let icon;
   export let width = 50;
   export let height = 50;
-  export let opt;
+  export let opt = {};
 </script>
 
 {@html feather.icons[icon].toSvg({ width, height, ...opt })}

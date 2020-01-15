@@ -2,9 +2,9 @@
   export let key;
   export let thumbnail;
   export let name;
-  export let rating = 5.0;
+  export let rating = 3.1;
   export let year;
-  import Star from "./Star.svelte";
+  import Icon from "./Icon.svelte";
 </script>
 
 <style>
@@ -21,6 +21,9 @@
   div:hover section {
     @apply pb-8;
   }
+  div:hover section span {
+    @apply text-base opacity-100 static;
+  }
   section {
     transition: all 0.1s ease-in-out;
     @apply cursor-pointer text-white absolute left-0 bottom-0 p-3 w-full;
@@ -34,7 +37,8 @@
     @apply absolute top-0 left-0 right-0 bottom-0 w-full h-full;
   }
   span {
-    @apply flex items-center text-base;
+    transition: position 0.1s ease-in-out;
+    @apply flex items-center text-sm opacity-0 absolute;
   }
 </style>
 
@@ -46,7 +50,11 @@
     <h1>{name}</h1>
     <h3>{year}</h3>
     <span>
-      <Star checked height={10} width={10} />
+      <Icon
+        height={10}
+        width={10}
+        icon="star"
+        opt={{ fill: 'yellow', 'stroke-width': 0 }} />
       {rating}
     </span>
   </section>

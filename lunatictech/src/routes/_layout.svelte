@@ -13,7 +13,7 @@
     @apply flex h-screen w-screen rounded;
   }
   main {
-    @apply flex-1 max-h-full overflow-y-auto;
+    @apply flex-1 max-h-full overflow-y-scroll;
     position: relative;
     background-color: white;
     box-sizing: border-box;
