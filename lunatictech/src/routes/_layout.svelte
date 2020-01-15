@@ -9,8 +9,13 @@
 </script>
 
 <style>
+  .cover {
+    background: var(--green3);
+    @apply h-screen w-screen p-2;
+  }
   .root {
-    @apply flex h-screen w-screen rounded;
+    border-radius: 1rem;
+    @apply flex h-full w-full  overflow-hidden bg-white shadow-lg;
   }
   main {
     @apply flex-1 max-h-full overflow-y-scroll;
@@ -23,24 +28,26 @@
   }
   main:hover {
     scrollbar-color: var(--green) transparent;
+    transition: all 0.1s ease-in;
   }
-  main::-webkit-scrollbar-track {
+  main::-webkit-scrollbar {
+    width: 6px;
     background: transparent;
   }
   main:hover::-webkit-scrollbar-thumb {
     background-color: var(--green);
     border-radius: 6px;
-    border: 3px solid transparent;
   }
 </style>
 
 <TailWind />
-
-<div class="root">
-  <Sidebar {segment} />
-  <main>
-    <StickyHead {segment} />
-    <slot />
-  </main>
-  <Panel />
+<div class="cover">
+  <div class="root">
+    <Sidebar {segment} />
+    <main>
+      <StickyHead {segment} />
+      <slot />
+    </main>
+    <Panel />
+  </div>
 </div>

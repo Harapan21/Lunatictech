@@ -7,7 +7,7 @@
 
 <style>
   div {
-    @apply relative p-3  shadow-xl flex items-center justify-center select-none;
+    @apply relative p-3  shadow-xl flex items-center justify-center select-none cursor-pointer;
     height: 35px;
     width: 35px;
     z-index: 2;

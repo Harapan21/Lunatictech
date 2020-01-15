@@ -11,7 +11,7 @@
   div {
     max-width: 140px;
     max-height: 200px;
-    @apply rounded-lg relative w-full h-full overflow-hidden text-white;
+    @apply rounded-lg relative w-full h-full overflow-hidden text-white  cursor-pointer select-none;
   }
   div:before {
     @apply absolute w-full h-full;
@@ -21,41 +21,52 @@
   div:hover section {
     @apply pb-8;
   }
-  div:hover section span {
-    @apply text-base opacity-100 static;
-  }
   section {
     transition: all 0.1s ease-in-out;
-    @apply cursor-pointer text-white absolute left-0 bottom-0 p-3 w-full;
+    @apply text-white absolute left-0 bottom-0 p-3 w-full;
   }
   section * {
     @apply text-base;
     font-family: var(--roboto);
     font-weight: 400;
   }
-  img {
-    @apply absolute top-0 left-0 right-0 bottom-0 w-full h-full;
+  ul,
+  li {
+    @apply flex items-center mr-2;
+    font-size: 0.8rem;
+  }
+  ul {
+    @apply w-full;
   }
   span {
-    transition: position 0.1s ease-in-out;
-    @apply flex items-center text-sm opacity-0 absolute;
+    @apply mr-1;
+    font-size: 0.5rem;
+  }
+  #yr {
+    @apply border border-gray-100 rounded-sm px-1;
   }
 </style>
 
 <div
   id={key}
-  style="background: url({thumbnail}) no-repeat center; background-size: 100%
+  style="background: url({thumbnail}) no-repeat center; background-size: auto
   100%;">
   <section>
     <h1>{name}</h1>
-    <h3>{year}</h3>
-    <span>
-      <Icon
-        height={10}
-        width={10}
-        icon="star"
-        opt={{ fill: 'yellow', 'stroke-width': 0 }} />
-      {rating}
-    </span>
+    <ul>
+      <li>
+        <span>
+          <Icon
+            height={13}
+            width={13}
+            icon="star"
+            opt={{ fill: 'yellow', 'stroke-width': 0 }} />
+        </span>
+        {rating}
+      </li>
+      <li>
+        <span id="yr">{year}</span>
+      </li>
+    </ul>
   </section>
 </div>

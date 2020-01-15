@@ -12,17 +12,14 @@
 
 <style>
   #panel {
-    @apply text-white w-1/4 rounded-l-lg p-5 relative overflow-hidden;
+    @apply text-white w-1/4  p-5 relative overflow-hidden;
     background: var(--black);
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
     transition: background 0.2s;
   }
   #panel.active {
     background: var(--green) !important;
-  }
-  .list {
-    @apply overflow-hidden max-h-full;
   }
   h1 {
     @apply text-sm;
@@ -30,9 +27,6 @@
     text-transform: uppercase;
     font-weight: 700;
     line-height: 2px;
-  }
-  h3 {
-    @apply text-sm;
   }
   .menu {
     @apply flex items-center w-full p-3 justify-end;
@@ -46,9 +40,6 @@
   }
   img {
     @apply absolute w-full h-full shadow-xl;
-  }
-  span {
-    transition: width 0.2s, height 0.2s;
   }
 </style>
 

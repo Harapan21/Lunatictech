@@ -5,11 +5,14 @@
   --roboto: "Roboto", sans-serif;
   --green: #56d666;
   --green2: #66dc75;
+  --green3: #eaffed;
   --black: #333333;
 }
+
 html {
   scroll-behavior: smooth;
 }
+
 body {
   margin: 0;
   padding: 0;
