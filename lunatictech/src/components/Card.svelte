@@ -18,9 +18,6 @@
     content: "";
     background: linear-gradient(transparent, #000000);
   }
-  div:hover section {
-    @apply pb-8;
-  }
   section {
     transition: all 0.1s ease-in-out;
     @apply text-white absolute left-0 bottom-0 p-3 w-full;

@@ -1,6 +1,6 @@
 <style>
   div {
-    @apply px-6 py-8 bg-white;
+    @apply px-6 py-5 bg-white;
   }
   h1 {
     color: var(--green);

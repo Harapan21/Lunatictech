@@ -1,5 +1,6 @@
 <script>
   import Headline from "./Headline.svelte";
+  import { scale } from "svelte/transition";
   import { active_post } from "../store";
   import Icon from "./Icon.svelte";
   export let segment;
@@ -54,8 +55,8 @@
       <span>Post</span>
     </a>
     <ul id="menu">
-      {#if active_post.title}
-        <li>
+      {#if $active_post}
+        <li in:scale={{ duration: 200 }}>
           <a class:selected={$active_post.title != ''} href="discover">
             {$active_post.title}
           </a>
