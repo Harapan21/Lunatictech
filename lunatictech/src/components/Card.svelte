@@ -1,10 +1,16 @@
 <script>
+  import { panel_router, topic_active } from "../store";
+  export let topic;
   export let key;
   export let thumbnail;
   export let name;
   export let rating = 3.1;
   export let year;
   import Icon from "./Icon.svelte";
+  function handleClick() {
+    panel_router.set(2);
+    topic.set({ topic, key });
+  }
 </script>
 
 <style>
@@ -45,6 +51,7 @@
 </style>
 
 <div
+  on:click={handleClick}
   id={key}
   style="background: url({thumbnail}) no-repeat center; background-size: auto
   100%;">

@@ -1,6 +1,7 @@
 <script>
   export let avatar = "faces.jpg";
   export let createdAt = "29 October 2019";
+  export let name = "James McMahon";
 </script>
 
 <style>
@@ -27,9 +28,9 @@
 </style>
 
 <div>
-  <img src={avatar} />
+  <img alt={name} src={avatar} />
   <span>
-    <h3>James McMahon</h3>
+    <h3>{name}</h3>
     <p>Published on {createdAt}</p>
   </span>
 </div>

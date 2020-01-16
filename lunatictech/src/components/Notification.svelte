@@ -1,7 +1,16 @@
 <script>
+  import { panel_router } from "../store";
   import Icon from "./Icon.svelte";
-  export let notification;
+  let isNotification = false;
   export let count;
+
+  function handleNotification() {
+    isNotification = !isNotification;
+  }
+  $: if (panel_router > 1) {
+    handleNotification();
+  }
+  $: isNotification ? panel_router.set(0) : panel_router.set(1);
 </script>
 
 <style>
@@ -62,8 +71,11 @@
   }
 </style>
 
-<div on:click class:active={notification} class:ripple={count}>
-  {#if notification}
+<div
+  on:click={handleNotification}
+  class:active={isNotification}
+  class:ripple={count}>
+  {#if isNotification}
     <Icon width={30} height={30} icon="x" opt={{ 'stroke-width': 3 }} />
   {:else if count}
     {count}

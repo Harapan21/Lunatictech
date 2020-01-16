@@ -3,21 +3,22 @@
   import Notification from "./Notification.svelte";
   import NotificationList from "./NotificationList.svelte";
   import Trending from "./Trending.svelte";
+  import Topic from "./Topic.svelte";
   export let avatar = "faces.jpg";
-  let routerPanel = { notification: Notification, treding: Trending };
-  let notification = false;
-  function handleNotification(param) {
-    notification = !notification;
-  }
+  let routerPanel = [
+    { title: "notification", component: NotificationList, width: "w-1/4" },
+    { title: "trending", component: Trending, width: "w-1/4" },
+    { title: "topic", component: Topic, width: "w-1/2" }
+  ];
 </script>
 
 <style>
   #panel {
-    @apply text-white w-1/4  p-5 relative overflow-hidden;
+    @apply text-white p-5 relative overflow-hidden;
     background: var(--black);
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
-    transition: background 0.2s;
+    transition: background 0.2s, width 0.3s ease-in-out;
   }
   #panel.active {
     background: var(--green) !important;
@@ -44,11 +45,14 @@
   }
 </style>
 
-<div id="panel" class="sm:w-full" class:active={notification}>
+<div
+  id="panel"
+  class:active={$panel_router === 0}
+  class={routerPanel[$panel_router].width}>
   <div class="menu">
-    <Notification count={2} {notification} on:click={handleNotification} />
+    <Notification count={2} />
     <img alt="profile" src={avatar} />
   </div>
-  <h1>{notification ? 'Notification' : 'Trending'}</h1>
-  <routerPanel[$panel_router] />
+  <h1>{routerPanel[$panel_router].title}</h1>
+  <svelte:component this={routerPanel[$panel_router].component} />
 </div>

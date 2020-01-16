@@ -1,5 +1,6 @@
 <script>
   import Card from "../components/Card.svelte";
+  
   export let games = [{ game: "FIFA", year: 2019, thumbnail: "game.jpg" }];
 </script>
 
@@ -15,6 +16,6 @@
 
 <div>
   {#each games as { game, year, thumbnail }, i}
-    <Card key={i} name={game} {year} {thumbnail} />
+    <Card key={i} name={game} {year} {thumbnail} topic="game" />
   {/each}
 </div>

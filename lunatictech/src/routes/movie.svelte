@@ -17,6 +17,6 @@
 
 <div>
   {#each movies as { movie, year, thumbnail }, i}
-    <Card key={i} name={movie} {year} {thumbnail} />
+    <Card key={i} name={movie} {year} {thumbnail} topic="movie" />
   {/each}
 </div>
