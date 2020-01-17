@@ -14,10 +14,10 @@
   }
   .root {
     border-radius: 1rem;
-    @apply flex h-full w-full  overflow-hidden bg-white shadow-lg border border-gray-300;
+    @apply flex h-full w-full relative overflow-hidden bg-white shadow-lg border border-gray-300;
   }
   main {
-    @apply flex-1 max-h-full overflow-y-scroll;
+    @apply flex-1 h-full overflow-y-scroll flex flex-col;
     position: relative;
     background-color: white;
     box-sizing: border-box;

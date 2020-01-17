@@ -1,12 +1,12 @@
 <script>
   import Card from "../components/Card.svelte";
-  
+
   export let games = [{ game: "FIFA", year: 2019, thumbnail: "game.jpg" }];
 </script>
 
 <style>
   div {
-    @apply p-5 h-full w-full;
+    @apply p-5 h-full w-full m-0;
   }
 </style>
 

@@ -6,19 +6,32 @@
   import Topic from "./Topic.svelte";
   export let avatar = "faces.jpg";
   let routerPanel = [
-    { title: "notification", component: NotificationList, width: "w-1/4" },
-    { title: "trending", component: Trending, width: "w-1/4" },
-    { title: "topic", component: Topic, width: "w-1/2" }
+    {
+      title: "notification",
+      component: NotificationList,
+      style: "w-1/4 relative"
+    },
+    { title: "trending", component: Trending, style: "w-1/4 relative" },
+    {
+      title: "topic",
+      component: Topic,
+      style: "w-3/4 absolute right-0 top-0 h-full z-50"
+    }
   ];
+  function handleMouseLeave() {
+    if ($panel_router === 2) {
+      panel_router.set(1);
+    }
+  }
 </script>
 
 <style>
   #panel {
-    @apply text-white p-5 relative overflow-hidden;
+    @apply text-white p-5  overflow-hidden;
     background: var(--black);
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
-    transition: background 0.2s, width 0.3s ease-in-out;
+    transition: background 0.2s ease-in, width 0.2s ease-in-out;
   }
   #panel.active {
     background: var(--green) !important;
@@ -48,7 +61,8 @@
 <div
   id="panel"
   class:active={$panel_router === 0}
-  class={routerPanel[$panel_router].width}>
+  on:mouseleave={handleMouseLeave}
+  class={routerPanel[$panel_router].style}>
   <div class="menu">
     <Notification count={2} />
     <img alt="profile" src={avatar} />

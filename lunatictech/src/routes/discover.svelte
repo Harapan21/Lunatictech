@@ -17,7 +17,7 @@
 
 <style>
   .discover {
-    @apply px-5 mt-3;
+    @apply px-5;
   }
   #headline-post {
     height: 20rem;

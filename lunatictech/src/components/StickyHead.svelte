@@ -1,7 +1,5 @@
 <script>
   import Search from "./Search.svelte";
-
-  export let segment;
 </script>
 
 <style>

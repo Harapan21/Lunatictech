@@ -46,6 +46,9 @@ pub struct Query;
 
 #[juniper::object(Context = Context)]
 impl Query {
+    fn info(context: &Context) -> Result<Box<dyn InfoSchema + 'static>, SmileError> {
+        unimplemented!()
+    }
     fn me(context: &Context) -> Result<Box<dyn UserSchema + 'static>, SmileError> {
         match &context.user_id {
             Some(auth_id) => Ok(User::find_by_id(auth_id, &context.conn)? as Box<dyn UserSchema>),

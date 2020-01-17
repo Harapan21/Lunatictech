@@ -8,7 +8,9 @@
   --green3: #eaffed;
   --black: #333333;
 }
-
+* {
+  box-sizing: border-box;
+}
 html {
   scroll-behavior: smooth;
 }

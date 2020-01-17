@@ -1,3 +1,7 @@
+<script>
+  import { fade } from "svelte/transition";
+</script>
+
 <style>
   .item {
     @apply border border-transparent p-3 my-5 rounded cursor-pointer;
@@ -8,7 +12,7 @@
   }
 </style>
 
-<div class="list">
+<div in:fade>
   <div class="item">
     <h3>5 Cara Mati Paling Enggak Penting di Jumanji: The Next Level</h3>
   </div>

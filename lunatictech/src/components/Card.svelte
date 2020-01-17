@@ -6,11 +6,18 @@
   export let name;
   export let rating = 3.1;
   export let year;
+  import { onDestroy } from "svelte";
   import Icon from "./Icon.svelte";
+
   function handleClick() {
+    topic_active.set({ topic, id: key, name });
     panel_router.set(2);
-    topic.set({ topic, key });
   }
+  onDestroy(() => {
+    if ($panel_router == 2) {
+      panel_router.set(1);
+    }
+  });
 </script>
 
 <style>
