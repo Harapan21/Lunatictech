@@ -1,5 +1,10 @@
 <script>
   import { topic_active } from "../store";
+  import Card from "./Card.svelte";
+  console.log($topic_active);
 </script>
 
-<h1>topic</h1>
+<div>
+  <h1>topic</h1>
+  <Card {...$topic_active} />
+</div>

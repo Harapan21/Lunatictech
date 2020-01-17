@@ -10,7 +10,7 @@
   import Icon from "./Icon.svelte";
 
   function handleClick() {
-    topic_active.set({ topic, id: key, name });
+    topic_active.set({ topic, key, name, thumbnail, year });
     panel_router.set(2);
   }
   onDestroy(() => {
@@ -22,9 +22,9 @@
 
 <style>
   div {
-    max-width: 140px;
-    max-height: 200px;
-    @apply rounded-lg relative w-full h-full overflow-hidden text-white  cursor-pointer select-none;
+    @apply rounded-lg relative overflow-hidden text-white  cursor-pointer select-none;
+    width: 140px;
+    height: 200px;
   }
   div:before {
     @apply absolute w-full h-full;
