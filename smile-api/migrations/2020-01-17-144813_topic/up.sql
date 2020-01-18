@@ -12,6 +12,8 @@ alter table `smile`.`category` change parentId topicId int,
 	ADD CONSTRAINT CN_TO_TOPIC FOREIGN KEY (topicId) REFERENCES topic(id) ON DELETE CASCADE ON UPDATE CASCADE
 ;
 DROP TRIGGER `smile`.set_default_if_category_null;
-DELETE FROM `smile`.`category` WHERE parentId is null;
+DELETE FROM `smile`.`category` 
+WHERE
+    parentId IS NULL;
 DELETE FROM `smile`.`category`
 

@@ -10,7 +10,7 @@ const NICKNAME: &'static str = r#"
 
 | by Harapan Pardamean <harapanpardamean@gmail.com>
 "#;
-const HOSTNAME: &'static str = "127.0.0.1:8088";
+const HOSTNAME: &'static str = "localhost:8088";
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&[0; 32])
-                    .domain("127.0.0.1")
+                    .domain("localhost")
                     .name("aunt")
                     .path("/")
                     .max_age(chrono::Duration::days(1).num_seconds())

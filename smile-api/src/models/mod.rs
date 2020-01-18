@@ -4,6 +4,7 @@ pub mod drive;
 pub mod embed;
 pub mod game;
 pub mod handler;
+pub mod info;
 pub mod movie;
 pub mod node;
 pub mod post;

@@ -8,6 +8,7 @@ use crate::{
         embed::{Embed, EmbedInput},
         game::{Game, GameInput},
         handler::Handler,
+        info::InfoSchema,
         movie::{Movie, MovieInput},
         post::{Post, PostInput},
         user::{User, UserInput},
@@ -46,7 +47,7 @@ pub struct Query;
 
 #[juniper::object(Context = Context)]
 impl Query {
-    fn info(context: &Context) -> Result<Box<dyn InfoSchema + 'static>, SmileError> {
+    fn info(context: &Context) -> Result<InfoSchema, SmileError> {
         unimplemented!()
     }
     fn me(context: &Context) -> Result<Box<dyn UserSchema + 'static>, SmileError> {

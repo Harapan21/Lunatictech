@@ -1,6 +1,6 @@
 -- This file should undo anything in `up.sql`
-ALTER TABLE  `smile`.`embed`  
-	DROP COLUMN game INT,
-	DROP COLUMN movie INT,
-	DROP  CN_TO_GAME ,
-	DROP  CN_TO_POST_AS_EMBED ;
+ALTER TABLE  `smile`.`embed`
+	DROP FOREIGN KEY CN_TO_GAME,
+	DROP FOREIGN KEY CN_TO_MOVIE,
+	DROP COLUMN game,
+	DROP COLUMN movie;

@@ -7,7 +7,7 @@ use crate::{
 pub trait CategorySchema {
     fn id(&self) -> &i32;
     fn name(&self) -> &str;
-    fn parent(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError>;
+    fn topic(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError>;
 }
 
 impl CategorySchema for Category {
@@ -17,10 +17,10 @@ impl CategorySchema for Category {
     fn name(&self) -> &str {
         &self.name.as_str()
     }
-    fn parent(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError> {
-        match &self.parentId {
-            Some(parent_id) => {
-                let category = Category::find_by_id(parent_id, &context.conn)?;
+    fn topic(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError> {
+        match &self.topicId {
+            Some(topic_id) => {
+                let category = Category::find_by_id(topic_id, &context.conn)?;
                 return Ok(Some(category));
             }
             None => Ok(None),
@@ -39,10 +39,10 @@ impl Box<dyn CategorySchema> {
     fn name(&self) -> &str {
         &self.name()
     }
-    fn parent(
+    fn topic(
         &self,
         context: &Context,
     ) -> Result<Option<Box<dyn CategorySchema + 'static>>, SmileError> {
-        self.parent(context)
+        self.topic(context)
     }
 }

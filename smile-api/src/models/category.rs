@@ -5,7 +5,7 @@ use crate::schema::category;
 pub struct Category {
     pub id: i32,
     pub name: String,
-    pub parentId: Option<i32>,
+    pub topicId: Option<i32>,
 }
 
 #[derive(
@@ -22,5 +22,5 @@ pub struct Category {
 #[table_name = "category"]
 pub struct CategoryInput {
     pub name: String,
-    pub parentId: Option<i32>,
+    pub topicId: Option<i32>,
 }
