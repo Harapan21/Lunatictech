@@ -1,6 +1,6 @@
 <style>
-  div {
-    @apply px-6 py-5 bg-white;
+  a {
+    @apply px-6 py-5 bg-white block;
   }
   h1 {
     color: var(--green);
@@ -13,7 +13,7 @@
   }
 </style>
 
-<div>
+<a href="discover">
   <h1>Lunatictech</h1>
   <h3>Watch and Play</h3>
-</div>
+</a>
