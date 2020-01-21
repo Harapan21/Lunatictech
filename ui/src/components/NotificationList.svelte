@@ -45,7 +45,7 @@
 
 <style>
   div {
-    @apply overflow-y-auto overflow-x-hidden  w-auto mt-5 mb-16 relative max-h-full;
+    @apply overflow-y-auto overflow-x-hidden  w-auto mt-5 mb-48 relative max-h-full;
     scrollbar-width: none;
   }
 

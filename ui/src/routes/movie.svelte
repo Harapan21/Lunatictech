@@ -12,7 +12,7 @@
 </style>
 
 <svelte:head>
-  <title>Hello Movie</title>
+  <title>Movie</title>
 </svelte:head>
 
 <div>

@@ -1,18 +1,9 @@
-<!-- <script>
-  export let post;
-</script> -->
-
-<!-- <script context="module">
-  import { client } from "../graphql/client";
-  import { POSTLIST } from "../graphql/query/post";
+<script context="module">
   export async function preload() {
-    return {
-      post: await client.query({
-        query: POSTLIST
-      })
-    };
+    return this.redirect(301, "discover");
   }
-</script> -->
+</script>
+
 <svelte:head>
   <title>Lunatictech</title>
 </svelte:head>

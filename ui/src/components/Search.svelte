@@ -4,7 +4,11 @@
     background-color: #f0fff2;
   }
   input:focus {
-    @apply outline-none bg-white border-gray-100;
+    @apply outline-none bg-white border-gray-100 shadow;
+  }
+  input:before {
+    content: "";
+    @apply absolute top-0 left-0 bg-black w-full h-full;
   }
 </style>
 
