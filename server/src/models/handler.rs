@@ -31,6 +31,7 @@ pub trait Handler<T, M> {
     fn update(id: T, input: M, connection: &MysqlConnection) -> Result<bool, SmileError>;
     fn remove(id: T, connection: &MysqlConnection) -> Result<bool, SmileError>;
 }
+
 macro_rules! handler {
     ($models:tt => $impl_for:ident ($id:ty, $input:tt) ) => {
         impl Handler<$id, $input> for $impl_for {
@@ -226,6 +227,7 @@ impl Handler<String, UserInput> for User {
             None => Err(SmileError::Required("password")),
         }
     }
+
     fn update(
         id: String,
         input: UserInput,
@@ -237,6 +239,7 @@ impl Handler<String, UserInput> for User {
             .map(|_| true)
             .map_err(SmileError::from)
     }
+
     fn remove(id: String, connection: &MysqlConnection) -> Result<bool, SmileError> {
         Delete(usr_smile.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
     }
