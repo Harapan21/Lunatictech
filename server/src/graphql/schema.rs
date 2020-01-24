@@ -48,7 +48,7 @@ pub struct Query;
 #[juniper::object(Context = Context)]
 impl Query {
     fn info(context: &Context) -> Result<InfoSchema, SmileError> {
-        unimplemented!()
+        InfoSchema::get(&context.conn)
     }
     fn me(context: &Context) -> Result<Box<dyn UserSchema + 'static>, SmileError> {
         match &context.user_id {
@@ -78,6 +78,9 @@ pub struct Mutation;
     Context = Context,
 )]
 impl Mutation {
+    fn info(context: &Context, name: String, description: String) -> Result<bool, SmileError> {
+        InfoSchema::set(context, InfoSchema { name, description })
+    }
     fn login(username: String, password: String, context: &Context) -> Result<Auth, SmileError> {
         let login = User::login(username, password, &context.conn)?;
         if let Some(token) = &login.token {

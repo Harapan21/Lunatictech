@@ -1,3 +1,18 @@
+<script context="module">
+  import client, { query_gql } from "../graphql/client";
+  import { blog } from "../store";
+  export async function preload() {
+    const info = await client.query({ query: query_gql.info });
+    blog.set({
+      info: {
+        name: info.data.info.name,
+        description: info.data.info.description,
+        loading: info.loading
+      }
+    });
+  }
+</script>
+
 <script>
   import TailWind from "../components/Tailwind.svelte";
   import PostItem from "../components/PostItem.svelte";

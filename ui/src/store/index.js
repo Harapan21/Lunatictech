@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export const active_post = writable();
 
@@ -9,4 +9,12 @@ export const topic_active = writable({
   name: undefined,
   thumbnail: undefined,
   year: undefined
+});
+
+export const blog = writable({
+  info: {
+    name: "",
+    description: "",
+    loaded: false
+  }
 });

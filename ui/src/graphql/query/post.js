@@ -1,6 +1,6 @@
 import { gql } from "apollo-boost";
 
-export const POSTLIST = gql`
+export default gql`
   query post_list {
     post {
       id

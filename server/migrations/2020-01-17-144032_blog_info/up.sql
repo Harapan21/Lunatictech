@@ -5,3 +5,11 @@ CREATE TABLE `smile`.`blog_info` (
 	PRIMARY KEY (name)
 );
 
+INSERT INTO `smile`.`blog_info`
+(name,
+description)
+VALUES
+("Lunatictech",
+"Watch and Play");
+
+	

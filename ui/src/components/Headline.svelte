@@ -1,3 +1,8 @@
+<script>
+  import { blog } from "../store";
+  console.log($blog);
+</script>
+
 <style>
   a {
     @apply px-6 py-5 bg-white block;
@@ -13,7 +18,9 @@
   }
 </style>
 
-<a href="discover">
-  <h1>Lunatictech</h1>
-  <h3>Watch and Play</h3>
-</a>
+{#if !$blog.info.loading}
+  <a href="discover">
+    <h1>{$blog.info.name}</h1>
+    <h3>{$blog.info.description}</h3>
+  </a>
+{/if}

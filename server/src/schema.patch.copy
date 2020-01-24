@@ -1,8 +1,15 @@
 table! {
+    blog_info (name) {
+        name -> Varchar,
+        description -> Varchar,
+    }
+}
+
+table! {
     category (id) {
         id -> Integer,
         name -> Varchar,
-        parentId -> Nullable<Integer>,
+        topicId -> Nullable<Integer>,
     }
 }
 
@@ -95,6 +102,14 @@ table! {
 }
 
 table! {
+    topic (id) {
+        id -> Integer,
+        name -> Varchar,
+        icon -> Nullable<Varchar>,
+    }
+}
+
+table! {
     usr_smile (user_id) {
         user_id -> Char,
         username -> Varchar,
@@ -108,6 +123,7 @@ table! {
     }
 }
 
+joinable!(category -> topic (topicId));
 joinable!(category_node -> category (categoryId));
 joinable!(category_node -> post (postId));
 joinable!(comment -> post (postId));
@@ -120,6 +136,7 @@ joinable!(post -> usr_smile (author_id));
 joinable!(rating -> post (postId));
 
 allow_tables_to_appear_in_same_query!(
+    blog_info,
     category,
     category_node,
     comment,
@@ -129,5 +146,6 @@ allow_tables_to_appear_in_same_query!(
     movie,
     post,
     rating,
+    topic,
     usr_smile,
 );
