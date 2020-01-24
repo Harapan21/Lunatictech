@@ -6,10 +6,10 @@ CREATE TABLE `smile`.`blog_info` (
 );
 
 INSERT INTO `smile`.`blog_info`
-(name,
-description)
+	(name,
+	description)
 VALUES
-("Lunatictech",
-"Watch and Play");
+	("Lunatictech",
+	"Watch and Play");
 
 	

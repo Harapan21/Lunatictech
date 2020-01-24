@@ -3,7 +3,7 @@ use crate::{
     models::{game::Game, movie::Movie, post::Post},
     schema::{embed, embed::dsl::*, rating},
 };
-use diesel::{prelude::*, update as dieselUpdate};
+use diesel::{prelude::*, update as Update};
 
 #[derive(
     juniper::GraphQLObject,
@@ -69,7 +69,7 @@ impl Embed {
         input: EmbedInput,
         conn: &MysqlConnection,
     ) -> Result<bool, SmileError> {
-        dieselUpdate(embed.filter(postId.eq(post_id)))
+        Update(embed.filter(postId.eq(post_id)))
             .set(input)
             .execute(conn)
             .map(|_| true)

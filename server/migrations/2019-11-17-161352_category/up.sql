@@ -4,7 +4,9 @@ CREATE TABLE `smile`.`category` (
     parentId INT,
     PRIMARY KEY (id)
 );
+
 ALTER TABLE `smile`.`category` AUTO_INCREMENT = 1;
+
 CREATE TABLE `smile`.`category_node` (
     id INT NOT NULL AUTO_INCREMENT,
     categoryId INT DEFAULT 1,
