@@ -2,8 +2,6 @@ extern crate uuid;
 
 use super::{
     category::{Category, CategoryInput},
-    game::{Game, GameInput},
-    movie::{Movie, MovieInput},
     post::{Post, PostInput},
     user::{User, UserInput},
 };
@@ -12,8 +10,6 @@ use crate::{
     errors::SmileError,
     schema::{
         category::dsl::category,
-        game::dsl::game,
-        movie::dsl::movie,
         post::dsl::post,
         usr_smile::dsl::{username, usr_smile},
     },
@@ -80,68 +76,8 @@ macro_rules! handler {
     };
 }
 
-handler!(game => Game(i32, GameInput));
-handler!(movie => Movie(i32, MovieInput));
 handler!(post => Post(i32, PostInput));
 handler!(category => Category(i32, CategoryInput));
-
-// impl Handler<i32, GameInput> for Game {
-//     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Game>>, SmileError> {
-//         let vec_game = game
-//             .load::<Game>(connection)
-//             .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<Game>>>())
-//             .map_err(SmileError::from)?;
-//         Ok(vec_game)
-//     }
-
-//     fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Game>, SmileError> {
-//         game.find(id).first::<Game>(connection).map(Box::new).map_err(SmileError::from)
-//     }
-
-//     fn input(input: GameInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-//         Insert(game).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
-//     }
-
-//     fn update(id: i32, input: GameInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-//         Remove(game.find(id)).set(input).execute(connection).map(|_| true).map_err(SmileError::from)
-//     }
-//     fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
-//         Delete(game.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
-//     }
-// }
-
-// impl Handler<i32, MovieInput> for Movie {
-//     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Movie>>, SmileError> {
-//         let vec_movie = movie
-//             .load::<Movie>(connection)
-//             .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<Movie>>>())
-//             .map_err(SmileError::from)?;
-//         Ok(vec_movie)
-//     }
-
-//     fn find_by_id(id: &i32, connection: &MysqlConnection) -> Result<Box<Movie>, SmileError> {
-//         movie.find(id).first::<Movie>(connection).map(Box::new).map_err(SmileError::from)
-//     }
-
-//     fn input(input: MovieInput, connection: &MysqlConnection) -> Result<bool, SmileError> {
-//         Insert(movie).values(&input).execute(connection).map(|_| true).map_err(SmileError::from)
-//     }
-
-//     fn update(
-//         id: i32,
-//         input: MovieInput,
-//         connection: &MysqlConnection,
-//     ) -> Result<bool, SmileError> {
-//         Remove(movie.find(id))
-//             .set(input)
-//             .execute(connection)
-//             .map(|_| true)
-//             .map_err(SmileError::from)
-//     }
-//     fn remove(id: i32, connection: &MysqlConnection) -> Result<bool, SmileError> {
-//         Delete(movie.find(id)).execute(connection).map(|_| true).map_err(SmileError::from)
-//     }
-// }
 
 // impl Handler<i32, PostInput> for Post {
 //     fn list(connection: &MysqlConnection) -> Result<Vec<Box<Post>>, SmileError> {

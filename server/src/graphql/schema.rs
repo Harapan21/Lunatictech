@@ -6,10 +6,8 @@ use crate::{
         category::{Category, CategoryInput},
         comment::{Comment, CommentInput},
         embed::{Embed, EmbedInput},
-        game::{Game, GameInput},
         handler::Handler,
         info::InfoSchema,
-        movie::{Movie, MovieInput},
         post::{Post, PostInput},
         user::{User, UserInput},
     },
@@ -64,12 +62,6 @@ impl Query {
         Category::list(&context.conn)
             .map(|list| list.into_iter().map(|item| item as Box<dyn CategorySchema>).collect())
     }
-    fn game(context: &Context) -> Result<Vec<Box<Game>>, SmileError> {
-        Game::list(&context.conn)
-    }
-    fn movie(context: &Context) -> Result<Vec<Box<Movie>>, SmileError> {
-        Movie::list(&context.conn)
-    }
 }
 
 pub struct Mutation;
@@ -111,46 +103,46 @@ impl Mutation {
             None => Err(SmileError::Unauthorized),
         }
     }
-    fn add_card(
-        id: Option<i32>,
-        name: String,
-        thumbnail: Option<String>,
-        card: Card,
-        action: ActionOption,
-        context: &Context,
-    ) -> Result<bool, SmileError> {
-        match (id, action) {
-            (None, ActionOption::INPUT) => match card {
-                Card::GAME => {
-                    let input = GameInput { name, thumbnail };
-                    return Game::input(input, &context.conn);
-                }
-                Card::MOVIE => {
-                    let input = MovieInput { name, thumbnail };
-                    return Movie::input(input, &context.conn);
-                }
-            },
-            (Some(id), ActionOption::UPDATE) => match card {
-                Card::GAME => {
-                    let input = GameInput { name, thumbnail };
-                    return Game::update(id, input, &context.conn);
-                }
-                Card::MOVIE => {
-                    let input = MovieInput { name, thumbnail };
-                    return Movie::update(id, input, &context.conn);
-                }
-            },
-            (Some(id), ActionOption::REMOVE) => match card {
-                Card::GAME => {
-                    return Game::remove(id, &context.conn);
-                }
-                Card::MOVIE => {
-                    return Movie::remove(id, &context.conn);
-                }
-            },
-            _ => unreachable!(),
-        }
-    }
+    // fn add_card(
+    //     id: Option<i32>,
+    //     name: String,
+    //     thumbnail: Option<String>,
+    //     card: Card,
+    //     action: ActionOption,
+    //     context: &Context,
+    // ) -> Result<bool, SmileError> {
+    //     match (id, action) {
+    //         (None, ActionOption::INPUT) => match card {
+    //             Card::GAME => {
+    //                 let input = GameInput { name, thumbnail };
+    //                 return Game::input(input, &context.conn);
+    //             }
+    //             Card::MOVIE => {
+    //                 let input = MovieInput { name, thumbnail };
+    //                 return Movie::input(input, &context.conn);
+    //             }
+    //         },
+    //         (Some(id), ActionOption::UPDATE) => match card {
+    //             Card::GAME => {
+    //                 let input = GameInput { name, thumbnail };
+    //                 return Game::update(id, input, &context.conn);
+    //             }
+    //             Card::MOVIE => {
+    //                 let input = MovieInput { name, thumbnail };
+    //                 return Movie::update(id, input, &context.conn);
+    //             }
+    //         },
+    //         (Some(id), ActionOption::REMOVE) => match card {
+    //             Card::GAME => {
+    //                 return Game::remove(id, &context.conn);
+    //             }
+    //             Card::MOVIE => {
+    //                 return Movie::remove(id, &context.conn);
+    //             }
+    //         },
+    //         _ => unreachable!(),
+    //     }
+    // }
     fn post(
         post_id: Option<i32>,
         mut input: Option<PostInput>,
