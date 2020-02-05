@@ -1,6 +1,6 @@
 use crate::errors::SmileError;
 use chrono::{Duration, Local};
-use jwt::{decode, encode, Algorithm, Header, Validation};
+use jwt::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 
 // lazy_static! {
 //     static ref PRIVATE_KEY: Vec<u8> = fs::read("src/utils/key/jwtRS256.key").unwrap();
@@ -25,18 +25,15 @@ impl Claims {
     }
 
     pub fn create_token(&self) -> Result<String, SmileError> {
-        Ok(encode(&Header::new(Algorithm::RS256), self, include_bytes!("./key/mykey.pem"))
-            .map_err(SmileError::JwtError)?)
+        let key = EncodingKey::from_rsa_pem(include_bytes!("./key/mykey.pem"))?;
+        Ok(encode(&Header::new(Algorithm::RS256), self, &key).map_err(SmileError::JwtError)?)
     }
 
     pub fn translate_token(token: String) -> Result<Claims, SmileError> {
-        decode::<Claims>(
-            &token,
-            include_bytes!("./key/pubkey.pem"),
-            &Validation::new(Algorithm::RS256),
-        )
-        .map(|data| data.claims.into())
-        .map_err(SmileError::JwtError)
+        let key = DecodingKey::from_rsa_pem(include_bytes!("./key/pubkey.pem"))?;
+        decode::<Claims>(&token, &key, &Validation::new(Algorithm::RS256))
+            .map(|data| data.claims.into())
+            .map_err(SmileError::JwtError)
     }
 }
 

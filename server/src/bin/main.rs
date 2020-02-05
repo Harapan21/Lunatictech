@@ -13,6 +13,7 @@ const HOSTNAME: &'static str = "localhost:8088";
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     println!("{}", NICKNAME);
+    // dbg!("this");
     HttpServer::new(move || {
         let schema = std::sync::Arc::new(graphql::schema::create_schema());
         App::new()

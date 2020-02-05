@@ -8,6 +8,7 @@ use crate::schema::topic;
     Serialize,
     Deserialize,
     PartialEq,
+    Insertable,
     Associations,
 )]
 #[table_name = "topic"]

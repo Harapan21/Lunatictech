@@ -17,7 +17,7 @@ use crate::{
 };
 
 use bcrypt::{hash, verify, DEFAULT_COST};
-
+// use async_std::task::spawn
 use diesel::{delete as Delete, insert_into as Insert, prelude::*, update as Remove};
 
 pub trait Handler<T, M> {

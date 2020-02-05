@@ -54,6 +54,7 @@ table! {
         postId -> Integer,
         thumbnail -> Nullable<Varchar>,
         video -> Nullable<Longtext>,
+        topicId -> Nullable<Integer>,
     }
 }
 
@@ -105,12 +106,14 @@ table! {
     }
 }
 
+joinable!(category -> topic (topicId));
 joinable!(category_node -> category (categoryId));
 joinable!(category_node -> post (postId));
 joinable!(comment -> post (postId));
 joinable!(comment -> usr_smile (userId));
 joinable!(contrib_post_temp -> post (postId));
 joinable!(embed -> post (postId));
+joinable!(embed -> topic (topicId));
 joinable!(post -> usr_smile (author_id));
 joinable!(rating -> post (postId));
 
