@@ -1,13 +1,13 @@
 use super::schema::Context;
 use crate::{
     errors::SmileError,
-    models::{category::Category, handler::Handler},
+    models::{category::Category, handler::Handler, topic::Topic},
 };
 
 pub trait CategorySchema {
     fn id(&self) -> &i32;
     fn name(&self) -> &str;
-    fn topic(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError>;
+    fn topic(&self, context: &Context) -> Result<Option<Box<Topic>>, SmileError>;
 }
 
 impl CategorySchema for Category {
@@ -17,11 +17,11 @@ impl CategorySchema for Category {
     fn name(&self) -> &str {
         &self.name.as_str()
     }
-    fn topic(&self, context: &Context) -> Result<Option<Box<dyn CategorySchema>>, SmileError> {
+    fn topic(&self, context: &Context) -> Result<Option<Box<Topic>>, SmileError> {
         match &self.topicId {
             Some(topic_id) => {
-                let category = Category::find_by_id(topic_id, &context.conn)?;
-                return Ok(Some(category));
+                let topic = Topic::find_by_id(topic_id, &context.conn)?;
+                return Ok(Some(topic));
             }
             None => Ok(None),
         }
@@ -39,10 +39,7 @@ impl Box<dyn CategorySchema> {
     fn name(&self) -> &str {
         &self.name()
     }
-    fn topic(
-        &self,
-        context: &Context,
-    ) -> Result<Option<Box<dyn CategorySchema + 'static>>, SmileError> {
+    fn topic(&self, context: &Context) -> Result<Option<Box<Topic>>, SmileError> {
         self.topic(context)
     }
 }

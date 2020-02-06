@@ -80,6 +80,10 @@ impl Post {
         let t1 =
             async move { CategoryNode::push_node(connection, vec_category, post_id.to_owned()) };
         let t3: Option<bool> = t2.await;
-        if t1.await? && (t3.is_none() || t3 == Some(true)) { Ok(true) } else { Ok(false) }
+        if t1.await? && (t3.is_none() || t3 == Some(true)) {
+            Ok(true)
+        } else {
+            Ok(false)
+        }
     }
 }

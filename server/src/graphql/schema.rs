@@ -9,6 +9,7 @@ use crate::{
         handler::Handler,
         info::InfoSchema,
         post::{Post, PostInput},
+        topic::Topic,
         user::{User, UserInput},
     },
     utils::Auth,
@@ -53,6 +54,9 @@ impl Query {
             Some(auth_id) => Ok(User::find_by_id(auth_id, &context.conn)? as Box<dyn UserSchema>),
             None => Err(SmileError::Unauthorized),
         }
+    }
+    fn topic(context: &Context) -> Result<Vec<Box<Topic>>, SmileError> {
+        Topic::list(&context.conn)
     }
     fn post(context: &Context) -> Result<Vec<Box<dyn PostSchema + 'static>>, SmileError> {
         let post = Post::list(&context.conn)?;

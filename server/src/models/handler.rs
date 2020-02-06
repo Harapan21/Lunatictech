@@ -3,6 +3,7 @@ extern crate uuid;
 use super::{
     category::{Category, CategoryInput},
     post::{Post, PostInput},
+    topic::{Topic, TopicInput},
     user::{User, UserInput},
 };
 
@@ -11,13 +12,13 @@ use crate::{
     schema::{
         category::dsl::category,
         post::dsl::post,
+        topic::dsl::topic,
         usr_smile::dsl::{username, usr_smile},
     },
     utils::Auth,
 };
 
 use bcrypt::{hash, verify, DEFAULT_COST};
-// use async_std::task::spawn
 use diesel::{delete as Delete, insert_into as Insert, prelude::*, update as Remove};
 
 pub trait Handler<T, M> {
@@ -77,6 +78,7 @@ macro_rules! handler {
 }
 
 handler!(post => Post(i32, PostInput));
+handler!(topic => Topic(i32, TopicInput));
 handler!(category => Category(i32, CategoryInput));
 
 // impl Handler<i32, PostInput> for Post {

@@ -4,10 +4,10 @@ version = "0.1.0"
 authors = ["Harapan21 <harapanpardamean@gmail.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[lib]
-name = "smile_api_lib"
-path = "src/lib.rs"
+# # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# [lib]
+# name = "smile_api_lib"
+# path = "src/lib.rs"
 
 [dependencies]
 actix-web = "2.0.0-rc"

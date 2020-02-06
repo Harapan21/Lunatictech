@@ -1,4 +1,35 @@
-use smile_api_lib::*;
+#![allow(non_snake_case, proc_macro_derive_resolution_fallback, non_camel_case_types)]
+extern crate actix_cors;
+extern crate actix_identity;
+extern crate jsonwebtoken as jwt;
+extern crate rayon;
+#[macro_use]
+extern crate juniper;
+extern crate serde;
+extern crate serde_json;
+extern crate uuid;
+#[macro_use]
+extern crate serde_derive;
+extern crate actix_web;
+extern crate dotenv;
+#[macro_use]
+extern crate diesel;
+extern crate bcrypt;
+#[macro_use]
+extern crate diesel_derive_enum;
+
+pub use actix_cors::Cors;
+pub use actix_identity::{CookieIdentityPolicy, IdentityService};
+pub use actix_web::{http::header, web, App, HttpServer};
+
+pub mod db;
+pub mod errors;
+pub mod graphql;
+pub mod models;
+pub mod schema;
+pub mod utils;
+
+pub use db::establish_connection;
 
 const NICKNAME: &'static str = r#"
  __    __  __  _  _    __   ____  ____  ___  ____  ____  ___  _   _ 
@@ -8,12 +39,12 @@ const NICKNAME: &'static str = r#"
 
 | by Harapan Pardamean <harapanpardamean@gmail.com>
 "#;
+
 const HOSTNAME: &'static str = "localhost:8088";
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     println!("{}", NICKNAME);
-    // dbg!("this");
     HttpServer::new(move || {
         let schema = std::sync::Arc::new(graphql::schema::create_schema());
         App::new()

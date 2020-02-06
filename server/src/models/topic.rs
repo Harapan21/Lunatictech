@@ -8,12 +8,18 @@ use crate::schema::topic;
     Serialize,
     Deserialize,
     PartialEq,
-    Insertable,
     Associations,
 )]
 #[table_name = "topic"]
 pub struct Topic {
     id: i32,
+    name: String,
+    icon: Option<String>,
+}
+
+#[derive(juniper::GraphQLInputObject, AsChangeset, Debug, Serialize, Deserialize, Insertable)]
+#[table_name = "topic"]
+pub struct TopicInput {
     name: String,
     icon: Option<String>,
 }
