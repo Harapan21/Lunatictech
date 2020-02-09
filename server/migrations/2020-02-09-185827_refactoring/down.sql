@@ -1,0 +1,14 @@
+use smile;
+DROP TABLE blog_info;
+DROP TABLE category_node;
+DROP TABLE topic_node;
+DROP TABLE category;
+DROP TABLE topic;
+DROP TABLE page;
+DROP TABLE comment;
+DROP TRIGGER push_embed;
+DROP TRIGGER push_rating;
+DROP TABLE rating;
+DROP TABLE embed;
+DROP TABLE post;
+DROP TABLE user;

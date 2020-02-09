@@ -7,7 +7,7 @@
   function handleNotification() {
     isNotification = !isNotification;
   }
-  $: if (panel_router > 1) {
+  $: if ($panel_router > 1) {
     handleNotification();
   }
   $: isNotification ? panel_router.set(0) : panel_router.set(1);

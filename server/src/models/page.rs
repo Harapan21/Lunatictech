@@ -1,5 +1,4 @@
-use crate::schema::topic;
-
+use crate::schema::page;
 #[derive(
     juniper::GraphQLObject,
     Debug,
@@ -10,18 +9,18 @@ use crate::schema::topic;
     PartialEq,
     Associations,
 )]
-#[table_name = "topic"]
-pub struct Topic {
+#[table_name = "page"]
+pub struct Page {
     pub id: i32,
     pub name: String,
-    pub thumbnail: Option<String>,
-    pub pageId: Option<i32>,
+    pub icon: Option<String>,
+    pub content: Option<String>,
 }
 
 #[derive(juniper::GraphQLInputObject, AsChangeset, Debug, Serialize, Deserialize, Insertable)]
-#[table_name = "topic"]
-pub struct TopicInput {
+#[table_name = "page"]
+pub struct PageInput {
     pub name: String,
-    pub thumbnail: Option<String>,
-    pub pageId: Option<i32>,
+    pub icon: Option<String>,
+    pub content: Option<String>,
 }

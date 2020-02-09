@@ -4,18 +4,21 @@
   import NotificationList from "./NotificationList.svelte";
   import Trending from "./Trending.svelte";
   import Topic from "./Topic.svelte";
+  import ProfileMenu from "./ProfileMenu.svelte";
   export let avatar = "faces.jpg";
   let routerPanel = [
     {
       title: "notification",
-      component: NotificationList,
-      style: "w-1/4 relative"
+      component: NotificationList
     },
-    { title: "trending", component: Trending, style: "w-1/4 relative" },
+    { title: "trending", component: Trending },
     {
       title: "topic",
-      component: Topic,
-      style: "w-3/4 absolute right-0 top-0 h-full z-50"
+      component: Topic
+    },
+    {
+      title: "profile",
+      component: ProfileMenu
     }
   ];
   function handleMouseLeave() {
@@ -23,12 +26,16 @@
       panel_router.set(1);
     }
   }
+  function handleProfile() {
+    panel_router.set(3);
+  }
+  $: console.log($panel_router);
 </script>
 
 <style>
   #panel {
     @apply text-white p-5  overflow-hidden;
-    background: var(--black);
+
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
     transition: background 0.2s ease-in, width 0.2s ease-in-out;
@@ -56,16 +63,30 @@
   img {
     @apply absolute w-full h-full shadow-xl;
   }
+  .notification {
+    @apply w-1/4 relative;
+    background: var(--black);
+  }
+  .profile {
+    @apply bg-white w-1/4 relative;
+  }
+  .topic {
+    @apply w-3/4 absolute right-0 top-0 h-full z-50;
+  }
+  .trending {
+    @apply w-1/4 relative;
+    background: var(--black);
+  }
 </style>
 
 <div
   id="panel"
   class:active={$panel_router === 0}
   on:mouseleave={handleMouseLeave}
-  class={routerPanel[$panel_router].style}>
+  class={routerPanel[$panel_router].title}>
   <div class="menu">
     <Notification count={2} />
-    <img alt="profile" src={avatar} />
+    <img on:click={handleProfile} alt="profile" src={avatar} />
   </div>
   <h1>{routerPanel[$panel_router].title}</h1>
   <svelte:component this={routerPanel[$panel_router].component} />

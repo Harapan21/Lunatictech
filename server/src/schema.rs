@@ -16,7 +16,7 @@ table! {
 table! {
     category_node (id) {
         id -> Integer,
-        categoryId -> Nullable<Integer>,
+        categoryId -> Integer,
         postId -> Integer,
     }
 }
@@ -33,43 +33,32 @@ table! {
 }
 
 table! {
-    use crate::models::post::Status;
-    use diesel::sql_types::*;
-    contrib_post_temp (id) {
-        id -> Integer,
-        postId -> Integer,
-        title -> Varchar,
-        content -> Nullable<Longtext>,
-        status -> Nullable<Status>,
-        accepted -> Nullable<Bool>,
-        createdAt -> Timestamp,
-        updateAt -> Timestamp,
-        author_id -> Char,
-    }
-}
-
-table! {
     embed (id) {
         id -> Integer,
         postId -> Integer,
         thumbnail -> Nullable<Varchar>,
         video -> Nullable<Longtext>,
-        topicId -> Nullable<Integer>,
     }
 }
 
 table! {
-    use crate::models::post::Status;
-    use diesel::sql_types::*;
+    page (id) {
+        id -> Integer,
+        name -> Varchar,
+        icon -> Nullable<Varchar>,
+        content -> Nullable<Longtext>,
+    }
+}
+
+table! {
     post (id) {
         id -> Integer,
         author_id -> Nullable<Char>,
         title -> Nullable<Varchar>,
         createdAt -> Timestamp,
         content -> Nullable<Longtext>,
-        status -> Nullable<Status>,
-        last_edited_at -> Nullable<Timestamp>,
-        last_edited_by -> Nullable<Char>,
+        status -> Enum,
+        lastEditedAt -> Nullable<Timestamp>,
     }
 }
 
@@ -87,13 +76,22 @@ table! {
 table! {
     topic (id) {
         id -> Integer,
-        name -> Varchar,
-        icon -> Nullable<Varchar>,
+        name -> Integer,
+        pageId -> Nullable<Integer>,
+        thumbnail -> Nullable<Varchar>,
     }
 }
 
 table! {
-    usr_smile (user_id) {
+    topic_node (id) {
+        id -> Integer,
+        topicId -> Integer,
+        postId -> Integer,
+    }
+}
+
+table! {
+    user (user_id) {
         user_id -> Char,
         username -> Varchar,
         email -> Nullable<Varchar>,
@@ -106,26 +104,27 @@ table! {
     }
 }
 
-joinable!(category -> topic (topicId));
 joinable!(category_node -> category (categoryId));
 joinable!(category_node -> post (postId));
 joinable!(comment -> post (postId));
-joinable!(comment -> usr_smile (userId));
-joinable!(contrib_post_temp -> post (postId));
+joinable!(comment -> user (userId));
 joinable!(embed -> post (postId));
-joinable!(embed -> topic (topicId));
-joinable!(post -> usr_smile (author_id));
+joinable!(post -> user (author_id));
 joinable!(rating -> post (postId));
+joinable!(topic -> page (pageId));
+joinable!(topic_node -> post (postId));
+joinable!(topic_node -> topic (topicId));
 
 allow_tables_to_appear_in_same_query!(
     blog_info,
     category,
     category_node,
     comment,
-    contrib_post_temp,
     embed,
+    page,
     post,
     rating,
     topic,
-    usr_smile,
+    topic_node,
+    user,
 );

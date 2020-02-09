@@ -2,6 +2,7 @@ extern crate uuid;
 
 use super::{
     category::{Category, CategoryInput},
+    page::{Page, PageInput},
     post::{Post, PostInput},
     topic::{Topic, TopicInput},
     user::{User, UserInput},
@@ -11,6 +12,7 @@ use crate::{
     errors::SmileError,
     schema::{
         category::dsl::category,
+        page::dsl::page,
         post::dsl::post,
         topic::dsl::topic,
         usr_smile::dsl::{username, usr_smile},
@@ -35,7 +37,7 @@ macro_rules! handler {
             fn list(connection: &MysqlConnection) -> Result<Vec<Box<$impl_for>>, SmileError> {
                 let vec = $models
                     .load::<$impl_for>(connection)
-                    .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<$impl_for>>>())
+                    .map(|e| e.into_iter().map(Box::new).collect::<Vec<Box<Self>>>())
                     .map_err(SmileError::from)?;
                 Ok(vec)
             }
@@ -78,6 +80,7 @@ macro_rules! handler {
 }
 
 handler!(post => Post(i32, PostInput));
+handler!(page => Page(i32, PageInput));
 handler!(topic => Topic(i32, TopicInput));
 handler!(category => Category(i32, CategoryInput));
 

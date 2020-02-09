@@ -54,24 +54,24 @@ table! {
         postId -> Integer,
         thumbnail -> Nullable<Varchar>,
         video -> Nullable<Longtext>,
-        game -> Nullable<Integer>,
-        movie -> Nullable<Integer>,
+        topicId -> Nullable<Integer>,
     }
 }
 
 table! {
-    game (id) {
+    page (id) {
         id -> Integer,
         name -> Varchar,
-        thumbnail -> Nullable<Varchar>,
+        icon -> Nullable<Varchar>,
+        content -> Nullable<Varchar>,
     }
 }
 
 table! {
-    movie (id) {
+    page_and_topic (id) {
         id -> Integer,
-        name -> Varchar,
-        thumbnail -> Nullable<Varchar>,
+        topicId -> Integer,
+        pageId -> Integer,
     }
 }
 
@@ -105,7 +105,8 @@ table! {
     topic (id) {
         id -> Integer,
         name -> Varchar,
-        icon -> Nullable<Varchar>,
+        thumbnail -> Nullable<Varchar>,
+        pageId -> Nullable<Integer>,
     }
 }
 
@@ -129,11 +130,13 @@ joinable!(category_node -> post (postId));
 joinable!(comment -> post (postId));
 joinable!(comment -> usr_smile (userId));
 joinable!(contrib_post_temp -> post (postId));
-joinable!(embed -> game (game));
-joinable!(embed -> movie (movie));
 joinable!(embed -> post (postId));
+joinable!(embed -> topic (topicId));
+joinable!(page_and_topic -> page (pageId));
+joinable!(page_and_topic -> topic (topicId));
 joinable!(post -> usr_smile (author_id));
 joinable!(rating -> post (postId));
+joinable!(topic -> page (pageId));
 
 allow_tables_to_appear_in_same_query!(
     blog_info,
@@ -142,8 +145,8 @@ allow_tables_to_appear_in_same_query!(
     comment,
     contrib_post_temp,
     embed,
-    game,
-    movie,
+    page,
+    page_and_topic,
     post,
     rating,
     topic,

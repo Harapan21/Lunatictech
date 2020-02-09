@@ -1,6 +1,8 @@
+use super::topic::Topic;
 use crate::schema::category;
 
-#[derive(Debug, Clone, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Associations, Queryable, Identifiable, Serialize, Deserialize, PartialEq)]
+#[belongs_to(Topic, foreign_key = "topicId")]
 #[table_name = "category"]
 pub struct Category {
     pub id: i32,

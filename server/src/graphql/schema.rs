@@ -1,7 +1,7 @@
 use crate::{
     db::MysqlPoolConnection,
     errors::SmileError,
-    graphql::{category::CategorySchema, post::PostSchema, user::UserSchema},
+    graphql::{category::CategorySchema, post::PostSchema, topic::TopicSchema, user::UserSchema},
     models::{
         category::{Category, CategoryInput},
         comment::{Comment, CommentInput},
@@ -55,13 +55,18 @@ impl Query {
             None => Err(SmileError::Unauthorized),
         }
     }
-    fn topic(context: &Context) -> Result<Vec<Box<Topic>>, SmileError> {
+
+    fn topic(context: &Context) -> Result<Vec<Box<dyn TopicSchema + 'static>>, SmileError> {
         Topic::list(&context.conn)
+            .map(|x| x.into_iter().map(|x| x as Box<dyn TopicSchema>).collect())
     }
+
     fn post(context: &Context) -> Result<Vec<Box<dyn PostSchema + 'static>>, SmileError> {
         let post = Post::list(&context.conn)?;
         Ok(post.into_iter().map(|e| e as Box<dyn PostSchema>).collect())
     }
+
+    // fn page(context: &Context) -> Result<Vec<Page
     fn category(context: &Context) -> Result<Vec<Box<dyn CategorySchema + 'static>>, SmileError> {
         Category::list(&context.conn)
             .map(|list| list.into_iter().map(|item| item as Box<dyn CategorySchema>).collect())

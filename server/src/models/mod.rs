@@ -5,6 +5,7 @@ pub mod embed;
 pub mod handler;
 pub mod info;
 pub mod node;
+pub mod page;
 pub mod post;
 pub mod topic;
 pub mod user;

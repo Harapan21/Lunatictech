@@ -1,7 +1,9 @@
+use super::page::Page;
+use super::topic::Topic;
 use crate::{
     errors::SmileError,
     models::{category::Category, post::Post},
-    schema::{category, category_node, post},
+    schema::{category, category_node, page_and_topic, post},
 };
 use diesel::prelude::*;
 
@@ -76,4 +78,24 @@ impl CategoryNode {
 #[derive(juniper::GraphQLObject, Debug, Serialize)]
 pub struct PostNode {
     pub user_id: String,
+}
+
+#[derive(
+    juniper::GraphQLObject,
+    Insertable,
+    Queryable,
+    Associations,
+    Identifiable,
+    Serialize,
+    Debug,
+    Deserialize,
+    PartialEq,
+)]
+#[belongs_to(Topic, foreign_key = "topicId")]
+#[belongs_to(Page, foreign_key = "pageId")]
+#[table_name = "page_and_topic"]
+pub struct PageNode {
+    id: i32,
+    topicId: i32,
+    pageId: i32,
 }
